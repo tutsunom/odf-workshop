@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Configuration Management :: ACS Workshop</title>
+    <link rel="canonical" href="https://redhat-scholars.github.io/acs-workshop/acs-workshop/09-configuration_management.html">
+    <link rel="prev" href="08-compliance.html">
+    <link rel="next" href="10-system_policies.html">
+    <meta name="generator" content="Antora 3.0.0">
+    <link rel="stylesheet" href="../_/css/site.css">
+<link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
+          src="../_/img/header_logo.png" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" href="https://redhat-scholars.github.io/acs-workshop">ACS Workshop</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">CheatSheets</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">CheatSheet A</a>
+            <a class="navbar-item" href="#">CheatSheet B</a>
+            <a class="navbar-item" href="#">CheatSheet C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Upcoming Events</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Event A</a>
+            <a class="navbar-item" href="#">Event B</a>
+            <a class="navbar-item" href="#">Event C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Tutorial A</a>
+            <a class="navbar-item" href="#">Tutorial B</a>
+            <a class="navbar-item" href="#">Tutorial C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="acs-workshop" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html">ACS Workshop</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="01-setup.html">Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-setup.html#prerequisite">Prerequisites</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02-getting_started.html">Getting Started</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-getting_started.html#install_acs_operator">Install RHACS Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-getting_started.html#install_acs_central">Install RHACS Central Cluster</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-getting_started.html#config_acs_securedcluster">Configuration of the RHACS Secured Cluster </a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-getting_started.html#deploy_demo_acs">Deploying Demo in RHACS</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-getting_started.html#deploy_apps">Deploying Apps</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03-overview-acs.html">RHACS Overview</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="03-overview-acs.html#acs_architecture">RHACS Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03-overview-acs.html#dashboard_acs">RHACS Dashboard</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03-overview-acs.html#dashboard_acs_header">Dashboard Header</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03-overview-acs.html#dashboard_acs_menu">Dashboard Left Menu</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03-overview-acs.html#dashboard_acs_information">Dashboard Information</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="04-vulnerabilities.html">Vulnerability Management</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#image_overview_image_details">Image overview and image details</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#vulnerability_management_panel">Review Vulnerability Management Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#scanning_images">Scanning images for vulnerabilities</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#filtering_vulnerabilities_scans">Filtering vulnerabilities scans</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#review_cve_images">Image CVE Vulnerability Analysis</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#image_correlation_deployments">Image CVE correlation with Deployments</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="05-risk.html">Risk Management</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-risk.html#risk_dashboard">Review Risk Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-risk.html#risk_single_deployment_details">Single Deployment Details</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-risk.html#risk_process_discovery">Process Discovery / Runtime</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-risk.html#risk_filtering">Filtering</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="06-network_graph.html">Network Graph</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-network_graph.html#network_graph_overview">Network Graph Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-network_graph.html#network_graph_views">Network Graph Views</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-network_graph.html#network_policy_simulator">Network Policy Simulator</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="07-violations.html">Violations</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#violations_overview">Violations Dashboard Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#violations_example">Violations Build &amp; Deploy Example</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#violations_runtime">Violations Runtime Example</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#violations_behaviour">Violations Behaviour</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#policy_summary">Policy Summary</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="08-compliance.html">Compliance</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard">Review Compliance Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard_scan">Execute the first Compliance Scan</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard_review">Review the Compliance Reports in the Compliance Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard_ns">Namespace Compliance Details</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard_report">Evidence Export</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_operator">Integrating Compliance Operator with RHACS </a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_operator_acs_review">Review Compliance Scans of the Compliance Operator in RHACS</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#acs_policy_compliance">Configure Policy in RHACS to Invoke Compliance related Controls</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#acs_policy_compliance_nist">Enforce Policies that Meet Guidance for NIST Control 4.2.2</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#acs_policy_compliance_nist_view">View Updated Compliance Scan Results in RHACS</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#acs_policy_compliance_nist_revert">Revert the Policy Changes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="09-configuration_management.html">Configuration Management</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#conf_management_overview">Configuration Management Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#conf_management_cis">Configuration Management CIS</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="10-system_policies.html">System Policies</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="10-system_policies.html#system_policies_overview">System Policies Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="10-system_policies.html#system_policies_example">System Policies Build and Deploy Example</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="10-system_policies.html#system_policies_enforcement">System Policies Enforcement</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="11-integrations.html">RHACS Integrations</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="11-integrations.html#integrate_with_internal_openshift_registry">Integrate with Internal Openshift Registry</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="11-integrations.html#integrate_with_internal_openshift_registry_config_acs">Configure RHACS integration for Internal Openshift Registry</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="11-integrations.html#integrate_acs_slack">Integrate RHACS with Slack</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="11-integrations.html#integrate_acs_oauth">Integrate RHACS with OpenShift OAuth</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="11-integrations.html#integrate_acs_sso">Integrate RHACS with OpenShift RHSSO</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="12-platform_configuration.html">RHACS Secure Cluster Management</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="12-platform_configuration.html#clusters">RHACS Secured Clusters</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="12-platform_configuration.html#clusters_vuln">Add vulnerabilities to the Secured Cluster</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="12-platform_configuration.html#system_configuration">RHACS System Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="12-platform_configuration.html#system_health">RHACS System Health</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="12-platform_configuration.html#access_control">RHACS Access Control</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="13-cicd.html">DevSecOps Pipelines</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="13-cicd.html#install_devsecops_pipelines">Installing RHACS DevSecOps Pipeline</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="13-cicd.html#run_devsecops_pipelines">Running the demo of DevSecOps Pipeline</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="14-apicli.html">RHACS API and CLI</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="14-apicli.html#cli-overview">RHACS CLI Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="14-apicli.html#cli-integration">RHACS CLI Integration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="14-apicli.html#api-overview">RHACS API Overview</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="15-contributors.html">Contributors</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">ACS Workshop</span>
+    <span class="version">master</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">ACS Workshop</span>
+      <ul class="versions">
+        <li class="version is-current">
+          <a href="index.html">master</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">ACS Workshop</a></li>
+    <li><a href="09-configuration_management.html">Configuration Management</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/tutsunom/acs-workshop/edit/master/documentation/modules/ROOT/pages/09-configuration_management.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Configuration Management</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Learn how to use the Configuration Management view and understand the correlation between various entities in your cluster to manage your cluster configuration efficiently.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="conf_management_overview"><a class="anchor" href="#conf_management_overview"></a>Configuration Management Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Every OpenShift Container Platform cluster includes many different entities distributed throughout the cluster, which makes it more challenging to understand and act on the available information.</p>
+</div>
+<div class="paragraph">
+<p>Red Hat Advanced Cluster Security for Kubernetes (RHACS) provides efficient configuration management that combines all these distributed entities on a single page. It brings together information about all your clusters, namespaces, nodes, deployments, images, secrets, users, groups, service accounts, and roles in a single Configuration Management view, helping you visualize different entities and the connections between them.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>To open the Configuration Management view, select Configuration Management from the left-hand navigation menu. Similar to the Dashboard, it displays some useful widgets.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/configmgmt/01-config.png" alt="Config 1" width="800">
+</div>
+</div>
+<div class="paragraph">
+<p>These widgets are interactive and show the following information:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Security policy violations by severity</p>
+</li>
+<li>
+<p>The state of CIS (Center for Information Security) Docker and Kubernetes benchmark controls</p>
+</li>
+<li>
+<p>Users with administrator rights in the most clusters</p>
+</li>
+<li>
+<p>Secrets used most widely in your clusters</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="conf_management_cis"><a class="anchor" href="#conf_management_cis"></a>Configuration Management CIS</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The header in the Configuration Management view shows you the number of policies and CIS controls in your cluster. The header includes drop-down menus that allow you to switch between entities. For example, you can:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Click Policies to view all policies and their severity, or select CIS Controls to view detailed information about all controls.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/configmgmt/02-config.png" alt="Config 2" width="800">
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Click Application and Infrastructure and select clusters, namespaces, nodes, deployments, images, and secrets to view detailed information.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/configmgmt/03-config.png" alt="Config 3" width="400">
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Click RBAC Visibility and Configuration and select users and groups, service accounts, and roles to view detailed information.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/configmgmt/04-config.png" alt="Config 4" width="800">
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="08-compliance.html">Compliance</a></span>
+  <span class="next"><a href="10-system_policies.html">System Policies</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

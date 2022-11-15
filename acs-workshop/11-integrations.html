@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Integrations :: ACS Workshop</title>
+    <link rel="canonical" href="https://redhat-scholars.github.io/acs-workshop/acs-workshop/11-integrations.html">
+    <link rel="prev" href="10-system_policies.html">
+    <link rel="next" href="12-platform_configuration.html">
+    <meta name="generator" content="Antora 3.0.0">
+    <link rel="stylesheet" href="../_/css/site.css">
+<link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
+          src="../_/img/header_logo.png" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" href="https://redhat-scholars.github.io/acs-workshop">ACS Workshop</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">CheatSheets</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">CheatSheet A</a>
+            <a class="navbar-item" href="#">CheatSheet B</a>
+            <a class="navbar-item" href="#">CheatSheet C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Upcoming Events</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Event A</a>
+            <a class="navbar-item" href="#">Event B</a>
+            <a class="navbar-item" href="#">Event C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Tutorial A</a>
+            <a class="navbar-item" href="#">Tutorial B</a>
+            <a class="navbar-item" href="#">Tutorial C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="acs-workshop" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html">ACS Workshop</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="01-setup.html">Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-setup.html#prerequisite">Prerequisites</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02-getting_started.html">Getting Started</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-getting_started.html#install_acs_operator">Install RHACS Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-getting_started.html#install_acs_central">Install RHACS Central Cluster</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-getting_started.html#config_acs_securedcluster">Configuration of the RHACS Secured Cluster </a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-getting_started.html#deploy_demo_acs">Deploying Demo in RHACS</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-getting_started.html#deploy_apps">Deploying Apps</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03-overview-acs.html">RHACS Overview</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="03-overview-acs.html#acs_architecture">RHACS Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03-overview-acs.html#dashboard_acs">RHACS Dashboard</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03-overview-acs.html#dashboard_acs_header">Dashboard Header</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03-overview-acs.html#dashboard_acs_menu">Dashboard Left Menu</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03-overview-acs.html#dashboard_acs_information">Dashboard Information</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="04-vulnerabilities.html">Vulnerability Management</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#image_overview_image_details">Image overview and image details</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#vulnerability_management_panel">Review Vulnerability Management Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#scanning_images">Scanning images for vulnerabilities</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#filtering_vulnerabilities_scans">Filtering vulnerabilities scans</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#review_cve_images">Image CVE Vulnerability Analysis</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#image_correlation_deployments">Image CVE correlation with Deployments</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="05-risk.html">Risk Management</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-risk.html#risk_dashboard">Review Risk Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-risk.html#risk_single_deployment_details">Single Deployment Details</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-risk.html#risk_process_discovery">Process Discovery / Runtime</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-risk.html#risk_filtering">Filtering</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="06-network_graph.html">Network Graph</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-network_graph.html#network_graph_overview">Network Graph Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-network_graph.html#network_graph_views">Network Graph Views</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-network_graph.html#network_policy_simulator">Network Policy Simulator</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="07-violations.html">Violations</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#violations_overview">Violations Dashboard Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#violations_example">Violations Build &amp; Deploy Example</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#violations_runtime">Violations Runtime Example</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#violations_behaviour">Violations Behaviour</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#policy_summary">Policy Summary</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="08-compliance.html">Compliance</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard">Review Compliance Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard_scan">Execute the first Compliance Scan</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard_review">Review the Compliance Reports in the Compliance Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard_ns">Namespace Compliance Details</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard_report">Evidence Export</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_operator">Integrating Compliance Operator with RHACS </a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_operator_acs_review">Review Compliance Scans of the Compliance Operator in RHACS</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#acs_policy_compliance">Configure Policy in RHACS to Invoke Compliance related Controls</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#acs_policy_compliance_nist">Enforce Policies that Meet Guidance for NIST Control 4.2.2</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#acs_policy_compliance_nist_view">View Updated Compliance Scan Results in RHACS</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#acs_policy_compliance_nist_revert">Revert the Policy Changes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="09-configuration_management.html">Configuration Management</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="09-configuration_management.html#conf_management_overview">Configuration Management Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="09-configuration_management.html#conf_management_cis">Configuration Management CIS</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="10-system_policies.html">System Policies</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="10-system_policies.html#system_policies_overview">System Policies Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="10-system_policies.html#system_policies_example">System Policies Build and Deploy Example</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="10-system_policies.html#system_policies_enforcement">System Policies Enforcement</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="11-integrations.html">RHACS Integrations</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="#integrate_with_internal_openshift_registry">Integrate with Internal Openshift Registry</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#integrate_with_internal_openshift_registry_config_acs">Configure RHACS integration for Internal Openshift Registry</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#integrate_acs_slack">Integrate RHACS with Slack</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#integrate_acs_oauth">Integrate RHACS with OpenShift OAuth</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#integrate_acs_sso">Integrate RHACS with OpenShift RHSSO</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="12-platform_configuration.html">RHACS Secure Cluster Management</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="12-platform_configuration.html#clusters">RHACS Secured Clusters</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="12-platform_configuration.html#clusters_vuln">Add vulnerabilities to the Secured Cluster</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="12-platform_configuration.html#system_configuration">RHACS System Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="12-platform_configuration.html#system_health">RHACS System Health</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="12-platform_configuration.html#access_control">RHACS Access Control</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="13-cicd.html">DevSecOps Pipelines</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="13-cicd.html#install_devsecops_pipelines">Installing RHACS DevSecOps Pipeline</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="13-cicd.html#run_devsecops_pipelines">Running the demo of DevSecOps Pipeline</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="14-apicli.html">RHACS API and CLI</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="14-apicli.html#cli-overview">RHACS CLI Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="14-apicli.html#cli-integration">RHACS CLI Integration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="14-apicli.html#api-overview">RHACS API Overview</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="15-contributors.html">Contributors</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">ACS Workshop</span>
+    <span class="version">master</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">ACS Workshop</span>
+      <ul class="versions">
+        <li class="version is-current">
+          <a href="index.html">master</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">ACS Workshop</a></li>
+    <li><a href="11-integrations.html">RHACS Integrations</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/tutsunom/acs-workshop/edit/master/documentation/modules/ROOT/pages/11-integrations.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Integrations</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+In RHACS the Scanner component only scans those images that are not already scanned by other integrated vulnerability scanners. It means that if you have integrated Red Hat Advanced Cluster Security for Kubernetes with other vulnerability scanners, Scanner checks and uses the scanning results from the integrated scanner if available.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="integrate_with_internal_openshift_registry"><a class="anchor" href="#integrate_with_internal_openshift_registry"></a>Integrate RHACS with the Internal Openshift Registry</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Idea originally posted by Mark Roberts in <a href="https://cloud.redhat.com/blog/using-red-hat-advanced-cluster-security-with-the-openshift-registry">this great blog post</a>, and adapt to consume internally</p>
+</div>
+<div class="paragraph">
+<p>Red Hat Advanced Cluster Security can be used to scan images held within OpenShift image streams (the OpenShift registry).</p>
+</div>
+<div class="paragraph">
+<p>This can be helpful within continuous integration processes, to enable organizations to scan images for policy violations and vulnerabilities prior to pushing the image to an external container registry.</p>
+</div>
+<div class="paragraph">
+<p>In this way, the quality of container images that get to the external registry improves, and triggered activities that result from a new image appearing in the registry only happen for a good reason.</p>
+</div>
+<div class="paragraph">
+<p>Generate a namespace and extract the token name of the</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export NSINTEGRATION="integration-internal-registry"
+
+oc new-project $NSINTEGRATION
+
+SECRET_TOKEN_NAME=$(oc get sa -n $NSINTEGRATION default -o jsonpath='{.secrets[*]}' | jq -r .name | grep token)
+
+PIPELINE_TOKEN=$(oc get secret -n $NSINTEGRATION $SECRET_TOKEN_NAME -o jsonpath='{.data.token}' | base64 -d)
+echo $PIPELINE_TOKEN
+
+oc policy add-role-to-user admin system:serviceaccount:$NSINTEGRATION:pipeline -n $NSINTEGRATION</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+TODO change the permissions to this - <a href="https://github.com/redhat-cop/gitops-catalog/blob/main/advanced-cluster-security-operator/instance/overlays/internal-registry-integration/stackrox-image-puller-sa.yaml" class="bare">https://github.com/redhat-cop/gitops-catalog/blob/main/advanced-cluster-security-operator/instance/overlays/internal-registry-integration/stackrox-image-puller-sa.yaml</a>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="integrate_with_internal_openshift_registry_config_acs"><a class="anchor" href="#integrate_with_internal_openshift_registry_config_acs"></a>Configure RHACS integration for Internal Openshift Registry</h3>
+<div class="paragraph">
+<p>To allow the roxctl command line interface to scan the images within the OpenShift registry, add an integration of type “Generic Docker Registry'', from the Platform Configuration - Integrations menu.</p>
+</div>
+<div class="paragraph">
+<p>Fill in the fields as shown in figure 1, giving the integration a unique name that should include the cluster name for practicality. Paste in the username and token and select Disable TLS certificate validation if you need insecure https communication to a test cluster, for example.</p>
+</div>
+<div class="paragraph">
+<p>Press the test button to validate the connection and press “save” when the test is successful.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/03-registry_ocp_internal.png" alt="RHACS Integrations 1" width="800">
+</div>
+</div>
+<div class="paragraph">
+<p>TODO: Finish the integration!!</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="integrate_acs_slack"><a class="anchor" href="#integrate_acs_slack"></a>Integrate RHACS Notifications with Slack</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you are using Slack, you can forward alerts from Red Hat Advanced Cluster Security for Kubernetes to Slack.</p>
+</div>
+<div class="paragraph">
+<p>Create a new Slack app, enable incoming webhooks, and get a webhook URL.</p>
+</div>
+<div class="paragraph">
+<p>To do this step, follow the <a href="https://docs.openshift.com/acs/integration/integrate-with-slack.html#configure-slack_integrate-with-slack">Configuration Slack documentation guide</a> for generate a slack channel and the webhook url into the Slack workspace.</p>
+</div>
+<div class="paragraph">
+<p>On the RHACS portal, navigate to Platform Configuration &#8594; Integrations.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/04-integration-slack.png" alt="RHACS Integrations Slack 1" width="800">
+</div>
+</div>
+<div class="paragraph">
+<p>Create a new integration in Red Hat Advanced Cluster Security for Kubernetes by using the webhook URL.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/05-integrations-slack.png" alt="RHACS Integrations Slack 2" width="600">
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+the webhook URL will have the format of "https://hooks.slack.com/services/ZZZ/YYY/XXX"
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Click Test and check the Slack Channel:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/07-integrations-slack.png" alt="RHACS Integrations Slack 3" width="500">
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+by default all the notifications in the system policies are disabled. If you have not configured any other integrations, you will see No notifiers configured!.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For enable the Policy Notifications, select a System Policy and click on Actions, then Enable Notification:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/08-integrations-slack.png" alt="RHACS Integrations Slack 4" width="700">
+</div>
+</div>
+<div class="paragraph">
+<p>Then in the System Policy selected, in the Notification will appear the Slack notification that it&#8217;s enabled.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/06-integrations-slack.png" alt="RHACS Integrations Slack 5" width="600">
+</div>
+</div>
+<div class="paragraph">
+<p>When a System Policy is violated, and appears in Violations, will be sent a Notification to Slack though the Slack integration notifier showing the information of the System Policy violated and more details about that:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/09-integrations-slack.png" alt="RHACS Integrations Slack 6" width="700">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="integrate_acs_oauth"><a class="anchor" href="#integrate_acs_oauth"></a>Integrate RHACS with OpenShift OAuth</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Red Hat Advanced Cluster Security (RHACS) Central is installed with one administrator user by default. Typically, customers request an integration with existing Identity Provider(s) (IDP).</p>
+</div>
+<div class="paragraph">
+<p>RHACS offers different options for such integration. In this section we will see the integration with OpenShift OAuth.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+It is assumed that RHACS is already installed and login to the Central UI is available.
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Login to your RHACS and select “Platform Configuration” &gt; “Access Control”</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/01-oauth.png" alt="OAuth 1" width="400">
+</div>
+</div>
+</li>
+<li>
+<p>From the drop down menu Add auth provider select OpenShift Auth</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/02-oauth.png" alt="OAuth 2" width="200">
+</div>
+</div>
+</li>
+<li>
+<p>Enter a Name for your provider and select a default role which is assigned to any user who can authenticate.
+It is recommended to select the role None, so new accounts will have no privileges in RHACS.
+With Rules you can assign roles to specific users, based on their userid, name, mail address or groups.
+For example the user with the name admin gets the role Admin assigned. On the other hand the user1 will have the role of Continuous Integration.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/03-oauth.png" alt="OAuth 3" width="800">
+</div>
+</div>
+</li>
+<li>
+<p>After Save the integration will appear as Auth Provider</p>
+<div class="imageblock unresolved">
+<div class="content">
+<img src="integrations/04-oauth.png" alt="OAuth 4" width="800">
+</div>
+</div>
+</li>
+<li>
+<p>In a private windows of your browser login into the RHACS portal, and check the OpenShift OAuth auth provider that you set up</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/05-oauth.png" alt="OAuth 5" width="400">
+</div>
+</div>
+</li>
+<li>
+<p>Login first with the admin user</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/06-oauth.png" alt="OAuth 6" width="400">
+</div>
+</div>
+</li>
+<li>
+<p>Admin user will have the role Admin in RHACS, so will have full privileges in the RHACS console. Check that you have full view of the Violations or Compliance among others.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/07-oauth.png" alt="OAuth 7" width="700">
+</div>
+</div>
+</li>
+<li>
+<p>Logout and login again but this time with the user user1 instead</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/08-oauth.png" alt="OAuth 8" width="500">
+</div>
+</div>
+</li>
+<li>
+<p>This user have very limited privileges and for example cannot see the Violations in the cluster neither compliance</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/09-oauth.png" alt="OAuth 9" width="800">
+</div>
+</div>
+</li>
+<li>
+<p>This user only have the role of the Continuous Integration, so will only have access to the CVE analysis in the Vulnerability Management among others, but not other actions like the Violations, Policies, etc</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/10-oauth.png" alt="OAuth 10" width="800">
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="integrate_acs_sso"><a class="anchor" href="#integrate_acs_sso"></a>Integrate RHACS with Red Hat Single Sign On</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following steps will create some basic example objects to an existing RHSSO or Keycloak to test the authentication at RHACS.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create the namespace for the single-sign-on</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc new-project single-sign-on</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create the OperatorGroup for install the RHSSO operator</p>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  annotations:
+    olm.providedAPIs: Keycloak.v1alpha1.keycloak.org,KeycloakBackup.v1alpha1.keycloak.org,KeycloakClient.v1alpha1.keycloak.org,KeycloakRealm.v1alpha1.keycloak.org,KeycloakUser.v1alpha1.keycloak.org
+  generateName: single-sign-on
+  name: single-sign-on
+spec:
+  targetNamespaces:
+    - single-sign-on</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f sso-og.yaml</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create the Subscription Operator for the RHSSO</p>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: rhsso-operator
+spec:
+  channel: alpha
+  installPlanApproval: Manual
+  name: rhsso-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f sso-subs.yaml</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create an instance of Keycloak</p>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">apiVersion: keycloak.org/v1alpha1
+kind: Keycloak
+metadata:
+  name: rhacs-keycloak
+  namespace: single-sign-on
+spec:
+  externalAccess:
+    enabled: true
+  instances: 1</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f sso-instance.yaml</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create the Realm for the installation called <strong>Basic</strong></p>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">apiVersion: keycloak.org/v1alpha1
+kind: KeycloakRealm
+metadata:
+ name: rhacs-keycloakrealm
+ namespace: single-sign-on
+spec:
+ instanceSelector:
+   matchLabels:
+     app: sso
+ realm:
+   displayName: Basic Realm
+   enabled: true
+   id: basic
+   realm: basic</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f sso-realm.yaml</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Login into Red Hat SSO. Get the route to your RHSSO instance and log into the Administration Interface.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get route keycloak -n single-sign-on --template='{{ .spec.host }}'</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Extract the admin password for Keycloak. The secret name is build from "credential"&lt;keycloak-instance-name&gt;</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc extract secret/credential-rhacs-keycloak -n single-sign-on --to=-</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># ADMIN_PASSWORD
+&lt;you password&gt;
+# ADMIN_USERNAME
+admin</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Be sure to select your Realm (Basic in our case), goto Clients and select a ClientID and enable the option Implicit Flow</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/01-sso.png" alt="SSO 1" width="800">
+</div>
+</div>
+</li>
+<li>
+<p>Get the Issuer URL from your realm. This is typically your:</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/02-sso.png" alt="SSO 2" width="800">
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"><a href="https://&lt;KEYCLOAK_URL&gt;/auth/realms/&lt;REALM_NAME&gt;" class="bare">https://&lt;KEYCLOAK_URL&gt;/auth/realms/&lt;REALM_NAME&gt;</a>;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>It&#8217;s time to Create Test Users to login!
+In RHSSO create 2 user accounts to test the authentication later. Goto Users and create the users:</p>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">User: acsadmin
+First Name: acsadmin</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/04-sso.png" alt="SSO 3" width="800">
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">User: user1
+First Name: user 1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can set any other values for these users. However, be sure to set a password for both, after they have been created.</p>
+</div>
+</li>
+<li>
+<p>To configure RHACS Authentication: RHSS, login to your RHACS and select “Platform Configuration” &gt; “Access Control”</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/03-sso.png" alt="SSO 3" width="800">
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Enter a “Name” for your provider i.e. “Single Sign On”</p>
+</li>
+<li>
+<p>Leave the “Callback Mode” to the “Auto-Select” setting</p>
+</li>
+<li>
+<p>Enter your Issuer URL</p>
+</li>
+<li>
+<p>As Client ID enter account (or the ClientID you would like to use)</p>
+</li>
+<li>
+<p>Leave the Client Secret empty and select the checkbox Do not use Client Secret which is good enough for our tests.</p>
+</li>
+<li>
+<p>Remember the two callback URL from the blue box. They must be configured in Keycloak.</p>
+</li>
+<li>
+<p>Select a default role which is assigned to any user who can authenticate.</p>
+</li>
+<li>
+<p>It is recommended to select the role None, so new accounts will have no privileges in RHACS.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>With Rules you can assign roles to specific users, based on their userid, name, mail address or groups.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/05-sso.png" alt="SSO 5" width="800">
+</div>
+</div>
+<div class="paragraph">
+<p>For example the user with the name admin (which have been created previously in our RHSSO) gets the role Admin assigned.</p>
+</div>
+</li>
+<li>
+<p>What is left to do is the configuration of redirect URLs. These URLs are shown in the RHACS Authentication Provider configuration (see blue field in the image above)</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/06-sso.png" alt="SSO 6" width="800">
+</div>
+</div>
+</li>
+<li>
+<p>Log back into RHSSO and select “Clients” &gt; “account”</p>
+</li>
+<li>
+<p>Into Valid Redirect URLs enter the two URLs which you saved from the blue box in the RHACS configuration.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/07-sso.png" alt="SSO 7" width="800">
+</div>
+</div>
+</li>
+<li>
+<p>Verify Authentication with OpenShift Auth.</p>
+</li>
+<li>
+<p>Logout from the Central UI and reload the browser.</p>
+</li>
+<li>
+<p>Select from the drop down Single Sign On</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/integrations/08-sso.png" alt="SSO 8" width="800">
+</div>
+</div>
+</li>
+<li>
+<p>Try to login with a valid SSO user.
+Depending on the Rules which have been defined during previous steps the appropriate permissions should be assigned.</p>
+<div class="paragraph">
+<p>For example: If you login as user acsadmin the role Admin is assigned.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="10-system_policies.html">System Policies</a></span>
+  <span class="next"><a href="12-platform_configuration.html">RHACS Secure Cluster Management</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
