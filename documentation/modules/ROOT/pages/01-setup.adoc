@@ -2,65 +2,44 @@
 include::_attributes.adoc[]
 
 [#prerequisite]
-== Prerequisite CLI tools
+== Setup OpenShift Cluster
+:profile: acs
 
-The following CLI tools are required for running the exercises in this workshop. 
-Please have them installed and configured before you get started with any of the workshop chapters.
+To run OpenShift4, you need to have one provisioned environment using https://demo.redhat.com[RHPDS] - Go to Catalog -> Openshift 4.10 Workshop.
 
-[cols="4*^,4*.",options="header,+attributes"]
-|===
-|**Tool**|**macOS**|**Fedora**|**windows**
+== Connect to your bastion server
 
-| `Git`
-| https://git-scm.com/download/mac[Download]
-| https://git-scm.com/download/linux[Download]
-| https://git-scm.com/download/win[Download]
+Once you have a workshop environment, you need to access the bastion server in your environment via SSH.
 
-| `Docker`
-| https://docs.docker.com/docker-for-mac/install[Docker for Mac]
-| `dnf install podman podman-docker`
-| https://docs.docker.com/docker-for-windows/install[Docker for Windows]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]	
+----	
+ssh lab-user@<YOUR_BASTION_SERVER>
+----
 
-| `kubectl {kubernetes-version}`
-| https://storage.googleapis.com/kubernetes-release/release/{kubernetes-version}/bin/darwin/amd64/kubectl[Download]
-| https://storage.googleapis.com/kubernetes-release/release/{kubernetes-version}/bin/linux/amd64/kubectl[Download]
-| https://storage.googleapis.com/kubernetes-release/release/{kubernetes-version}/bin/windows/amd64/kubectl.exe[Download]
+Some CLI tools are already installed on you bastion server. You can check the OpenShift version using:
 
-| `kustomize {kustomize-version}`
-| https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv4.1.2/kustomize_{kustomize-version}_darwin_amd64.tar.gz[Download]
-| https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv4.1.2/kustomize_{kustomize-version}_linux_amd64.tar.gz[Download]
-| https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv4.1.2/kustomize_{kustomize-version}_windows_amd64.tar.gz[Download]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]	
+----	
+oc version	
+----
 
-| `Ansible`
-| `python -m pip install --user ansible`
-| `sudo dnf install ansible`
-| 
+The output should show oc version >=4.10:	
 
-|===
+[.console-output]
+[source,bash,subs="attributes+,+macros"]	
+----	
+Client Version: {ocp-version}
+Server Version: {ocp-version}
+Kubernetes Version: {kubernetes-version}
+----
 
-The following CLI tools are optional for running the exercises in this tutorial.
-Although they are used in the tutorial, you could use others without any problem.
+== Login OpenShift Web console
 
-[cols="4*^,4*.",options="header,+attributes"]
-|===
-|**Tool**|**macOS**|**Fedora**|**windows**
+If you have a workshop environment, you can access OpenShift web console.
 
-| https://github.com/mikefarah/yq[yq v2.4.1]
-| https://github.com/mikefarah/yq/releases/download/2.4.1/yq_darwin_amd64[Download]
-| https://github.com/mikefarah/yq/releases/download/2.4.1/yq_linux_amd64[Download]
-| https://github.com/mikefarah/yq/releases/download/2.4.1/yq_windows_amd64.exe[Download]
-
-| https://github.com/stedolan/jq[jq v1.6.0]
-| https://github.com/stedolan/jq/releases/download/jq-1.6/jq-osx-amd64[Download]
-| https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64[Download]
-| https://github.com/stedolan/jq/releases/download/jq-1.6/jq-win64.exe[Download]
-
-| watch
-| `brew install watch`
-| `dnf install procps-ng`
-|
-
-|===
+The web console URL is shown in RHPDS as well as cluster admin username/password.
 
 
 [#downloadtutorial]
@@ -70,30 +49,5 @@ Although they are used in the tutorial, you could use others without any problem
 :folder: acs-workshop
 include::https://raw.githubusercontent.com/redhat-developer-demos/rhd-tutorial-common/master/download-sources.adoc[]
 
-
-[#kubernetes]
-== Setup OpenShift Cluster
-
-:profile: acs
-
-To run OpenShift4, you need to have one provisioned using https://try.openshift.com[try.openshift.com] or can use any existing OpenShift4 cluster.	
-Once you have your cluster, you can download the latest OpenShift client(oc) from https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/[here] and add to your path.	
-
-You can check the OpenShift version using:
-
-[.console-input]
-[source,bash,subs="attributes+,+macros"]	
-----	
-oc version	
-----
-
-The output should show oc version >=4.7:	
-
-[.console-output]
-[source,bash,subs="attributes+,+macros"]	
-----	
-Client Version: 4.7.0-202102130115.p0-c66c03f	
-Kubernetes Version: {kubernetes-version}	
-----
 
 And then you are ready for installing RHACS on Openshift.
