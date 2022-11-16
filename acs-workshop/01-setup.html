@@ -384,100 +384,53 @@
 <article class="doc">
 <h1 class="page">Setup</h1>
 <div class="sect1">
-<h2 id="prerequisite"><a class="anchor" href="#prerequisite"></a>Prerequisite CLI tools</h2>
+<h2 id="prerequisite"><a class="anchor" href="#prerequisite"></a>Setup OpenShift Cluster</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The following CLI tools are required for running the exercises in this workshop.
-Please have them installed and configured before you get started with any of the workshop chapters.</p>
+<p>To run OpenShift4, you need to have one provisioned environment using <a href="https://demo.redhat.com">RHPDS</a> - Go to Catalog &#8594; Openshift 4.10 Workshop.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-center valign-top"><strong>Tool</strong></th>
-<th class="tableblock halign-center valign-top"><strong>macOS</strong></th>
-<th class="tableblock halign-center valign-top"><strong>Fedora</strong></th>
-<th class="tableblock halign-center valign-top"><strong>windows</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><code>Git</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://git-scm.com/download/mac">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://git-scm.com/download/linux">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://git-scm.com/download/win">Download</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><code>Docker</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://docs.docker.com/docker-for-mac/install">Docker for Mac</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><code>dnf install podman podman-docker</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://docs.docker.com/docker-for-windows/install">Docker for Windows</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><code>kubectl v1.20.2</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://storage.googleapis.com/kubernetes-release/release/v1.20.2/bin/darwin/amd64/kubectl">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://storage.googleapis.com/kubernetes-release/release/v1.20.2/bin/linux/amd64/kubectl">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://storage.googleapis.com/kubernetes-release/release/v1.20.2/bin/windows/amd64/kubectl.exe">Download</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><code>kustomize v4.1.2</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv4.1.2/kustomize_v4.1.2_darwin_amd64.tar.gz">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv4.1.2/kustomize_v4.1.2_linux_amd64.tar.gz">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv4.1.2/kustomize_v4.1.2_windows_amd64.tar.gz">Download</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><code>Ansible</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><code>python -m pip install --user ansible</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><code>sudo dnf install ansible</code></p></td>
-<td class="tableblock halign-center valign-top"></td>
-</tr>
-</tbody>
-</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_connect_to_your_bastion_server"><a class="anchor" href="#_connect_to_your_bastion_server"></a>Connect to your bastion server</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>The following CLI tools are optional for running the exercises in this tutorial.
-Although they are used in the tutorial, you could use others without any problem.</p>
+<p>Once you have a workshop environment, you need to access the bastion server in your environment via SSH.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-center valign-top"><strong>Tool</strong></th>
-<th class="tableblock halign-center valign-top"><strong>macOS</strong></th>
-<th class="tableblock halign-center valign-top"><strong>Fedora</strong></th>
-<th class="tableblock halign-center valign-top"><strong>windows</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/mikefarah/yq">yq v2.4.1</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/mikefarah/yq/releases/download/2.4.1/yq_darwin_amd64">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/mikefarah/yq/releases/download/2.4.1/yq_linux_amd64">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/mikefarah/yq/releases/download/2.4.1/yq_windows_amd64.exe">Download</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/stedolan/jq">jq v1.6.0</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-osx-amd64">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64">Download</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-win64.exe">Download</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">watch</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><code>brew install watch</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><code>dnf install procps-ng</code></p></td>
-<td class="tableblock halign-center valign-top"></td>
-</tr>
-</tbody>
-</table>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ssh lab-user@&lt;YOUR_BASTION_SERVER&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Some CLI tools are already installed on you bastion server. You can check the OpenShift version using:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc version</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output should show oc version &gt;=4.10:</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">Client Version: 4.10.36
+Server Version: 4.10.36
+Kubernetes Version: v1.23.5+8471591</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_login_openshift_web_console"><a class="anchor" href="#_login_openshift_web_console"></a>Login OpenShift Web console</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you have a workshop environment, you can access OpenShift web console.</p>
+</div>
+<div class="paragraph">
+<p>The web console URL is shown in RHPDS as well as cluster admin username/password.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -499,32 +452,6 @@ Although they are used in the tutorial, you could use others without any problem
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd $TUTORIAL_HOME</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="kubernetes"><a class="anchor" href="#kubernetes"></a>Setup OpenShift Cluster</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>To run OpenShift4, you need to have one provisioned using <a href="https://try.openshift.com">try.openshift.com</a> or can use any existing OpenShift4 cluster.
-Once you have your cluster, you can download the latest OpenShift client(oc) from <a href="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/">here</a> and add to your path.</p>
-</div>
-<div class="paragraph">
-<p>You can check the OpenShift version using:</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc version</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The output should show oc version &gt;=4.7:</p>
-</div>
-<div class="listingblock console-output">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">Client Version: 4.7.0-202102130115.p0-c66c03f
-Kubernetes Version: v1.20.2</code></pre>
 </div>
 </div>
 <div class="paragraph">
