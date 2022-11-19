@@ -15,11 +15,11 @@ image::install/00_operator_hub.png[ACS Operator 1, 800]
 +
 image::install/01_select_acs_operator.png[ACS Operator 2, 800]
 
-. Confirm installation parameters (auto update, ``rhacs-3.70 channel``, ``rhacs-operator`` namespace).
+. Confirm installation parameters (``rhacs-3.70`` channel, ``rhacs-operator`` namespace, ``Automatic`` update).
 +
 image::install/02_install_acs_operator.png[ACS Operator 3, 800]
 
-. Wait for completion, the installation will take a few seconds.
+. Wait for completion, the installation will take a few minutes.
 +
 image::install/03_wait_for_completion.png[ACS Operator 4, 800]
 
