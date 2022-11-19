@@ -415,9 +415,14 @@ In RHACS the Scanner component only scans those images that are not already scan
 <p>In this way, the quality of container images that get to the external registry improves, and triggered activities that result from a new image appearing in the registry only happen for a good reason.</p>
 </div>
 <div class="paragraph">
-<p>Generate a namespace and extract the token name of the</p>
+<p>Generate a namespace and extract the token of the default service accout by the following shell commands.</p>
 </div>
 <div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f labitem/stackrox-integration-internal-registry.sh</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export NSINTEGRATION="integration-internal-registry"
 
@@ -430,18 +435,6 @@ echo $PIPELINE_TOKEN
 
 oc policy add-role-to-user admin system:serviceaccount:$NSINTEGRATION:pipeline -n $NSINTEGRATION</code></pre>
 </div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-TODO change the permissions to this - <a href="https://github.com/redhat-cop/gitops-catalog/blob/main/advanced-cluster-security-operator/instance/overlays/internal-registry-integration/stackrox-image-puller-sa.yaml" class="bare">https://github.com/redhat-cop/gitops-catalog/blob/main/advanced-cluster-security-operator/instance/overlays/internal-registry-integration/stackrox-image-puller-sa.yaml</a>
-</td>
-</tr>
-</table>
 </div>
 <div class="sect2">
 <h3 id="integrate_with_internal_openshift_registry_config_acs"><a class="anchor" href="#integrate_with_internal_openshift_registry_config_acs"></a>Configure RHACS integration for Internal Openshift Registry</h3>
