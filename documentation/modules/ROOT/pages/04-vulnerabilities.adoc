@@ -30,7 +30,7 @@ image::vulnerabilities/top-riskiest-images.png[Top Riskies Images, 600]
 +
 We can see the images which are more exposed. Not only we can see the number of CVEs affecting the images but which of them are fixable. You can click and get information about the CVEs and the fixable ones.
 
-* In the Top Riskiest Images, click on #5, mastercard-processor:latest.
+* In the Top Riskiest Images, find and click on ``mastercard-processor:latest``.
 +
 image::vulnerabilities/02-vuln.png[Vuln 2, 800]
 +

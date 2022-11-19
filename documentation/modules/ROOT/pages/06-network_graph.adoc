@@ -11,7 +11,7 @@ image::network-flow/03-network.png[Network Flow 1, 800]
 
 In the upper left you’ll see the dropdown for clusters so I can easily navigate between any of the clusters that are connected to RHACS.
 
-* The default view, Active, shows me actual traffic for the Past Hour between the deployments in all of the namespaces.
+* The default view, Active, shows me actual traffic for the Past Hour between the deployments in all of the namespaces. Now let's select and see ``backend`` namespace.
 
 image::network-flow/00-network.png[Network Flow 1, 600]
 

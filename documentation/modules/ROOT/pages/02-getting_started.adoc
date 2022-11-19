@@ -280,10 +280,14 @@ ansible-playbook rhacs-demo.yaml -e stackrox_central_admin_password=stackrox
 [.console-output]
 [source,bash,subs="attributes+,+macros"]	
 ----	
-TASK [ocp4_workload_stackrox_demo_apps : post_workload tasks complete] ********************************************************
-ok: [localhost] => {
-    "msg": "Post-Workload Tasks completed successfully."
-}
+TASK [ocp4_deploy_acs_demo_apps : Lock baselines] ****************************************************************************************
+ok: [localhost] => (item=visa-processor)
+ok: [localhost] => (item=backend-atlas)
+ok: [localhost] => (item=asset-cache)
+
+PLAY RECAP *******************************************************************************************************************************
+localhost                  : ok=35   changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
 ----
 
 [#deploy_apps] 
@@ -292,6 +296,12 @@ ok: [localhost] => {
 If you do not plan to follow the remaining sections (which are based on deploying the demo) and prefer to play and make your own findings, simply follow the steps below:
 
 . Start some applications with critical vulnerabilities:
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]	
+----	
+oc new-project test
+----
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]	
