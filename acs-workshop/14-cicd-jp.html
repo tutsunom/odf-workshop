@@ -317,6 +317,9 @@
     <a class="nav-link" href="14-cicd-jp.html">RHACSを使用したアプリケーションへの自動化セキュリティの実装とDevSecOpsの構築</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#setup">セットアップ</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="#ci">継続的インテグレーション</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -451,10 +454,39 @@ DevSecOps パイプラインをサポートするために、多くのツール�
 </div>
 </div>
 <div class="sect1">
+<h2 id="setup"><a class="anchor" href="#setup"></a>セットアップ</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_openshift_pipelines_と_openshift_gitops_のインストール"><a class="anchor" href="#_openshift_pipelines_と_openshift_gitops_のインストール"></a>OpenShift Pipelines と OpenShift GitOps のインストール</h3>
+<div class="paragraph">
+<p>まずはじめに、OpenShift Pipelines と OpenShift GitOps をインストールします。<br>
+OpenShift Pipelines と OpenShift GitOps はそれぞれ Operator が用意されており、OpenShift Web コンソールの OperatorHub から簡単にインストールすることができます。</p>
+</div>
+<div class="paragraph">
+<p>Web コンソールに cluster-admin でログインしたら、左のメニューから "Operators" &gt; "OperatorHub" を選択し、OperatorHub の画面に移ります。<br>
+OperatorHub の画面で、Red Hat OpenShift Pipelines の Operator を検索し、これをクリックします。</p>
+</div>
+<div class="paragraph">
+<p><span class="image unresolved"><img src="cicd/lab4-pipelines-install-01.png" alt="600" width="800"></span>
+<span class="image unresolved"><img src="cicd/lab4-pipelines-install-02.png" alt="600" width="800"></span>
+<span class="image unresolved"><img src="cicd/lab4-pipelines-install-03.png" alt="600" width="800"></span></p>
+</div>
+<div class="paragraph">
+<p>同様に、Red Hat OpenShift GitOps もインストールします。</p>
+</div>
+<div class="paragraph">
+<p><span class="image unresolved"><img src="cicd/lab4-pipelines-install-01.png" alt="600" width="800"></span>
+<span class="image unresolved"><img src="cicd/lab4-pipelines-install-02.png" alt="600" width="800"></span>
+<span class="image unresolved"><img src="cicd/lab4-pipelines-install-03.png" alt="600" width="800"></span></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="ci"><a class="anchor" href="#ci"></a>継続的インテグレーション</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>この最初のモジュールでは、サンプルで用意しているセキュアなパイプラインを OpenShift Pipeline で実行し、各ステップを確認してみます。<br>
+<p>このモジュールでは、サンプルで用意しているセキュアなパイプラインを OpenShift Pipelines で実行し、各ステップを確認してみます。<br>
 このラボでは、Tekton パイプラインの開始方法と、開発ライフサイクル内でセキュリティと gitops ツールを統合するためのタスクの使用方法を学習します。</p>
 </div>
 <div class="olist arabic">
@@ -480,7 +512,7 @@ DevSecOps パイプラインをサポートするために、多くのツール�
 </div>
 </li>
 <li>
-<p>ocp-workshop プロジェクトに移動します。</p>
+<p><code>cicd</code> プロジェクトに移動します。</p>
 <div class="paragraph">
 <p><span class="image"><img src="_images/cicd/lab4-devsecops05.png" alt="200" width="200"></span></p>
 </div>
@@ -528,7 +560,7 @@ DevSecOps パイプラインをサポートするために、多くのツール�
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">oc create -f <a href="https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/pipeline-build-dev-run.yaml" class="bare">https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/pipeline-build-dev-run.yaml</a> -n ocp-workshop</th>
+<th class="tableblock halign-left valign-top">oc create -f <a href="https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/pipeline-build-dev-run.yaml" class="bare">https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/pipeline-build-dev-run.yaml</a> -n cicd</th>
 </tr>
 </thead>
 </table>
@@ -618,7 +650,7 @@ DevSecOps パイプラインをサポートするために、多くのツール�
 </div>
 </li>
 <li>
-<p><code>ocp-workshop</code>プロジェクトが選択されていることを確認してください。</p>
+<p><code>cicd</code>プロジェクトが選択されていることを確認してください。</p>
 <div class="paragraph">
 <p><span class="image"><img src="_images/cicd/lab4-devsecops15.png" alt="300" width="300"></span></p>
 </div>
@@ -955,7 +987,7 @@ ACSツールはこのイメージがデプロイされているかどうかを�
 </colgroup>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">✗ Image image-registry.openshift-image-registry.svc:5000/ocp-workshop/spring-petclinic@sha256:ece54d2923654c36f4e97bc0410f5c027871c5b7483e977cfc6c2bd56fef625d and '<strong>ERROR: Policy "Fixable Severity at least Important"</strong>'</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✗ Image image-registry.openshift-image-registry.svc:5000/cicd/spring-petclinic@sha256:ece54d2923654c36f4e97bc0410f5c027871c5b7483e977cfc6c2bd56fef625d and '<strong>ERROR: Policy "Fixable Severity at least Important"</strong>'</p></td>
 </tr>
 </tbody>
 </table>
@@ -1027,13 +1059,13 @@ ACSツールはこのイメージがデプロイされているかどうかを�
 </colgroup>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">image-registry.openshift-image-registry.svc:5000/ocp-workshop/spring-petclinic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">image-registry.openshift-image-registry.svc:5000/cicd/spring-petclinic</p></td>
 </tr>
 </tbody>
 </table>
 </li>
 <li>
-<p><code>Create "image-registry.openshift-image-registry.svc:5000/ocp-workshop/spring-petclinic"</code>Imageを選択してください。</p>
+<p><code>Create "image-registry.openshift-image-registry.svc:5000/cicd/spring-petclinic"</code>Imageを選択してください。</p>
 <div class="paragraph">
 <p><span class="image unresolved"><img src="cicd/lab4.2-5-exclude-image_new.png" alt="300" width="700"></span></p>
 </div>
@@ -1502,13 +1534,13 @@ ACSで異なるセキュリティポリシーを適用し、このポリシー�
 </colgroup>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">kubectl apply -f <a href="https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/s2ijava-mgr.yaml" class="bare">https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/s2ijava-mgr.yaml</a> --namespace=ocp-workshop</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kubectl apply -f <a href="https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/s2ijava-mgr.yaml" class="bare">https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/s2ijava-mgr.yaml</a> --namespace=cicd</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">または</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">oc apply -f <a href="https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/s2ijava-mgr.yaml" class="bare">https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/s2ijava-mgr.yaml</a>  -n ocp-workshop</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">oc apply -f <a href="https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/s2ijava-mgr.yaml" class="bare">https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/s2ijava-mgr.yaml</a>  -n cicd</p></td>
 </tr>
 </tbody>
 </table>
