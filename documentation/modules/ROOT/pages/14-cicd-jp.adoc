@@ -133,7 +133,7 @@ image:cicd/lab4-devsecops09.png[400,400]
 +
 image:cicd/lab4-devsecops10.png[400,600]
 +
-.. ``サインイン``をクリックし、__gogsadmin__の認証情報でログインします。
+.. ``サインイン``をクリックし、__gogs__の認証情報でログインします。
 +
 image:cicd/lab4-devsecops11.png[500,400]
 +
@@ -142,7 +142,7 @@ image:cicd/lab4-devsecops11.png[500,400]
 |Password: gogs
 |===
 +
-.. gogsadminアカウント内のspring-petclinicリポジトリを選択します:
+.. gogsアカウント内のspring-petclinicリポジトリを選択します:
 +
 image:cicd/lab4-devsecops12.png[400,700]
 +
@@ -205,9 +205,9 @@ image:cicd/lab4-devsecops24.png[400,700]
 +
 image:cicd/lab4-devsecops25.png[600,700]
 +
-... ``gogsadmin``をクリックします。このラボのために2つのリポジトリが用意されています。
+... ``gogs``をクリックします。このラボのために2つのリポジトリが用意されています。
 +
-gogsadminユーザの認証情報は以下の通りです:
+gogsユーザの認証情報は以下の通りです:
 +
 |===
 |User: gogs
