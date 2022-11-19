@@ -34,10 +34,30 @@ DevSecOpsのCI/CDパイプラインでは、次のような技術を使用しま
 - https://gatling.io/[Gatling]
 - https://www.zaproxy.org/[Zap Proxy]
 
+[#setup]
+== セットアップ
+=== OpenShift Pipelines と OpenShift GitOps のインストール
+まずはじめに、OpenShift Pipelines と OpenShift GitOps をインストールします。 +
+OpenShift Pipelines と OpenShift GitOps はそれぞれ Operator が用意されており、OpenShift Web コンソールの OperatorHub から簡単にインストールすることができます。
+
+Web コンソールに cluster-admin でログインしたら、左のメニューから "Operators" > "OperatorHub" を選択し、OperatorHub の画面に移ります。 +
+OperatorHub の画面で、Red Hat OpenShift Pipelines の Operator を検索し、これをクリックします。
+
+image:cicd/lab4-pipelines-install-01.png[600,800]
+image:cicd/lab4-pipelines-install-02.png[600,800]
+image:cicd/lab4-pipelines-install-03.png[600,800]
+
+同様に、Red Hat OpenShift GitOps もインストールします。
+
+image:cicd/lab4-pipelines-install-01.png[600,800]
+image:cicd/lab4-pipelines-install-02.png[600,800]
+image:cicd/lab4-pipelines-install-03.png[600,800]
+
+
 [#ci]
 == 継続的インテグレーション
 
-この最初のモジュールでは、サンプルで用意しているセキュアなパイプラインを OpenShift Pipeline で実行し、各ステップを確認してみます。 +
+このモジュールでは、サンプルで用意しているセキュアなパイプラインを OpenShift Pipelines で実行し、各ステップを確認してみます。 +
 このラボでは、Tekton パイプラインの開始方法と、開発ライフサイクル内でセキュリティと gitops ツールを統合するためのタスクの使用方法を学習します。
 
 . パイプラインを開始するには、3つの方法があります。以下の3つのOptionいずれかで、パイプラインを開始してください:
@@ -48,7 +68,7 @@ DevSecOpsのCI/CDパイプラインでは、次のような技術を使用しま
 +
 image:cicd/lab4-devsecops04.png[200,200]
 +
-.. ocp-workshop プロジェクトに移動します。
+.. ``cicd`` プロジェクトに移動します。
 +
 image:cicd/lab4-devsecops05.png[200,200]
 +
@@ -76,7 +96,7 @@ image:cicd/lab4-devsecops08.png[200,700]
 [source]
 
 |===
-|oc create -f https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/pipeline-build-dev-run.yaml -n ocp-workshop
+|oc create -f https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/pipeline-build-dev-run.yaml -n cicd
 
 |===
 +
@@ -123,7 +143,7 @@ image:cicd/lab4-devsecops14.png[400,700]
 +
 image:cicd/lab4-devsecops04.png[200,200]
 +
-. ``ocp-workshop``プロジェクトが選択されていることを確認してください。
+. ``cicd``プロジェクトが選択されていることを確認してください。
 +
 image:cicd/lab4-devsecops15.png[300,300]
 +
@@ -313,7 +333,7 @@ spring-petclinicビルドのポリシーを迂回する例外を追加したい�
 .. *image-check* タスクのログを調べると、以下のような失敗の原因となるメッセージが見つかります:
 +
 |===
-|✗ Image image-registry.openshift-image-registry.svc:5000/ocp-workshop/spring-petclinic@sha256:ece54d2923654c36f4e97bc0410f5c027871c5b7483e977cfc6c2bd56fef625d and '*ERROR: Policy "Fixable Severity at least Important"*'
+|✗ Image image-registry.openshift-image-registry.svc:5000/cicd/spring-petclinic@sha256:ece54d2923654c36f4e97bc0410f5c027871c5b7483e977cfc6c2bd56fef625d and '*ERROR: Policy "Fixable Severity at least Important"*'
 |===
 +
 .. `ワッフルアイコン` image:cicd/lab4-devsecops42.png[20,20] をクリックしてコンソールリンクを表示 → 以下のように `Red Hat Advanced Cluster Security For Kubernetes` を選択します。
@@ -350,10 +370,10 @@ image:cicd/lab4-devsecops48_new.png[300,700]
 * Exclude imagesセクションで、`Excluded Images (Build Lifecycle only)` リストのオプションをフィルタリングするために以下をタイプします:
 +
 |===
-|image-registry.openshift-image-registry.svc:5000/ocp-workshop/spring-petclinic
+|image-registry.openshift-image-registry.svc:5000/cicd/spring-petclinic
 |===
 +
-* ``Create "image-registry.openshift-image-registry.svc:5000/ocp-workshop/spring-petclinic"``Imageを選択してください。
+* ``Create "image-registry.openshift-image-registry.svc:5000/cicd/spring-petclinic"``Imageを選択してください。
 +
 image:cicd/lab4.2-5-exclude-image_new.png[300,700]
 +
@@ -605,9 +625,9 @@ image:cicd/lab4-devsecops93.png[300,700]
 . コマンドターミナルから新しい更新タスクを適用します:
 +
 |===
-|kubectl apply -f https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/s2ijava-mgr.yaml --namespace=ocp-workshop
+|kubectl apply -f https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/s2ijava-mgr.yaml --namespace=cicd
 |または
-|oc apply -f https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/s2ijava-mgr.yaml  -n ocp-workshop
+|oc apply -f https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/s2ijava-mgr.yaml  -n cicd
 |===
 +
 . OpenShift Dev UI を開き、パイプラインを再実行すると、デプロイメントが成功しました。developersの皆さん、おめでとうございます!
