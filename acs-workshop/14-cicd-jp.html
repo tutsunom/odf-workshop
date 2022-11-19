@@ -470,22 +470,70 @@ OperatorHub の画面で、Red Hat OpenShift Pipelines の Operator を検索し
 <p><span class="image"><img src="_images/cicd/lab4-pipelines-install-01.PNG" alt="600" width="800"></span></p>
 </div>
 <div class="paragraph">
-<p><span class="image unresolved"><img src="cicd/lab4-pipelines-install-02.png" alt="600" width="800"></span></p>
+<p>画面の右側に Operator の詳細が表示されます。上部にある "Install" のボタンをクリックします。</p>
 </div>
 <div class="paragraph">
-<p><span class="image unresolved"><img src="cicd/lab4-pipelines-install-03.png" alt="600" width="800"></span></p>
+<p><span class="image"><img src="_images/cicd/lab4-pipelines-install-02.PNG" alt="600" width="800"></span></p>
+</div>
+<div class="paragraph">
+<p>OpenShift Pipelines Operator の channel や Installation mode などの設定画面が表示されます。<strong>設定は変更せず、デフォルトの設定のまま</strong>下部にある "Install" のボタンをクリックします。これで自動的にインストールが始まります。<br>
+(設定項目の選択肢が図と異なることがありますが、デフォルトのままで構いません)</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-pipelines-install-03.PNG" alt="600" width="800"></span></p>
+</div>
+<div class="paragraph">
+<p>再度左のメニューから "Operators" &gt; "Installed Operators" を選択し、インストールされている Operator の一覧に、OpenShift Pipelines Operator が表示されていることを確認します。Operator の Status が "Succeeded" となるまで待ちます。
+(おおむね5分も待てばよいでしょう)</p>
 </div>
 <div class="paragraph">
 <p>同様に、Red Hat OpenShift GitOps もインストールします。</p>
 </div>
 <div class="paragraph">
-<p><span class="image unresolved"><img src="cicd/lab4-gitops-install-01.png" alt="600" width="800"></span></p>
+<p><span class="image"><img src="_images/cicd/lab4-gitops-install-01.PNG" alt="600" width="800"></span></p>
 </div>
 <div class="paragraph">
-<p><span class="image unresolved"><img src="cicd/lab4-gitops-install-02.png" alt="600" width="800"></span></p>
+<p><span class="image"><img src="_images/cicd/lab4-gitops-install-02.PNG" alt="600" width="800"></span></p>
 </div>
 <div class="paragraph">
-<p><span class="image unresolved"><img src="cicd/lab4-gitops-install-03.png" alt="600" width="800"></span></p>
+<p>OpenShift GitOps Operator の channel や Installation mode などの設定画面が表示されます。<strong>設定は変更せず、デフォルトの設定のまま</strong>下部にある "Install" のボタンをクリックします。これで自動的にインストールが始まります。<br>
+(設定項目の選択肢が図と異なることがありますが、デフォルトのままで構いません)</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-gitops-install-03.PNG" alt="600" width="800"></span></p>
+</div>
+<div class="paragraph">
+<p>再度左のメニューから "Operators" &gt; "Installed Operators" を選択し、インストールされている Operator の一覧に、OpenShift GitOps Operator が表示されていることを確認します。Operator の Status が "Succeeded" となるまで待ちます。
+(おおむね5分も待てばよいでしょう)</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_サンプルパイプラインのデプロイ"><a class="anchor" href="#_サンプルパイプラインのデプロイ"></a>サンプルパイプラインのデプロイ</h3>
+<div class="paragraph">
+<p>OpenShift Pipelines と OpenShift GitOps を使ってパイプラインを手で構築してもよいのですが、ここではサンプルで用意しているパイプラインを使って CI と CD を体験します。<br>
+次のように Git リポジトリをクローンして、シェルスクリプトを実行します。シェルスクリプトでは Ansible の Playbook が実行され、自動的にパイプラインが作られます。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd
+git clone <a href="https://github.com/tutsunom/Devsecops-CI-CDPipeLineDemo.git" class="bare">https://github.com/tutsunom/Devsecops-CI-CDPipeLineDemo.git</a>
+cd Devsecops-CI-CDPipeLineDemo
+./install.sh</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+前段の System Policies の演習の最後に、<strong>"Fixable Severity at least Important"</strong> Policy を "Build" と "Deploy" のステージで enforce するように設定していると、Playbook は途中で fail します。<br>
+これは、パイプラインで使用するアプリケーションがこの Policy に抵触し、その結果 Pod がデプロイできないためです。<br>
+<strong>"Fixable Severity at least Important"</strong> Policy を "Deploy" で enforce しないように修正して、再度 Playbook を実施して下さい。
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -500,7 +548,7 @@ OperatorHub の画面で、Red Hat OpenShift Pipelines の Operator を検索し
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>パイプラインを開始するには、3つの方法があります。以下の3つのOptionいずれかで、パイプラインを開始してください:</p>
+<p>パイプラインを開始するには、いくつかの方法があります。以下のOptionいずれかで、パイプラインを開始してください:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -556,28 +604,7 @@ OperatorHub の画面で、Red Hat OpenShift Pipelines の Operator を検索し
 </div>
 </li>
 <li>
-<p>Option 2: コマンドラインからパイプラインを起動する場合。
-コマンドラインはテスト中にパイプラインを開始するのに便利な方法で、PRやgitへのpushをシミュレートしてパイプラインを起動させる方法です。CLIでパイプラインを開始するのが好きなユーザー向けです。</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>実行:</p>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 100%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">oc create -f <a href="https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/pipeline-build-dev-run.yaml" class="bare">https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/pipeline-build-dev-run.yaml</a> -n cicd</th>
-</tr>
-</thead>
-</table>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>Option 3: 新しいコードがgit repoにpushされると、パイプラインを開始するトリガーにもなります。このラボでは、git repo は Gogs です。以下の手順は、「Gogs」git repo経由でコードをプッシュするためのものです。
+<p>Option 2: 新しいコードがgit repoにpushされると、パイプラインを開始するトリガーにもなります。このラボでは、git repo は Gogs です。以下の手順は、「Gogs」git repo経由でコードをプッシュするためのものです。
 このオプションは、開発者の観点からすると最もポピュラーなものかもしれません。PR や git リポジトリへのプッシュからパイプラインが始まり、webhook が自動的にパイプラインを開始します。</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
@@ -607,10 +634,10 @@ OperatorHub の画面で、Red Hat OpenShift Pipelines の Operator を検索し
 </colgroup>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">User: gogsadmin</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User: gogs</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Password: openshift</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password: gogs</p></td>
 </tr>
 </tbody>
 </table>
@@ -696,7 +723,7 @@ OperatorHub の画面で、Red Hat OpenShift Pipelines の Operator を検索し
 <p><span class="image"><img src="_images/cicd/lab4-devsecops19.png" alt="500" width="700"></span></p>
 </div>
 <div class="paragraph">
-<p>次のモジュール、Lab 4.2では、何が起こったのか確認し、それを安全に解決する方法について説明します。</p>
+<p>次のモジュールでは、何が起こったのか確認し、それを安全に解決する方法について説明します。</p>
 </div>
 <div class="paragraph">
 <p>[注意] 手動でパイプラインを実行するトリガーに加え、Gogs gitサーバー上のspring-petclinic gitリポジトリにpushするたびに、パイプラインが実行されます。</p>
@@ -736,10 +763,10 @@ OperatorHub の画面で、Red Hat OpenShift Pipelines の Operator を検索し
 </colgroup>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">User: gogsadmin</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User: gogs</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Pass: openshift</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pass: gogs</p></td>
 </tr>
 </tbody>
 </table>
