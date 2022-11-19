@@ -1,5 +1,5 @@
-name: acs-workshop
-title: ACS Workshop
+name: odf-workshop
+title: ODF Workshop
 version: master
 nav:
   - modules/ROOT/nav.adoc

@@ -84,8 +84,8 @@ Delete all of the following part from the `project-request` manifest and save it
 
 == Get tutorial sources
 
-:tutorial-url: https://github.com/tutsunom/acs-workshop.git
-:folder: acs-workshop
+:tutorial-url: https://github.com/tutsunom/odf-workshop.git
+:folder: odf-workshop
 include::https://raw.githubusercontent.com/redhat-developer-demos/rhd-tutorial-common/master/download-sources.adoc[]
 
 

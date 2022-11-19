@@ -1,7 +1,7 @@
 :experimental:
 :source-highlighter: highlightjs
 :branch: main
-:github-repo: https://github.com/tutsunom/acs-workshop/blob/{branch}
+:github-repo: https://github.com/tutsunom/odf-workshop/blob/{branch}
 :profile: acs
 :minikube-version: v1.20.0
 :ocp-version: 4.10.36

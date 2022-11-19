@@ -2,9 +2,9 @@ runtime:
   cache_dir: ./.cache/antora
 
 site:
-  title: ACS Workshop (Dev Mode)
+  title: ODF Workshop (Dev Mode)
   url: http://localhost:3000/rhs-build-course/index.html
-  start_page: acs-workshop::index.adoc
+  start_page: odf-workshop::index.adoc
 
 content:
   sources:
@@ -13,7 +13,7 @@ content:
       start_path: documentation
 asciidoc:
   attributes:
-    title: ACS Workshop (Dev Mode)
+    title: ODF Workshop (Dev Mode)
   extensions:
     - ./lib/remote-include-processor.js
     - ./lib/tab-block.js

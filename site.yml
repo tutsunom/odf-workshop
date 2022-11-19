@@ -2,9 +2,9 @@ runtime:
   cache_dir: ./.cache/antora
 
 site:
-  title: ACS Workshop
-  url: https://tutsunom.github.io/acs-workshop
-  start_page: acs-workshop::index.adoc
+  title: ODF Workshop
+  url: https://tutsunom.github.io/odf-workshop
+  start_page: odf-workshop::index.adoc
 
 content:
   sources:
