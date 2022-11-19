@@ -71,8 +71,6 @@
 ** xref:11-integrations.adoc#integrate_acs_sso[Integrate RHACS with OpenShift RHSSO]
 
 * xref:12-platform_configuration.adoc[RHACS Secure Cluster Management]
-** xref:12-platform_configuration.adoc#clusters[RHACS Secured Clusters]
-** xref:12-platform_configuration.adoc#clusters_vuln[Add vulnerabilities to the Secured Cluster]
 ** xref:12-platform_configuration.adoc#system_configuration[RHACS System Configuration]
 ** xref:12-platform_configuration.adoc#system_health[RHACS System Health]
 ** xref:12-platform_configuration.adoc#access_control[RHACS Access Control]
@@ -81,9 +79,13 @@
 ** xref:13-cicd#install_devsecops_pipelines[Installing RHACS DevSecOps Pipeline]
 ** xref:13-cicd#run_devsecops_pipelines[Running the demo of DevSecOps Pipeline]
 
-* xref:14-apicli.adoc[RHACS API and CLI]
-** xref:14-apicli.adoc#cli-overview[RHACS CLI Overview]
-** xref:14-apicli.adoc#cli-integration[RHACS CLI Integration]
-** xref:14-apicli.adoc#api-overview[RHACS API Overview]
+* xref:14-cicd-jp.adoc[RHACSを使用したアプリケーションへの自動化セキュリティの実装とDevSecOpsの構築]
+** xref:14-cicd-jp#ci[継続的インテグレーション]
+** xref:14-cicd-jp#devsecops[ACSを利用したDevSecOpsのステップ]
+** xref:14-cicd-jp#cd[GitOpsを使った継続的デリバリー]
+** xref:14-cicd-jp#dast[PostCI - ダイナミックアプリケーションセキュリティとテスト (DAST)]
+** xref:14-cicd-jp#policy_violation[セキュリティポリシーとCI]
+** xref:14-cicd-jp#cd[GitOpsを使った継続的デリバリー]
+** xref:14-cicd-jp#troubleshooting[トラブルシューティング]
 
 * xref:15-contributors.adoc[Contributors]
