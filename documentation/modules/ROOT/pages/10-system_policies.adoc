@@ -70,5 +70,3 @@ Security gets their enforcement, and DevOps sees a “normal” failure from the
 * Click Save.
 
 image::policies/04-policies.png[RHACS Policies 4, 400]
-
-NOTE: TODO add new policies section

@@ -30,7 +30,7 @@ image::vulnerabilities/top-riskiest-images.png[Top Riskies Images, 600]
 +
 We can see the images which are more exposed. Not only we can see the number of CVEs affecting the images but which of them are fixable. You can click and get information about the CVEs and the fixable ones.
 
-* In the Top Riskiest Images, click on #4, mastercard-processor:latest.
+* In the Top Riskiest Images, click on #5, mastercard-processor:latest.
 +
 image::vulnerabilities/02-vuln.png[Vuln 2, 800]
 +
@@ -44,7 +44,7 @@ You can also see, at the top, the warning that CVE data is stale - that this ima
 +
 At the bottom, the Image Findings section focuses on Fixable vulnerabilities, sorted by CVSS.
 
-* Under the Image Findings section, Click on Dockerfile tab:
+* Click on Dockerfile section:
 +
 image::vulnerabilities/03-vuln.png[Vuln 3, 700]
 +
@@ -90,7 +90,7 @@ As you can see only the active images are displayed to check the vulnerabilities
 [#review_cve_images]
 == Image CVE Vulnerability Analysis
 
-* Click back to the Fixable CVEs tab.
+* Select ``visa-processor:latest-v2`` image, go to the Observed CVEs tab in Image Findings section, and select ``Fixable`` and ``True`` on the filter bar.
 +
 The CVE list for each image focuses on the severe - CVSS >7 - and the “fixable,” where the upstream package maintainers have published a fix. 
 
@@ -122,7 +122,7 @@ RHACS can use other sources of information in OpenShift to judge the risk that a
 
 The first risk factor - is the vulnerable component actually in a running deployment?
 
-* Click on the 6 Deployments button in the Related Entities column on the right.
+* Click on the Deployments button in the Related Entities column on the right.
 +
 image::vulnerabilities/06-vuln.png[Vuln 6, 700]
 +

@@ -1,15 +1,23 @@
 = Setup
 include::_attributes.adoc[]
 
-[#prerequisite]
 == Setup OpenShift Cluster
 :profile: acs
 
-To run OpenShift4, you need to have one provisioned environment using https://demo.redhat.com[RHPDS] - Go to Catalog -> Openshift 4.10 Workshop.
+To run OpenShift4, you need to have one provisioned environment using https://demo.redhat.com[RHPDS].
+Go to Catalog -> Openshift 4.10 Workshop -> Order.
+
+== Login OpenShift Web console
+
+Once you have a workshop environment, you can also access OpenShift web console. +
+The web console URL is shown in RHPDS as well as cluster admin username/password.
+
+NOTE: If the language setting is NOT set to "English", it might to be good to set it "English" via User Preference menu.  +
+If you continue this workshop without "English" setting, the pipeline will not display properly in the DevSecOps lab.
 
 == Connect to your bastion server
 
-Once you have a workshop environment, you need to access the bastion server in your environment via SSH.
+You also need to access the bastion server in your environment via SSH.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]	
@@ -35,14 +43,45 @@ Server Version: {ocp-version}
 Kubernetes Version: {kubernetes-version}
 ----
 
-== Login OpenShift Web console
+== Edit the default project template
 
-If you have a workshop environment, you can access OpenShift web console.
+Then first of all, the default Project Template must be edited. +
+In the Openshift 4.10 Workshop environment provided by RHPDS, a Limit Range is automatically set for newly created projects. This can be an obstacle to the smooth running of the Workshop.
 
-The web console URL is shown in RHPDS as well as cluster admin username/password.
+Use the `oc edit` command to clear the Limit Range section.
 
+[.console-input]
+[source,bash,subs="attributes+,+macros"]	
+----	
+oc edit template project-request -n openshift-config
+----
 
-[#downloadtutorial]
+Delete all of the following part from the `project-request` manifest and save it.
+
+----
+- apiVersion: v1
+  kind: LimitRange
+  metadata:
+    name: ${PROJECT_NAME}-core-resource-limits
+    namespace: ${PROJECT_NAME}
+  spec:
+    limits:
+    - default:
+        cpu: 500m
+        memory: 1.5Gi
+      defaultRequest:
+        cpu: 50m
+        memory: 256Mi
+      max:
+        cpu: 4
+        memory: 6Gi
+      type: Container
+    - max:
+        cpu: 4
+        memory: 12Gi
+      type: Pod
+----
+
 == Get tutorial sources
 
 :tutorial-url: https://github.com/tutsunom/acs-workshop.git

@@ -15,7 +15,7 @@ image::install/00_operator_hub.png[ACS Operator 1, 800]
 +
 image::install/01_select_acs_operator.png[ACS Operator 2, 800]
 
-. Confirm default installation parameters (auto update, ``latest channel``, ``rhacs-operator`` namespace).
+. Confirm installation parameters (auto update, ``rhacs-3.70 channel``, ``rhacs-operator`` namespace).
 +
 image::install/02_install_acs_operator.png[ACS Operator 3, 800]
 
@@ -44,7 +44,18 @@ Log in to your OpenShift cluster and create a new ``stackrox`` namespace (using 
 oc new-project stackrox	
 ----
 
-The following is an example of the central custom resource. You can do this in two ways, via the web console or via the CLI.
+Then, create a secret with a password to be used by the admin user in ACS Central. You will specify this secret later when you create ACS Central. +
+This is not a mandatory work, but you should set `stackrox` as the admin password with `acs-password` secret for later labs in this workshop.
+
+NOTE: If you create Central without specifying a Secret, a random string will be set as the admin user's password. 
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]	
+----	
+oc create secret generic acs-password --from-literal=password=stackrox -n stackrox
+----
+
+Then, let's create Central. The following is an example of the central custom resource. You can do this in two ways, via the web console or via the CLI.
 
 [.console-input]
 [source,yaml,subs="attributes+,+macros"]	
@@ -64,6 +75,8 @@ spec:
         enabled: false
       route:
         enabled: true
+    adminPasswordSecret:
+      name: acs-password
     persistence:
       persistentVolumeClaim:
         claimName: stackrox-db
@@ -76,7 +89,7 @@ spec:
         maxReplicas: 5
         minReplicas: 2
         replicas: 3
-    scannerComponent: Enabled	
+    scannerComponent: Enabled
 ----
 
 [#install_acs_central_web_console]
@@ -126,19 +139,7 @@ oc get pods -n stackrox -w
 
 === RHACS login
 
-. Once the installation is complete, obtain and copy the generated admin password from the ``central-htpasswd`` secret.
-.. Using the command line:
-+
-[.console-input]
-[source,bash,subs="attributes+,+macros"]	
-----	
-oc -n stackrox get secret central-htpasswd -o go-template='{{index .data "password" | base64decode}}'
-----
-.. Using the web console, **Secrets** view from the ``Developer`` perspective (search for ``central-htpasswd`` secret):
-+
-image::install/05_1_login_password.png[ACS Operator 61, 800]
-
-. Extract the hostname of the generated route from the command line as follows or using the ``Topology`` view from the web console.
+. Once the installation is complete, extract the hostname of the generated route from the command line as follows or using the ``Topology`` view from the web console.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]	
@@ -146,7 +147,7 @@ image::install/05_1_login_password.png[ACS Operator 61, 800]
 oc get routes/central -n stackrox -o jsonpath='{.spec.host}'
 ----
 
-. Login to https://<route_hostname> using the ``admin`` username and the password extracted before.
+. Login to https://<route_hostname> using the ``admin`` username and the password ``stackrox``.
 +
 image::install/05_2_login.png[ACS Operator 62, 800]
 
@@ -256,8 +257,10 @@ IMPORTANT: Independent of which option to install you used, you need to deploy t
 [.console-input]
 [source,bash,subs="attributes+,+macros"]	
 ----
+sudo dnf install -y ansible
 ansible-galaxy collection install kubernetes.core
-pip install kubernetes jmespath
+sudo pip3 install kubernetes openshift jmespath
+cd
 git clone https://github.com/rh-mobb/rhacs-demo
 cd rhacs-demo
 ----
@@ -269,9 +272,8 @@ WARNING: you must be logged to the OpenShift cluster before you execute the play
 [.console-input]
 [source,bash,subs="attributes+,+macros"]	
 ----
-ansible-playbook rhacs-demo.yaml -e stackrox_central_admin_password=[your_pass]<1>
+ansible-playbook rhacs-demo.yaml -e stackrox_central_admin_password=stackrox
 ----
-<1> The same password you obtained in the step 1 of the ``ACS login`` section.
 
 . After the Playbook execution (and if everything worked properly), the output will be the following:
 +
@@ -288,14 +290,6 @@ ok: [localhost] => {
 == Deploying Apps - Optional
 
 If you do not plan to follow the remaining sections (which are based on deploying the demo) and prefer to play and make your own findings, simply follow the steps below:
-
-. Create a new project:
-+
-[.console-input]
-[source,bash,subs="attributes+,+macros"]	
-----	
-oc new-project test
-----
 
 . Start some applications with critical vulnerabilities:
 +

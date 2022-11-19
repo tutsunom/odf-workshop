@@ -160,7 +160,7 @@ oc get csv -n openshift-compliance | grep compliance
 [source,bash,subs="attributes+,+macros"]	
 ----	
 oc get csv -n openshift-compliance | grep compliance
-compliance-operator.v0.1.39   Compliance Operator   0.1.39   Succeeded
+compliance-operator.v0.1.57   Compliance Operator   0.1.57   Succeeded
 ----
 
 * Verify that the Compliance Operator is up and running:

@@ -104,7 +104,7 @@ image::integrations/02-oauth.png[OAuth 2, 200]
 . Enter a Name for your provider and select a default role which is assigned to any user who can authenticate.
 It is recommended to select the role None, so new accounts will have no privileges in RHACS.
 With Rules you can assign roles to specific users, based on their userid, name, mail address or groups.
-For example the user with the name admin gets the role Admin assigned. On the other hand the user1 will have the role of Continuous Integration.
+For example the user with the name ``opentlc-mgr`` gets the role Admin assigned. On the other hand the ``user1`` will have the role of Continuous Integration.
 +
 image::integrations/03-oauth.png[OAuth 3, 800]
 
@@ -116,7 +116,7 @@ image::integrations/04-oauth.png[OAuth 4, 800]
 +
 image::integrations/05-oauth.png[OAuth 5, 400]
 
-. Login first with the admin user
+. Login first with the ``opentlc-mgr`` user
 +
 image::integrations/06-oauth.png[OAuth 6, 400]
 
@@ -182,8 +182,8 @@ kind: Subscription
 metadata:
   name: rhsso-operator
 spec:
-  channel: alpha
-  installPlanApproval: Manual
+  channel: stable
+  installPlanApproval: Automatic
   name: rhsso-operator
   source: redhat-operators
   sourceNamespace: openshift-marketplace
