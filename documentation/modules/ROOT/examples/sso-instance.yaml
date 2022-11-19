@@ -3,6 +3,8 @@ kind: Keycloak
 metadata:
   name: rhacs-keycloak
   namespace: single-sign-on
+  labels:
+    app: sso
 spec:
   externalAccess:
     enabled: true
