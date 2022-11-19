@@ -538,13 +538,25 @@
 <div class="ulist">
 <ul>
 <li>
+<p>Go to your <code>TUTORIAL_HOME</code> directory:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd $TUTORIAL_HOME</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
 <p>Create a Namespace object YAML file by running:</p>
 </li>
 </ul>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f co-ns.yaml</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f labitem/co-ns.yaml</code></pre>
 </div>
 </div>
 <div class="listingblock console-output">
@@ -562,6 +574,11 @@ metadata:
 </li>
 </ul>
 </div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f labitem/co-og.yaml</code></pre>
+</div>
+</div>
 <div class="listingblock console-output">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">apiVersion: operators.coreos.com/v1
@@ -574,17 +591,17 @@ spec:
   - openshift-compliance</code></pre>
 </div>
 </div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f co-og.yaml</code></pre>
-</div>
-</div>
 <div class="ulist">
 <ul>
 <li>
 <p>Create the Compliance Operator Subscription object YAML file by running:</p>
 </li>
 </ul>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f labitem/co-subs.yaml</code></pre>
+</div>
 </div>
 <div class="listingblock console-output">
 <div class="content">
@@ -599,11 +616,6 @@ spec:
   name: compliance-operator
   source: redhat-operators
   sourceNamespace: openshift-marketplace</code></pre>
-</div>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f co-subs.yaml</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -659,7 +671,7 @@ rhcos4-openshift-compliance-pp-c7b548bd-k4sz2   1/1     Running   0          3m2
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f co-scan.yaml</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f labitem/co-scan.yaml</code></pre>
 </div>
 </div>
 <div class="listingblock console-output">
@@ -852,7 +864,7 @@ deployed."</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Navigate to Platform Configuration &#8594; Policy Management</p>
+<p>Navigate to Platform Configuration &#8594; Policies</p>
 </li>
 <li>
 <p>Find and click on the policy named, "90-day Image Age" which by default is second in the list. We&#8217;re not going to change this policy other than to enable enforcement.</p>
@@ -864,10 +876,10 @@ deployed."</p>
 <p>Click Next at the bottom panel to get to the Policy Behavior page.</p>
 </li>
 <li>
-<p>On the response method options, click Inform and Enforce.</p>
+<p>On the response method options, click "Inform and enforce".</p>
 </li>
 <li>
-<p>Click on for both Build and Deploy enforcement.</p>
+<p>Toggle on for both "Build" and "Deploy" enforcement.</p>
 </li>
 <li>
 <p>Click Next at the bottom panel until you get to Review Policy page.</p>
@@ -876,7 +888,7 @@ deployed."</p>
 <p>Click Save.</p>
 </li>
 <li>
-<p>At the main Policy Management page, find the Policy named, "Latest tag" and repeat steps 3 - 6 to enable enforcement and save the policy.</p>
+<p>At the main Policies page, find the Policy named, "Latest tag" and repeat steps 3 - 6 to enable enforcement and save the policy.</p>
 </li>
 </ul>
 </div>
@@ -919,7 +931,7 @@ deployed."</p>
 <p>To avoid rejecting any other deployments to the cluster, you should disable the enforcement after viewing the updated RHACS results.</p>
 </div>
 <div class="paragraph">
-<p>Navigate to Platform Configuration &#8594; Policy Management
+<p>Navigate to Platform Configuration &#8594; Policies
 Find and click on the policy named, "90-day Image Age" which by default is second in the list. Click Edit to get to the Policy settings.</p>
 </div>
 <div class="ulist">
@@ -931,7 +943,7 @@ Find and click on the policy named, "90-day Image Age" which by default is secon
 <p>Click Next at the bottom panel to get to the Policy Behavior page.</p>
 </li>
 <li>
-<p>On the response method options, click Inform.</p>
+<p>On the response method options, click "Inform".</p>
 </li>
 <li>
 <p>Click Next at the bottom panel until you get to Review Policy page.</p>
@@ -940,7 +952,7 @@ Find and click on the policy named, "90-day Image Age" which by default is secon
 <p>Click Save.</p>
 </li>
 <li>
-<p>At the main Policy Management page, find the Policy named, "Latest tag" and repeat the steps to disable enforcement and save the policy.</p>
+<p>At the main Policies page, find the Policy named, "Latest tag" and repeat the steps to disable enforcement and save the policy.</p>
 </li>
 </ul>
 </div>

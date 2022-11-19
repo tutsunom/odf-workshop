@@ -842,10 +842,13 @@ you must be logged to the OpenShift cluster before you execute the playbook.
 <p>After the Playbook execution (and if everything worked properly), the output will be the following:</p>
 <div class="listingblock console-output">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">TASK [ocp4_workload_stackrox_demo_apps : post_workload tasks complete] ********************************************************
-ok: [localhost] =&gt; {
-    "msg": "Post-Workload Tasks completed successfully."
-}</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">TASK [ocp4_deploy_acs_demo_apps : Lock baselines] ****************************************************************************************
+ok: [localhost] =&gt; (item=visa-processor)
+ok: [localhost] =&gt; (item=backend-atlas)
+ok: [localhost] =&gt; (item=asset-cache)
+
+PLAY RECAP *******************************************************************************************************************************
+localhost                  : ok=35   changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0</code></pre>
 </div>
 </div>
 </li>
@@ -863,6 +866,11 @@ ok: [localhost] =&gt; {
 <ol class="arabic">
 <li>
 <p>Start some applications with critical vulnerabilities:</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc new-project test</code></pre>
+</div>
+</div>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc run shell --labels=app=shellshock,team=test-team \
