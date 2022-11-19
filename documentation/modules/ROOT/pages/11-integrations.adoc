@@ -19,7 +19,7 @@ Generate a namespace and extract the token of the default service accout by the 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]	
 ----	
-oc apply -f labitem/stackrox-integration-internal-registry.sh
+bash labitem/stackrox-integration-internal-registry.sh
 ----
 
 [.console-output]
@@ -47,8 +47,6 @@ Fill in the fields as shown in figure 1, giving the integration a unique name th
 Press the test button to validate the connection and press “save” when the test is successful.
 
 image::integrations/03-registry_ocp_internal.png[RHACS Integrations 1, 800]
-
-TODO: Finish the integration!!
 
 [#integrate_acs_slack]
 == Integrate RHACS Notifications with Slack
