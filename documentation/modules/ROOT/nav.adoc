@@ -85,7 +85,7 @@
 ** xref:14-cicd-jp#cd[GitOpsを使った継続的デリバリー]
 ** xref:14-cicd-jp#dast[PostCI - ダイナミックアプリケーションセキュリティとテスト (DAST)]
 ** xref:14-cicd-jp#policy_violation[セキュリティポリシーとCI]
-** xref:14-cicd-jp#cd[GitOpsを使った継続的デリバリー]
+** xref:14-cicd-jp#fiximage[ボーナスラボ]
 ** xref:14-cicd-jp#troubleshooting[トラブルシューティング]
 
 * xref:15-contributors.adoc[Contributors]

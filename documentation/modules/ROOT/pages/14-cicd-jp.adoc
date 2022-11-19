@@ -560,7 +560,7 @@ image:cicd/lab4-devsecops87.png[300,700]
 
 
 [#fiximage]
-== ボーナスラボ：Image を修正する
+== ボーナスラボ: Image を修正する
 
 ``bad image``のビルドに強制合格するImageへの移行を示せる、完全なデモのために、Image ビルドのTektonタスクを更新し、Imageを修正することができます。
 この例では、ACS で ``Red Hat Package Manager in Image`` ポリシーの実施を有効にしています。これは、ベースイメージに yum と rpm の両方のパッケージマネージャーが存在するため、イメージチェックでパイプラインが失敗することになります。
