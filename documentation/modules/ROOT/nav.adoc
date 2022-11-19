@@ -80,6 +80,7 @@
 //** xref:13-cicd#run_devsecops_pipelines[Running the demo of DevSecOps Pipeline]
 
 * xref:14-cicd-jp.adoc[RHACSを使用したアプリケーションへの自動化セキュリティの実装とDevSecOpsの構築]
+** xref:14-cicd-jp#setup[セットアップ]
 ** xref:14-cicd-jp#ci[継続的インテグレーション]
 ** xref:14-cicd-jp#devsecops[ACSを利用したDevSecOpsのステップ]
 ** xref:14-cicd-jp#cd[GitOpsを使った継続的デリバリー]
