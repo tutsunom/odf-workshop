@@ -3,10 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>RHACS Secure Cluster Management :: ACS Workshop</title>
-    <link rel="canonical" href="https://tutsunom.github.io/acs-workshop/acs-workshop/12-platform_configuration.html">
-    <link rel="prev" href="11-integrations.html">
-    <link rel="next" href="14-cicd-jp.html">
+    <title>Welcome to Red Hat Advanced Cluster Security Workshop :: ODF Workshop</title>
+    <link rel="canonical" href="https://tutsunom.github.io/odf-workshop/odf-workshop/index.html">
+    <link rel="next" href="01-setup.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 <link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
@@ -18,7 +17,7 @@
     <div class="navbar-brand">
       <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
           src="../_/img/header_logo.png" height="40px" alt="Red Hat Developer Program"></a>
-      <a class="navbar-item" href="https://tutsunom.github.io/acs-workshop">ACS Workshop</a>
+      <a class="navbar-item" href="https://tutsunom.github.io/odf-workshop">ODF Workshop</a>
       <button class="navbar-burger" data-target="topbar-nav">
         <span></span>
         <span></span>
@@ -62,12 +61,12 @@
   </nav>
 </header>
 <div class="body">
-<div class="nav-container" data-component="acs-workshop" data-version="master">
+<div class="nav-container" data-component="odf-workshop" data-version="master">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
   <nav class="nav-menu">
-    <h3 class="title"><a href="index.html">ACS Workshop</a></h3>
+    <h3 class="title"><a href="index.html">ODF Workshop</a></h3>
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
@@ -293,18 +292,18 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="12-platform_configuration.html">RHACS Secure Cluster Management</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#system_configuration">RHACS System Configuration</a>
+    <a class="nav-link" href="12-platform_configuration.html#system_configuration">RHACS System Configuration</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#system_health">RHACS System Health</a>
+    <a class="nav-link" href="12-platform_configuration.html#system_health">RHACS System Health</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#access_control">RHACS Access Control</a>
+    <a class="nav-link" href="12-platform_configuration.html#access_control">RHACS Access Control</a>
   </li>
 </ul>
   </li>
@@ -352,12 +351,12 @@
 </div>
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
-    <span class="title">ACS Workshop</span>
+    <span class="title">ODF Workshop</span>
     <span class="version">master</span>
   </div>
   <ul class="components">
     <li class="component is-current">
-      <span class="title">ACS Workshop</span>
+      <span class="title">ODF Workshop</span>
       <ul class="versions">
         <li class="version is-current">
           <a href="index.html">master</a>
@@ -372,219 +371,107 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="index.html" class="home-link"></a>
+  <a href="index.html" class="home-link is-current"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
-    <li><a href="index.html">ACS Workshop</a></li>
-    <li><a href="12-platform_configuration.html">RHACS Secure Cluster Management</a></li>
+    <li><a href="index.html">ODF Workshop</a></li>
+    <li><a href="index.html">Welcome to Red Hat Advanced Cluster Security Workshop</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/tutsunom/odf-workshop/edit/master/documentation/modules/ROOT/pages/12-platform_configuration.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/tutsunom/odf-workshop/edit/master/documentation/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">RHACS Secure Cluster Management</h1>
-<div class="sect1">
-<h2 id="system_configuration"><a class="anchor" href="#system_configuration"></a>RHACS System Configuration</h2>
+<h1 class="page">Welcome to Red Hat Advanced Cluster Security Workshop</h1>
+<div id="preamble">
 <div class="sectionbody">
-<div class="paragraph">
-<p>Check into the <a href="https://docs.openshift.com/acs/3.66/configuration/enable-alert-data-retention.html">official documentation</a> the different configuration tweaks that you can do in the RHACS cluster:</p>
-</div>
 <div class="imageblock">
 <div class="content">
-<img src="_images/multicluster/03_multi.png" alt="RHACS Multi 3" width="800">
+<img src="_images/acs-logo.svg" alt="RHACS Logo" width="400">
 </div>
+</div>
+</div>
+</div>
+<div class="sect1 text-center strong">
+<h2>Red Hat Advanced Cluster Security for Kubernetes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Red Hat Advanced Cluster Security for Kubernetes (Red Hat Advanced Cluster Security or RHACS) provides the tools and capabilities to address the security needs of a cloud-native development approach on Kubernetes.</p>
 </div>
 <div class="paragraph">
-<p>The options are:</p>
+<p>The RHACS solution offers visibility into the security of your cluster, vulnerability management, and security compliance through auditing, network segmentation awareness and configuration, security risk profiling, security-related configuration management, threat detection, and incident response. In addition, RHACS grants an ability to pull the actions from that tooling deep into the application code development process through APIs.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://docs.openshift.com/acs/3.66/configuration/enable-alert-data-retention.html">Data Retention Configuration</a></p>
-</li>
-<li>
-<p>Header Configuration</p>
-</li>
-<li>
-<p>Footer Configuration</p>
-</li>
-<li>
-<p>Login Notice Configuration</p>
-</li>
-<li>
-<p>Online Telemetry Data Collection</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>These security features represent the primary work any developer or administrator faces as they work across a range of environments, including multiple datacenters, private clouds, or public clouds that run Kubernetes clusters.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="system_health"><a class="anchor" href="#system_health"></a>RHACS System Health</h2>
+<h2>RHACS Features</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>The Red Hat Advanced Cluster Security for Kubernetes system health dashboard provides a single interface for viewing health related information about Red Hat Advanced Cluster Security for Kubernetes components.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/acs_features.png" alt="RHACS Features" width="800">
+</div>
 </div>
 <div class="paragraph">
-<p>To access the health dashboard:</p>
+<p>Using Red Hat Advanced Cluster Security for Kubernetes (Red Hat Advanced Cluster Security), you can gain comprehensive Kubernetes security that includes the following use cases:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>On the RHACS portal, navigate to Platform Configuration → System Health.</p>
+<p><strong>Visibility</strong>:  See your entire landscape of images, registries, containers, deployments, and runtime behavior.</p>
+</li>
+<li>
+<p><strong>Vulnerability Management</strong>: Identify and remediate vulnerabilities in both container images and Kubernetes across the entire software development life cycle.</p>
+</li>
+<li>
+<p><strong>Compliance</strong>: Audit your systems against CIS Benchmarks, NIST, PCI, and HIPAA, with interactive dashboards and one-click audit reports.</p>
+</li>
+<li>
+<p><strong>Network Segmentation</strong>: Visualize existing connections and enforce tighter segmentation using Kubernetes-native controls to reduce your blast radius.</p>
+</li>
+<li>
+<p><strong>Risk Profiling</strong>: See all your deployments ranked by risk level, using context from Kubernetes’ declarative data, to prioritize remediation.</p>
+</li>
+<li>
+<p><strong>Configuration Management</strong>: Apply best practices for Docker and Kubernetes to harden your environment for a more secure and stable application.</p>
+</li>
+<li>
+<p><strong>Threat Detection</strong>: Use rules, automated allow lists, and baselining to accurately identify suspicious activity in your running applications.</p>
+</li>
+<li>
+<p><strong>Incident Response</strong>: Take action, from failing builds and blocking deployments to killing pods and thwarting attacks, using Kubernetes for enforcement.</p>
 </li>
 </ul>
 </div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/multicluster/02_multi.png" alt="RHACS Multi 2" width="800">
-</div>
-</div>
-<div class="paragraph">
-<p>The health dashboard organizes information in the following groups:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><strong>Cluster Health</strong> - Shows the overall state of Red Hat Advanced Cluster Security for Kubernetes cluster.</p>
-</li>
-<li>
-<p><strong>Vulnerability Definitions</strong> - Shows the last update time of vulnerability definitions.</p>
-</li>
-<li>
-<p><strong>Image Integrations</strong> - Shows the health of all registries that you have integrated.</p>
-</li>
-<li>
-<p><strong>Notifier Integrations</strong> - Shows the health of any notifiers (Slack, email, Jira, or other similar integrations) that you have integrated.</p>
-</li>
-<li>
-<p><strong>Backup Integrations</strong> - Shows the health of any backup providers that you have integrated.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>The dashboard lists the following states for different components:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><strong>Healthy</strong> - The component is functional.</p>
-</li>
-<li>
-<p><strong>Degraded</strong> - The component is partially unhealthy. This state means the cluster is functional, but some components are unhealthy and require attention.</p>
-</li>
-<li>
-<p><strong>Unhealthy</strong> - This component is not healthy and requires immediate attention.</p>
-</li>
-<li>
-<p><strong>Uninitialized</strong> - The component has not yet reported back to Central to have its health assessed. An uninitialized state may sometimes require attention, but often components report back the health status after a few minutes or when the integration is used.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>The Cluster Overview shows information about your Red Hat Advanced Cluster Security for Kubernetes cluster health. It reports the health information about the following:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><strong>Collector Status</strong> - It shows whether the Collector pod that Red Hat Advanced Cluster Security for Kubernetes uses is reporting healthy.</p>
-</li>
-<li>
-<p><strong>Sensor Status</strong> - It shows whether the Sensor pod that Red Hat Advanced Cluster Security for Kubernetes uses is reporting healthy.</p>
-</li>
-<li>
-<p><strong>Sensor Upgrade</strong> - It shows whether the Sensor is running the correct version when compared with Central.</p>
-</li>
-<li>
-<p><strong>Credential Expiration</strong> - It shows if the credentials for Red Hat Advanced Cluster Security for Kubernetes are nearing expiration.</p>
-</li>
-</ol>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+This is not an official RH Advanced Cluster Security guide or workshop. Please contact with your RH representative if you want more information about Training or Guidelines about this topic / product.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="access_control"><a class="anchor" href="#access_control"></a>RHACS Access Control</h2>
+<h2>Contributors</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Red Hat Advanced Cluster Security for Kubernetes (RHACS) comes with role-based access control (RBAC) that you can use to configure roles and grant various levels of access to Red Hat Advanced Cluster Security for Kubernetes for different users.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/multicluster/04_multi.png" alt="RHACS Multi 4" width="400">
-</div>
+<p>This workshop has been developed and is maintained by <a href="https://github.com/rcarrata">Roberto Carratalá</a>,  <a href="https://github.com/jadebustos">Jose Angel de Bustos</a> and <a href="https://github.com/josgonza-rh">Jose Antonio Gonzalez Prada</a>.</p>
 </div>
 <div class="paragraph">
-<p>Red Hat Advanced Cluster Security for Kubernetes 3.63 includes a scoped access control feature that enables you to configure fine-grained and specific sets of permissions that define how a given Red Hat Advanced Cluster Security for Kubernetes user or a group of users can interact with Red Hat Advanced Cluster Security for Kubernetes, which resources they can access, and which actions they can perform.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Roles are a collection of permission sets and access scopes. You can assign roles to users and groups by specifying rules. You can configure these rules when you configure an authentication provider. There are two types of roles in Red Hat Advanced Cluster Security for Kubernetes:</p>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><strong>System roles</strong> that are created by Red Hat and cannot be changed.</p>
-</li>
-<li>
-<p><strong>Custom roles</strong>, which Red Hat Advanced Cluster Security for Kubernetes administrators can create and change at any time.</p>
-</li>
-</ol>
-</div>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/multicluster/07_multi.png" alt="RHACS Multi 5" width="800">
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Permission sets are a set of permissions that define what actions a role can perform on a given resource. Resources are the functionalities of Red Hat Advanced Cluster Security for Kubernetes for which you can set view (read) and modify (write) permissions. There are two types of permission sets in Red Hat Advanced Cluster Security for Kubernetes:</p>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><strong>System permission sets</strong>, which are created by Red Hat and cannot be changed.</p>
-</li>
-<li>
-<p><strong>Custom permission sets</strong>, which Red Hat Advanced Cluster Security for Kubernetes administrators can create and change at any time.</p>
-</li>
-</ol>
-</div>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/multicluster/08_multi.png" alt="RHACS Multi 6" width="800">
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Access scopes are a set of Kubernetes and OpenShift Container Platform resources that users can access. For example, you can define an access scope that only allows users to access information about pods in a given project. There are two types of access scopes in Red Hat Advanced Cluster Security for Kubernetes:</p>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><strong>System access scopes</strong>, which are created by Red Hat and cannot be changed.</p>
-</li>
-<li>
-<p><strong>Custom access scopes</strong>, which Red Hat Advanced Cluster Security for Kubernetes administrators can create and change at any time.</p>
-</li>
-</ol>
-</div>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>For more information about RBAC and the integration with third parties for <a href="https://docs.openshift.com/acs/3.66/operating/manage-user-access/manage-role-based-access-control-3630.html#rbac-system-roles-3630_manage-role-based-access-control">User Access</a></p>
+<p>Thanks all the <a href="https://github.com/redhat-scholars/odf-workshop/graphs/contributors">contributors</a> that reviewed and contributed to this workshop!!</p>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="11-integrations.html">RHACS Integrations</a></span>
-  <span class="next"><a href="14-cicd-jp.html">RHACSを使用したアプリケーションへの自動化セキュリティの実装とDevSecOpsの構築</a></span>
+  <span class="next"><a href="01-setup.html">Setup</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">

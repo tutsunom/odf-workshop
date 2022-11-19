@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Configuration Management :: ACS Workshop</title>
-    <link rel="canonical" href="https://tutsunom.github.io/acs-workshop/acs-workshop/09-configuration_management.html">
-    <link rel="prev" href="08-compliance.html">
-    <link rel="next" href="10-system_policies.html">
+    <title>Vulnerability Management in ACS :: ODF Workshop</title>
+    <link rel="canonical" href="https://tutsunom.github.io/odf-workshop/odf-workshop/04-vulnerabilities.html">
+    <link rel="prev" href="03-overview-acs.html">
+    <link rel="next" href="05-risk.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 <link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
@@ -18,7 +18,7 @@
     <div class="navbar-brand">
       <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
           src="../_/img/header_logo.png" height="40px" alt="Red Hat Developer Program"></a>
-      <a class="navbar-item" href="https://tutsunom.github.io/acs-workshop">ACS Workshop</a>
+      <a class="navbar-item" href="https://tutsunom.github.io/odf-workshop">ODF Workshop</a>
       <button class="navbar-burger" data-target="topbar-nav">
         <span></span>
         <span></span>
@@ -62,12 +62,12 @@
   </nav>
 </header>
 <div class="body">
-<div class="nav-container" data-component="acs-workshop" data-version="master">
+<div class="nav-container" data-component="odf-workshop" data-version="master">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
   <nav class="nav-menu">
-    <h3 class="title"><a href="index.html">ACS Workshop</a></h3>
+    <h3 class="title"><a href="index.html">ODF Workshop</a></h3>
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
@@ -125,27 +125,27 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="04-vulnerabilities.html">Vulnerability Management</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="04-vulnerabilities.html#image_overview_image_details">Image overview and image details</a>
+    <a class="nav-link" href="#image_overview_image_details">Image overview and image details</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="04-vulnerabilities.html#vulnerability_management_panel">Review Vulnerability Management Dashboard</a>
+    <a class="nav-link" href="#vulnerability_management_panel">Review Vulnerability Management Dashboard</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="04-vulnerabilities.html#scanning_images">Scanning images for vulnerabilities</a>
+    <a class="nav-link" href="#scanning_images">Scanning images for vulnerabilities</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="04-vulnerabilities.html#filtering_vulnerabilities_scans">Filtering vulnerabilities scans</a>
+    <a class="nav-link" href="#filtering_vulnerabilities_scans">Filtering vulnerabilities scans</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="04-vulnerabilities.html#review_cve_images">Image CVE Vulnerability Analysis</a>
+    <a class="nav-link" href="#review_cve_images">Image CVE Vulnerability Analysis</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="04-vulnerabilities.html#image_correlation_deployments">Image CVE correlation with Deployments</a>
+    <a class="nav-link" href="#image_correlation_deployments">Image CVE correlation with Deployments</a>
   </li>
 </ul>
   </li>
@@ -242,15 +242,15 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="09-configuration_management.html">Configuration Management</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#conf_management_overview">Configuration Management Overview</a>
+    <a class="nav-link" href="09-configuration_management.html#conf_management_overview">Configuration Management Overview</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#conf_management_cis">Configuration Management CIS</a>
+    <a class="nav-link" href="09-configuration_management.html#conf_management_cis">Configuration Management CIS</a>
   </li>
 </ul>
   </li>
@@ -352,12 +352,12 @@
 </div>
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
-    <span class="title">ACS Workshop</span>
+    <span class="title">ODF Workshop</span>
     <span class="version">master</span>
   </div>
   <ul class="components">
     <li class="component is-current">
-      <span class="title">ACS Workshop</span>
+      <span class="title">ODF Workshop</span>
       <ul class="versions">
         <li class="version is-current">
           <a href="index.html">master</a>
@@ -375,111 +375,296 @@
   <a href="index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
-    <li><a href="index.html">ACS Workshop</a></li>
-    <li><a href="09-configuration_management.html">Configuration Management</a></li>
+    <li><a href="index.html">ODF Workshop</a></li>
+    <li><a href="04-vulnerabilities.html">Vulnerability Management</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/tutsunom/odf-workshop/edit/master/documentation/modules/ROOT/pages/09-configuration_management.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/tutsunom/odf-workshop/edit/master/documentation/modules/ROOT/pages/04-vulnerabilities.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Configuration Management</h1>
-<div id="preamble">
+<h1 class="page">Vulnerability Management in ACS</h1>
+<div class="sect1">
+<h2 id="vulnerability_management_panel"><a class="anchor" href="#vulnerability_management_panel"></a>Vulnerability Management main panel</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Learn how to use the Configuration Management view and understand the correlation between various entities in your cluster to manage your cluster configuration efficiently.</p>
+<p>Let’s start with Vulnerability Management, a familiar topic for most security teams.</p>
+</div>
+<div class="paragraph">
+<p>The overview provides several important reports - where the vulnerabilities are, which are the most widespread or the most recent, where my Docker images are coming from, and important vulnerabilities in OpenShift itself.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/vulnerabilities/40_vuln.png" alt="ACS Vulnerabilities" width="800">
+</div>
+</div>
+<div class="paragraph">
+<p>More important than fixing any one vulnerability is establishing a process to keep container images updated and to prevent the promotion through the pipeline for images that have serious, fixable vulnerabilities.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In the upper right, you’ll see buttons to link you to all policies, CVEs, and images, and a menu to bring you to reports by cluster, namespace, deployment, and component.</p>
+</li>
+<li>
+<p>Point out the <strong>Top Riskiest Images</strong> panel in the upper right</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+For the following sections, please note that the order in which the images appear or the number of components affected may vary depending on the version of the demo app (changes prone).
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="conf_management_overview"><a class="anchor" href="#conf_management_overview"></a>Configuration Management Overview</h2>
+<h2 id="image_overview_image_details"><a class="anchor" href="#image_overview_image_details"></a>Image overview and image details</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Every OpenShift Container Platform cluster includes many different entities distributed throughout the cluster, which makes it more challenging to understand and act on the available information.</p>
-</div>
-<div class="paragraph">
-<p>Red Hat Advanced Cluster Security for Kubernetes (RHACS) provides efficient configuration management that combines all these distributed entities on a single page. It brings together information about all your clusters, namespaces, nodes, deployments, images, secrets, users, groups, service accounts, and roles in a single Configuration Management view, helping you visualize different entities and the connections between them.</p>
+<p>In <strong>Top Riskiest Images</strong> panel, click on <code>VIEW ALL</code> button.
+Now you will see that the images are listed here in order of risk, based on the number and severity of the vulnerabilities present in the components in the images.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>To open the Configuration Management view, select Configuration Management from the left-hand navigation menu. Similar to the Dashboard, it displays some useful widgets.</p>
-</li>
-</ul>
-</div>
+<p>Lets see it:</p>
 <div class="imageblock">
 <div class="content">
-<img src="_images/configmgmt/01-config.png" alt="Config 1" width="800">
+<img src="_images/vulnerabilities/top-riskiest-images.png" alt="Top Riskies Images" width="600">
 </div>
 </div>
 <div class="paragraph">
-<p>These widgets are interactive and show the following information:</p>
+<p>We can see the images which are more exposed. Not only we can see the number of CVEs affecting the images but which of them are fixable. You can click and get information about the CVEs and the fixable ones.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Security policy violations by severity</p>
 </li>
 <li>
-<p>The state of CIS (Center for Information Security) Docker and Kubernetes benchmark controls</p>
+<p>In the Top Riskiest Images, find and click on <code>mastercard-processor:latest</code>.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/vulnerabilities/02-vuln.png" alt="Vuln 2" width="800">
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+if you don&#8217;t have the exact image in the Top Riskiest Images, go to "View All" button, and filter by the name of Mastercard processor.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>RHACS built-in vulnerability scanner breaks down images into layers and components - where components can be operating-system installed packages, or dependencies installed by programming languages like Python, Javascript, or Java.</p>
+</div>
+<div class="paragraph">
+<p>The Image Summary provides the important security details of the image overall, with links to the components. For example, in the <strong>DETAILS &amp; METADATA → Image OS</strong> panel, the information you see there tells you that this image has a serious security problem - the base image was imported several years ago (Debian 8 - 2015).</p>
+</div>
+<div class="paragraph">
+<p>You can also see, at the top, the warning that CVE data is stale - that this image has a base OS version whose distribution has stopped providing security information on, and has likely stopped publishing security fixes for.</p>
+</div>
+<div class="paragraph">
+<p>At the bottom, the Image Findings section focuses on Fixable vulnerabilities, sorted by CVSS.</p>
+</div>
 </li>
 <li>
-<p>Users with administrator rights in the most clusters</p>
-</li>
-<li>
-<p>Secrets used most widely in your clusters</p>
+<p>Click on Dockerfile section:</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/vulnerabilities/03-vuln.png" alt="Vuln 3" width="700">
+</div>
+</div>
+<div class="paragraph">
+<p>The Dockerfile tab view shows the layer-by-layer view and, as you can see, the most recent layers are also several years old.</p>
+</div>
+<div class="paragraph">
+<p>Time is not kind to images and components - as vulnerabilities are discovered, RHACS will display newly discovered CVEs.</p>
+</div>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="conf_management_cis"><a class="anchor" href="#conf_management_cis"></a>Configuration Management CIS</h2>
+<h2 id="scanning_images"><a class="anchor" href="#scanning_images"></a>Scanning images for vulnerabilities</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The header in the Configuration Management view shows you the number of policies and CIS controls in your cluster. The header includes drop-down menus that allow you to switch between entities. For example, you can:</p>
+<p>By default information about vulnerabilities is show for all the images:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Click Policies to view all policies and their severity, or select CIS Controls to view detailed information about all controls.</p>
+<p>Active images, which are those images that are deployed.</p>
+</li>
+<li>
+<p>Inactive images, which are those images that are not deployed.</p>
 </li>
 </ul>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="_images/configmgmt/02-config.png" alt="Config 2" width="800">
+<img src="_images/vulnerabilities/active_inactive.png" alt="ActiveInactive" width="700">
 </div>
+</div>
+<div class="paragraph">
+<p>Only active images will be scanned for vulnerabilities. If we want to scan inactive images we will need to mark the image as watched, so you will need to click on <strong>Manage Watches</strong>:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/vulnerabilities/01-inactive.png" alt="ActiveInactive" width="700">
+</div>
+</div>
+<div class="paragraph">
+<p>Add the inactive image you want to scan for vulnerabilities:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/vulnerabilities/02-inactive.png" alt="ActiveInactive" width="700">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="filtering_vulnerabilities_scans"><a class="anchor" href="#filtering_vulnerabilities_scans"></a>Filtering vulnerabilities scans</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Using the search box we can filter the results for the vulnerabilities scan:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/vulnerabilities/01-filter.png" alt="ActiveInactive" width="700">
+</div>
+</div>
+<div class="paragraph">
+<p>As usual que can use some tags to filter, as <strong>CVE</strong>, <strong>CVE Type</strong>, &#8230;&#8203;</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/vulnerabilities/02-filter.png" alt="ActiveInactive" width="700">
+</div>
+</div>
+<div class="paragraph">
+<p>We can use regular expresions as well. For instance, we are not usually interested in inactive images vulnerabilities because there is no deployment using it. For this reason we are not probably interested in checking the vulneratilities for the inactive images. We can filter them using <strong>Deployment r/.+</strong> as filter. That filter means to list all the images where the deployment field is not empty, i.e. active images:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/vulnerabilities/03-filter.png" alt="ActiveInactive" width="700">
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see only the active images are displayed to check the vulnerabilities.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="review_cve_images"><a class="anchor" href="#review_cve_images"></a>Image CVE Vulnerability Analysis</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Select <code>visa-processor:latest-v2</code> image, go to the Observed CVEs tab in Image Findings section, and select <code>Fixable</code> and <code>True</code> on the filter bar.</p>
+<div class="paragraph">
+<p>The CVE list for each image focuses on the severe - CVSS &gt;7 - and the “fixable,” where the upstream package maintainers have published a fix.</p>
+</div>
+</li>
+<li>
+<p>We don’t think it’s practical to ask your teams to fix Linux or Javascript - but we think it’s reasonable to ask them to pick up fixes published by those communities.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/vulnerabilities/04-vuln.png" alt="Vuln 4" width="700">
+</div>
+</div>
+</li>
+<li>
+<p>Click on a Fixable CVE in the list, like CVE-2018-14618</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/vulnerabilities/05-vuln.png" alt="Vuln 5" width="700">
+</div>
+</div>
+<div class="paragraph">
+<p>This CVE for example is very serious - scoring 9.8/10 - and fixable.</p>
+</div>
+<div class="paragraph">
+<p>It’s a vulnerability in curl and libcurl - and these packages are present either because it was part of a base image, or it was deliberately added by a developer in one of the Dockerfile layers.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+RHACS scanner uses to fetch and update the vulnerability definitions from <a href="http://definitions.stackrox.io/" class="bare">http://definitions.stackrox.io/</a>. On the other hand collector-modules.stackrox.io is the other FQDN that will be used in online mode.
+These two are used by Central in RHACS to fetch vulnerability details and collector modules.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="image_correlation_deployments"><a class="anchor" href="#image_correlation_deployments"></a>Image CVE correlation with Deployments</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>All of this CVE detail is well and good, but it’s a bit noisy.</p>
+</div>
+<div class="paragraph">
+<p>How do we judge the true risk - which vulnerabilities are likely to be exploited?</p>
+</div>
+<div class="paragraph">
+<p>In other words. Which vulnerabilities do we really have to fix first?</p>
+</div>
+<div class="paragraph">
+<p>RHACS can use other sources of information in OpenShift to judge the risk that a given vulnerability would be exploited, and hence to set priorities for fixes.</p>
+</div>
+<div class="paragraph">
+<p>The first risk factor - is the vulnerable component actually in a running deployment?</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Click Application and Infrastructure and select clusters, namespaces, nodes, deployments, images, and secrets to view detailed information.</p>
+<p>Click on the Deployments button in the Related Entities column on the right.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/vulnerabilities/06-vuln.png" alt="Vuln 6" width="700">
+</div>
+</div>
+<div class="paragraph">
+<p>These are the five deployments running right now with containers that come from images with this vulnerability present.
+“Up and running” is a risk factor - vulnerabilities are only going to be exploited if they’re in a running container somewhere in the cluster.</p>
+</div>
+<div class="paragraph">
+<p>We display the critical information here - so you can see that we have this present in the Production cluster, in Namespaces like Payments, which starts to provide context to the security team.</p>
+</div>
+<div class="paragraph">
+<p>The last column on the right is the Risk priority - which RHACS has already determined from configuration and runtime activity in the deployment.
+So - of these five deployments, the visa-processor is most likely to be exploited. How is this determined?</p>
+</div>
 </li>
 </ul>
 </div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/configmgmt/03-config.png" alt="Config 3" width="400">
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Click RBAC Visibility and Configuration and select users and groups, service accounts, and roles to view detailed information.</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/configmgmt/04-config.png" alt="Config 4" width="800">
-</div>
+<div class="paragraph">
+<p>Continue to the next section - Risks for find out!</p>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="08-compliance.html">Compliance</a></span>
-  <span class="next"><a href="10-system_policies.html">System Policies</a></span>
+  <span class="prev"><a href="03-overview-acs.html">RHACS Overview</a></span>
+  <span class="next"><a href="05-risk.html">Risk Management</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">

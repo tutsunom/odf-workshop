@@ -3,10 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Setup :: ACS Workshop</title>
-    <link rel="canonical" href="https://tutsunom.github.io/acs-workshop/acs-workshop/01-setup.html">
-    <link rel="prev" href="index.html">
-    <link rel="next" href="02-getting_started.html">
+    <title>RHACS DevSecOps Pipelines :: ODF Workshop</title>
+    <link rel="canonical" href="https://tutsunom.github.io/odf-workshop/odf-workshop/13-cicd.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 <link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
@@ -18,7 +16,7 @@
     <div class="navbar-brand">
       <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
           src="../_/img/header_logo.png" height="40px" alt="Red Hat Developer Program"></a>
-      <a class="navbar-item" href="https://tutsunom.github.io/acs-workshop">ACS Workshop</a>
+      <a class="navbar-item" href="https://tutsunom.github.io/odf-workshop">ODF Workshop</a>
       <button class="navbar-burger" data-target="topbar-nav">
         <span></span>
         <span></span>
@@ -62,21 +60,21 @@
   </nav>
 </header>
 <div class="body">
-<div class="nav-container" data-component="acs-workshop" data-version="master">
+<div class="nav-container" data-component="odf-workshop" data-version="master">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
   <nav class="nav-menu">
-    <h3 class="title"><a href="index.html">ACS Workshop</a></h3>
+    <h3 class="title"><a href="index.html">ODF Workshop</a></h3>
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="01-setup.html">Setup</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#prerequisite">Prerequisites</a>
+    <a class="nav-link" href="01-setup.html#prerequisite">Prerequisites</a>
   </li>
 </ul>
   </li>
@@ -352,12 +350,12 @@
 </div>
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
-    <span class="title">ACS Workshop</span>
+    <span class="title">ODF Workshop</span>
     <span class="version">master</span>
   </div>
   <ul class="components">
     <li class="component is-current">
-      <span class="title">ACS Workshop</span>
+      <span class="title">ODF Workshop</span>
       <ul class="versions">
         <li class="version is-current">
           <a href="index.html">master</a>
@@ -375,152 +373,91 @@
   <a href="index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
-    <li><a href="index.html">ACS Workshop</a></li>
-    <li><a href="01-setup.html">Setup</a></li>
+    <li><a href="index.html">ODF Workshop</a></li>
+    <li><a href="13-cicd.html">RHACS DevSecOps Pipelines</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/tutsunom/odf-workshop/edit/master/documentation/modules/ROOT/pages/01-setup.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/tutsunom/odf-workshop/edit/master/documentation/modules/ROOT/pages/13-cicd.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Setup</h1>
+<h1 class="page">RHACS DevSecOps Pipelines</h1>
 <div class="sect1">
-<h2 id="_setup_openshift_cluster"><a class="anchor" href="#_setup_openshift_cluster"></a>Setup OpenShift Cluster</h2>
+<h2 id="integrate_ocp_pipelines"><a class="anchor" href="#integrate_ocp_pipelines"></a>Integrate Openshift Pipelines with RHACS</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To run OpenShift4, you need to have one provisioned environment using <a href="https://demo.redhat.com">RHPDS</a>.
-Go to Catalog &#8594; Openshift 4.10 Workshop &#8594; Order.</p>
+<p><a href="https://cloud.redhat.com/blog/using-openshift-pipelines-to-automate-red-hat-advanced-cluster-security-for-kubernetes">Using OpenShift Pipelines to Automate Red Hat Advanced Cluster Security for Kubernetes</a></p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_login_openshift_web_console"><a class="anchor" href="#_login_openshift_web_console"></a>Login OpenShift Web console</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>Once you have a workshop environment, you can also access OpenShift web console.<br>
-The web console URL is shown in RHPDS as well as cluster admin username/password.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-If the language setting is NOT set to "English", it might to be good to set it "English" via User Preference menu. <br>
-If you continue this workshop without "English" setting, the pipeline will not display properly in the DevSecOps lab.
-</td>
-</tr>
-</table>
+<p>TODO: finish the writing.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_connect_to_your_bastion_server"><a class="anchor" href="#_connect_to_your_bastion_server"></a>Connect to your bastion server</h2>
+<h2 id="install_devsecops_pipelines"><a class="anchor" href="#install_devsecops_pipelines"></a>Installing RHACS DevSecOps Pipeline</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You also need to access the bastion server in your environment via SSH.</p>
+<p>Based in <a href="https://github.com/rcarrata/devsecops-demo">DevSecOps Pipeline Repo</a> we will deploy in our Openshift cluster a full DevSecOps pipeline example to see the integration of RHACS to a CICD Pipeline.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/cicd/00-acs_cicd_overview.png" alt="RHACS CICD 1" width="800">
+</div>
+</div>
+<div class="paragraph">
+<p>Download the demo and install the prereqs:</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ssh lab-user@&lt;YOUR_BASTION_SERVER&gt;</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone <a href="https://github.com/rcarrata/devsecops-demo.git" class="bare">https://github.com/rcarrata/devsecops-demo.git</a>
+ansible-galaxy collection install community.kubernetes
+cd devsecops-demo</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Some CLI tools are already installed on you bastion server. You can check the OpenShift version using:</p>
+<p>Install the demo in Stackrox:</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc version</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone <a href="https://github.com/rcarrata/devsecops-demo.git" class="bare">https://github.com/rcarrata/devsecops-demo.git</a>
+ansible-galaxy collection install community.kubernetes
+cd devsecops-demo</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The output should show oc version &gt;=4.10:</p>
+<p>Check the status of the devsecops pipelines demo:</p>
 </div>
-<div class="listingblock console-output">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">Client Version: 4.10.36
-Server Version: 4.10.36
-Kubernetes Version: v1.23.5+8471591</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./status.sh</code></pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_edit_the_default_project_template"><a class="anchor" href="#_edit_the_default_project_template"></a>Edit the default project template</h2>
+<h2 id="run_devsecops_pipelines"><a class="anchor" href="#run_devsecops_pipelines"></a>Running the demo of DevSecOps Pipeline</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Then first of all, the default Project Template must be edited.<br>
-In the Openshift 4.10 Workshop environment provided by RHPDS, a Limit Range is automatically set for newly created projects. This can be an obstacle to the smooth running of the Workshop.</p>
-</div>
-<div class="paragraph">
-<p>Use the <code>oc edit</code> command to clear the Limit Range section.</p>
+<p>Run the demo with:</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc edit template project-request -n openshift-config</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./demo.sh start</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Delete all of the following part from the <code>project-request</code> manifest and save it.</p>
+<p>Go to the namespace of <code><code>cicd</code></code> and check the Pipelines resources with the PipelineRun like the following:</p>
 </div>
-<div class="listingblock">
+<div class="imageblock">
 <div class="content">
-<pre>- apiVersion: v1
-  kind: LimitRange
-  metadata:
-    name: ${PROJECT_NAME}-core-resource-limits
-    namespace: ${PROJECT_NAME}
-  spec:
-    limits:
-    - default:
-        cpu: 500m
-        memory: 1.5Gi
-      defaultRequest:
-        cpu: 50m
-        memory: 256Mi
-      max:
-        cpu: 4
-        memory: 6Gi
-      type: Container
-    - max:
-        cpu: 4
-        memory: 12Gi
-      type: Pod</pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_get_tutorial_sources"><a class="anchor" href="#_get_tutorial_sources"></a>Get tutorial sources</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Before we start setting up the environment, let’s clone the tutorial sources and set the <code>TUTORIAL_HOME</code> environment variable to point to the root directory of the tutorial:</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone <a href="https://github.com/tutsunom/acs-workshop.git" class="bare">https://github.com/tutsunom/acs-workshop.git</a> acs-workshop</code></pre>
-</div>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export TUTORIAL_HOME="$(pwd)/acs-workshop"</code></pre>
-</div>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd $TUTORIAL_HOME</code></pre>
+<img src="_images/cicd/01-devsecops_pipeline.png" alt="RHACS CICD 2" width="800">
 </div>
 </div>
 <div class="paragraph">
-<p>And then you are ready for installing RHACS on Openshift.</p>
+<p>For more information check the <a href="https://github.com/rcarrata/devsecops-demo">original repo</a> or the <a href="https://github.com/RedHatDemos/SecurityDemos/blob/master/2021Labs/OpenShiftSecurity/documentation/lab4.adoc">Security Lab guide</a> that have all the details and caveats.</p>
 </div>
 </div>
 </div>
-<nav class="pagination">
-  <span class="prev"><a href="index.html">ACS Workshop</a></span>
-  <span class="next"><a href="02-getting_started.html">Getting Started</a></span>
-</nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>

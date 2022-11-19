@@ -3,9 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Welcome to Red Hat Advanced Cluster Security Workshop :: ACS Workshop</title>
-    <link rel="canonical" href="https://tutsunom.github.io/acs-workshop/acs-workshop/index.html">
-    <link rel="next" href="01-setup.html">
+    <title>Violations :: ODF Workshop</title>
+    <link rel="canonical" href="https://tutsunom.github.io/odf-workshop/odf-workshop/07-violations.html">
+    <link rel="prev" href="06-network_graph.html">
+    <link rel="next" href="08-compliance.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 <link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
@@ -17,7 +18,7 @@
     <div class="navbar-brand">
       <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
           src="../_/img/header_logo.png" height="40px" alt="Red Hat Developer Program"></a>
-      <a class="navbar-item" href="https://tutsunom.github.io/acs-workshop">ACS Workshop</a>
+      <a class="navbar-item" href="https://tutsunom.github.io/odf-workshop">ODF Workshop</a>
       <button class="navbar-burger" data-target="topbar-nav">
         <span></span>
         <span></span>
@@ -61,12 +62,12 @@
   </nav>
 </header>
 <div class="body">
-<div class="nav-container" data-component="acs-workshop" data-version="master">
+<div class="nav-container" data-component="odf-workshop" data-version="master">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
   <nav class="nav-menu">
-    <h3 class="title"><a href="index.html">ACS Workshop</a></h3>
+    <h3 class="title"><a href="index.html">ODF Workshop</a></h3>
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
@@ -181,24 +182,24 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="07-violations.html">Violations</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="07-violations.html#violations_overview">Violations Dashboard Overview</a>
+    <a class="nav-link" href="#violations_overview">Violations Dashboard Overview</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="07-violations.html#violations_example">Violations Build &amp; Deploy Example</a>
+    <a class="nav-link" href="#violations_example">Violations Build &amp; Deploy Example</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="07-violations.html#violations_runtime">Violations Runtime Example</a>
+    <a class="nav-link" href="#violations_runtime">Violations Runtime Example</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="07-violations.html#violations_behaviour">Violations Behaviour</a>
+    <a class="nav-link" href="#violations_behaviour">Violations Behaviour</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="07-violations.html#policy_summary">Policy Summary</a>
+    <a class="nav-link" href="#policy_summary">Policy Summary</a>
   </li>
 </ul>
   </li>
@@ -351,12 +352,12 @@
 </div>
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
-    <span class="title">ACS Workshop</span>
+    <span class="title">ODF Workshop</span>
     <span class="version">master</span>
   </div>
   <ul class="components">
     <li class="component is-current">
-      <span class="title">ACS Workshop</span>
+      <span class="title">ODF Workshop</span>
       <ul class="versions">
         <li class="version is-current">
           <a href="index.html">master</a>
@@ -371,79 +372,90 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="index.html" class="home-link is-current"></a>
+  <a href="index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
-    <li><a href="index.html">ACS Workshop</a></li>
-    <li><a href="index.html">Welcome to Red Hat Advanced Cluster Security Workshop</a></li>
+    <li><a href="index.html">ODF Workshop</a></li>
+    <li><a href="07-violations.html">Violations</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/tutsunom/odf-workshop/edit/master/documentation/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/tutsunom/odf-workshop/edit/master/documentation/modules/ROOT/pages/07-violations.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Welcome to Red Hat Advanced Cluster Security Workshop</h1>
+<h1 class="page">Violations</h1>
 <div id="preamble">
 <div class="sectionbody">
-<div class="imageblock">
-<div class="content">
-<img src="_images/acs-logo.svg" alt="RHACS Logo" width="400">
-</div>
-</div>
-</div>
-</div>
-<div class="sect1 text-center strong">
-<h2>Red Hat Advanced Cluster Security for Kubernetes</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>Red Hat Advanced Cluster Security for Kubernetes (Red Hat Advanced Cluster Security or RHACS) provides the tools and capabilities to address the security needs of a cloud-native development approach on Kubernetes.</p>
+<p>Using Red Hat Advanced Cluster Security for Kubernetes you can view policy violations, drill down to the actual cause of the violation, and take corrective actions.</p>
 </div>
 <div class="paragraph">
-<p>The RHACS solution offers visibility into the security of your cluster, vulnerability management, and security compliance through auditing, network segmentation awareness and configuration, security risk profiling, security-related configuration management, threat detection, and incident response. In addition, RHACS grants an ability to pull the actions from that tooling deep into the application code development process through APIs.</p>
-</div>
-<div class="paragraph">
-<p>These security features represent the primary work any developer or administrator faces as they work across a range of environments, including multiple datacenters, private clouds, or public clouds that run Kubernetes clusters.</p>
+<p>Red Hat Advanced Cluster Security for Kubernetes built-in policies identify a variety of security findings, including vulnerabilities (CVEs), violations of DevOps best practices, high-risk build and deployment practices, and suspicious runtime behaviors. Whether you use the default out-of-box security policies or use your own custom policies, Red Hat Advanced Cluster Security for Kubernetes reports a violation when an enabled policy fails.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2>RHACS Features</h2>
+<h2 id="violations_overview"><a class="anchor" href="#violations_overview"></a>Violations Dashboard Overview</h2>
 <div class="sectionbody">
-<div class="imageblock">
-<div class="content">
-<img src="_images/acs_features.png" alt="RHACS Features" width="800">
-</div>
+<div class="paragraph">
+<p>Violations record all of the specific times where a policy criteria has been met by any of the objects in your cluster - images and their components, deployments, runtime activity.</p>
 </div>
 <div class="paragraph">
-<p>Using Red Hat Advanced Cluster Security for Kubernetes (Red Hat Advanced Cluster Security), you can gain comprehensive Kubernetes security that includes the following use cases:</p>
+<p>Think of it as the “stream” of events that have occurred, although we don’t want this to just be a “to-do” list for incident response folks.</p>
 </div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/violations/01-violations.png" alt="Violations 1" width="600">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="violations_example"><a class="anchor" href="#violations_example"></a>Violations Build &amp; Deploy Example</h2>
+<div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Visibility</strong>:  See your entire landscape of images, registries, containers, deployments, and runtime behavior.</p>
-</li>
-<li>
-<p><strong>Vulnerability Management</strong>: Identify and remediate vulnerabilities in both container images and Kubernetes across the entire software development life cycle.</p>
-</li>
-<li>
-<p><strong>Compliance</strong>: Audit your systems against CIS Benchmarks, NIST, PCI, and HIPAA, with interactive dashboards and one-click audit reports.</p>
-</li>
-<li>
-<p><strong>Network Segmentation</strong>: Visualize existing connections and enforce tighter segmentation using Kubernetes-native controls to reduce your blast radius.</p>
-</li>
-<li>
-<p><strong>Risk Profiling</strong>: See all your deployments ranked by risk level, using context from Kubernetes’ declarative data, to prioritize remediation.</p>
-</li>
-<li>
-<p><strong>Configuration Management</strong>: Apply best practices for Docker and Kubernetes to harden your environment for a more secure and stable application.</p>
-</li>
-<li>
-<p><strong>Threat Detection</strong>: Use rules, automated allow lists, and baselining to accurately identify suspicious activity in your running applications.</p>
-</li>
-<li>
-<p><strong>Incident Response</strong>: Take action, from failing builds and blocking deployments to killing pods and thwarting attacks, using Kubernetes for enforcement.</p>
+<p>Click on a Violation of the "Fixable Severity at least Important". You may have to look for one! The violation details appear on the right.</p>
 </li>
 </ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/violations/02-violations.png" alt="Violations 2" width="800">
+</div>
+</div>
+<div class="paragraph">
+<p>Here’s an example of the details recorded for a policy violated at deployment time.</p>
+</div>
+<div class="paragraph">
+<p>You’ll see that it’s the same information presented in a CI/CD tool or developer console when using the build-time integration.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="violations_runtime"><a class="anchor" href="#violations_runtime"></a>Violations Runtime Example</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Click on a Violation of the "Netcat Execution Detected" in Image policy. Again, you may have to look or search (filter) for it. The violation details appear on the right.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/violations/03-violations.png" alt="Violations 3" width="600">
+</div>
+</div>
+<div class="paragraph">
+<p>This violation is a runtime incident - so it has a different set of details and actions available.</p>
+</div>
+<div class="paragraph">
+<p>The forensic data recorded will be familiar to most incident response team - the “who, what, when, where, and why” of the activity, including process names, arguments, UIDs, container IDs</p>
+</div>
+<div class="paragraph">
+<p>In this case, for our demo, there’s been no enforcement of the action, just a notification, and the team has options to resolve or suppress these notifications in the future.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -452,7 +464,7 @@
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-This is not an official RH Advanced Cluster Security guide or workshop. Please contact with your RH representative if you want more information about Training or Guidelines about this topic / product.
+The violations are per Deployment, not per pod!
 </td>
 </tr>
 </table>
@@ -460,18 +472,60 @@ This is not an official RH Advanced Cluster Security guide or workshop. Please c
 </div>
 </div>
 <div class="sect1">
-<h2>Contributors</h2>
+<h2 id="violations_behaviour"><a class="anchor" href="#violations_behaviour"></a>Violations Behaviour</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This workshop has been developed and is maintained by <a href="https://github.com/rcarrata">Roberto Carratalá</a>,  <a href="https://github.com/jadebustos">Jose Angel de Bustos</a> and <a href="https://github.com/josgonza-rh">Jose Antonio Gonzalez Prada</a>.</p>
+<p>What happens if you not resolve a Violation in a Deployment, or if the same violation happened again (with the same parameters)?</p>
 </div>
 <div class="paragraph">
-<p>Thanks all the <a href="https://github.com/redhat-scholars/acs-workshop/graphs/contributors">contributors</a> that reviewed and contributed to this workshop!!</p>
+<p>A unique violation is not always generated per event, but those events and details are summarized in the violation details itself.</p>
+</div>
+<div class="paragraph">
+<p>This behavior is expected. Since it is the same running deployment that you are updating through your pipeline, and this first violation is not resolved.
+If new CVEs present themselves, those are of course updated based on any changes to the image.</p>
+</div>
+<div class="paragraph">
+<p>But a violation will not trigger if we have already analyzed it is currently violating that policy from the original
+time stamp of when it was detected, and nothing else has changed</p>
+</div>
+<div class="paragraph">
+<p>If the change to the deployment represented new violations, then those would appear. Or, if you deleted the deployment and redeployed a new one for example.</p>
+</div>
+<div class="paragraph">
+<p>For example, "Ubuntu Package Manager Execution". If I had an outstanding violation present from Time X, when it was first detected, and the same pod executes 24 hours later at time Y, the result would be additive, where I would see the details of those executions (First Occurrence, Last Occurrence and then each individual event execution) under the same violation summary</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="policy_summary"><a class="anchor" href="#policy_summary"></a>Policy Summary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>RHACS has a number of built-in policies to detect activity that’s related to attacker goals: gain a foothold, maintain a presence, move laterally, and exfiltrate data.
+The continuous runtime monitoring observes all container activity and will automatically respond to events with appropriate enforcement and notification</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In the right hand side details of the Violation, click on the Policy tab</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/violations/04-violations.png" alt="Violations 4" width="500">
+</div>
+</div>
+<div class="paragraph">
+<p>But that would be missing out on an opportunity - RHACS wants to go one step further, to take advantage of the ephemeral, immutable nature of containers to improve security in a measurable way going forward.</p>
+</div>
+<div class="paragraph">
+<p>We are, essentially, using runtime incidents as a learning opportunity to improve security going forward by constraining how our containers can act.</p>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="next"><a href="01-setup.html">Setup</a></span>
+  <span class="prev"><a href="06-network_graph.html">Network Graph</a></span>
+  <span class="next"><a href="08-compliance.html">Compliance</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">

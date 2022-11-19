@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Vulnerability Management in ACS :: ACS Workshop</title>
-    <link rel="canonical" href="https://tutsunom.github.io/acs-workshop/acs-workshop/04-vulnerabilities.html">
-    <link rel="prev" href="03-overview-acs.html">
-    <link rel="next" href="05-risk.html">
+    <title>Risk Management in RHACS :: ODF Workshop</title>
+    <link rel="canonical" href="https://tutsunom.github.io/odf-workshop/odf-workshop/05-risk.html">
+    <link rel="prev" href="04-vulnerabilities.html">
+    <link rel="next" href="06-network_graph.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 <link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
@@ -18,7 +18,7 @@
     <div class="navbar-brand">
       <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
           src="../_/img/header_logo.png" height="40px" alt="Red Hat Developer Program"></a>
-      <a class="navbar-item" href="https://tutsunom.github.io/acs-workshop">ACS Workshop</a>
+      <a class="navbar-item" href="https://tutsunom.github.io/odf-workshop">ODF Workshop</a>
       <button class="navbar-burger" data-target="topbar-nav">
         <span></span>
         <span></span>
@@ -62,12 +62,12 @@
   </nav>
 </header>
 <div class="body">
-<div class="nav-container" data-component="acs-workshop" data-version="master">
+<div class="nav-container" data-component="odf-workshop" data-version="master">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
   <nav class="nav-menu">
-    <h3 class="title"><a href="index.html">ACS Workshop</a></h3>
+    <h3 class="title"><a href="index.html">ODF Workshop</a></h3>
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
@@ -125,45 +125,45 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="04-vulnerabilities.html">Vulnerability Management</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#image_overview_image_details">Image overview and image details</a>
+    <a class="nav-link" href="04-vulnerabilities.html#image_overview_image_details">Image overview and image details</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#vulnerability_management_panel">Review Vulnerability Management Dashboard</a>
+    <a class="nav-link" href="04-vulnerabilities.html#vulnerability_management_panel">Review Vulnerability Management Dashboard</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#scanning_images">Scanning images for vulnerabilities</a>
+    <a class="nav-link" href="04-vulnerabilities.html#scanning_images">Scanning images for vulnerabilities</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#filtering_vulnerabilities_scans">Filtering vulnerabilities scans</a>
+    <a class="nav-link" href="04-vulnerabilities.html#filtering_vulnerabilities_scans">Filtering vulnerabilities scans</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#review_cve_images">Image CVE Vulnerability Analysis</a>
+    <a class="nav-link" href="04-vulnerabilities.html#review_cve_images">Image CVE Vulnerability Analysis</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#image_correlation_deployments">Image CVE correlation with Deployments</a>
+    <a class="nav-link" href="04-vulnerabilities.html#image_correlation_deployments">Image CVE correlation with Deployments</a>
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="05-risk.html">Risk Management</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="05-risk.html#risk_dashboard">Review Risk Dashboard</a>
+    <a class="nav-link" href="#risk_dashboard">Review Risk Dashboard</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="05-risk.html#risk_single_deployment_details">Single Deployment Details</a>
+    <a class="nav-link" href="#risk_single_deployment_details">Single Deployment Details</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="05-risk.html#risk_process_discovery">Process Discovery / Runtime</a>
+    <a class="nav-link" href="#risk_process_discovery">Process Discovery / Runtime</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="05-risk.html#risk_filtering">Filtering</a>
+    <a class="nav-link" href="#risk_filtering">Filtering</a>
   </li>
 </ul>
   </li>
@@ -352,12 +352,12 @@
 </div>
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
-    <span class="title">ACS Workshop</span>
+    <span class="title">ODF Workshop</span>
     <span class="version">master</span>
   </div>
   <ul class="components">
     <li class="component is-current">
-      <span class="title">ACS Workshop</span>
+      <span class="title">ODF Workshop</span>
       <ul class="versions">
         <li class="version is-current">
           <a href="index.html">master</a>
@@ -375,296 +375,195 @@
   <a href="index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
-    <li><a href="index.html">ACS Workshop</a></li>
-    <li><a href="04-vulnerabilities.html">Vulnerability Management</a></li>
+    <li><a href="index.html">ODF Workshop</a></li>
+    <li><a href="05-risk.html">Risk Management</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/tutsunom/odf-workshop/edit/master/documentation/modules/ROOT/pages/04-vulnerabilities.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/tutsunom/odf-workshop/edit/master/documentation/modules/ROOT/pages/05-risk.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Vulnerability Management in ACS</h1>
+<h1 class="page">Risk Management in RHACS</h1>
 <div class="sect1">
-<h2 id="vulnerability_management_panel"><a class="anchor" href="#vulnerability_management_panel"></a>Vulnerability Management main panel</h2>
+<h2 id="risk_dashboard"><a class="anchor" href="#risk_dashboard"></a>Risks main dashboard</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Let’s start with Vulnerability Management, a familiar topic for most security teams.</p>
-</div>
-<div class="paragraph">
-<p>The overview provides several important reports - where the vulnerabilities are, which are the most widespread or the most recent, where my Docker images are coming from, and important vulnerabilities in OpenShift itself.</p>
+<p>Let’s take a look at the Risk view, where we go beyond the basics of vulnerabilities to understand how deployment configuration and runtime activity impact the likelihood of an exploit occurring and how successful those exploits will be.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="_images/vulnerabilities/40_vuln.png" alt="ACS Vulnerabilities" width="800">
+<img src="_images/risks/01-risks.png" alt="RHACS Risks 1" width="800">
 </div>
 </div>
 <div class="paragraph">
-<p>More important than fixing any one vulnerability is establishing a process to keep container images updated and to prevent the promotion through the pipeline for images that have serious, fixable vulnerabilities.</p>
+<p>This list view shows all deployments, in all clusters and namespaces, ordered by Risk priority.</p>
+</div>
+<div class="paragraph">
+<p>Risk is also influenced by runtime activity - and Deployments that have activity that could indicate a breach in progress have a red dot on the left.
+Obviously - the first one in the list should be our first focus.</p>
+</div>
+<div class="paragraph">
+<p>The reality of security is that it’s just not possible to tackle all sources of Risk, so organizations end up prioritizing their efforts. We want RHACS to help inform that prioritization.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="risk_single_deployment_details"><a class="anchor" href="#risk_single_deployment_details"></a>Single Deployment Details</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Click on the number 1 deployment, <strong>visa-processor</strong> to bring up the <code>RISK INDICATORS</code></p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/risks/02-risks.png" alt="RHACS Risks 2" width="350">
+</div>
+</div>
+<div class="paragraph">
+<p>The details tab shows why this deployment is considered such a high risk.</p>
+</div>
+<div class="paragraph">
+<p>The deployment has serious, fixable vulnerabilities, but it also has configurations like network ports and service exposure outside the cluster, making it more likely to be attacked.</p>
+</div>
+<div class="paragraph">
+<p>In addition, other configurations like privileged containers mean that a successful attacker has access to the underlying host network and filesystem, including other containers running on that host.</p>
+</div>
+</li>
+<li>
+<p>Navigate to the bottom of the <code>RISK INDICATORS</code> page to the RBAC configuration section</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/risks/03-risks.png" alt="RHACS Risks 3" width="400">
+</div>
+</div>
+<div class="paragraph">
+<p>At the bottom, we see another serious problem: the service account associated with this deployment has been given <code>cluster admin</code> privileges, which means that a successful attacker gains full control over this entire OpenShift cluster which could result in compromise of the entire cluster.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>All of these configurations are gleaned automatically by RHACS from OpenShift, and the built-in policies assign a risk score to each, meaning that this Risk report is available as soon as you start running RHACS.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="risk_process_discovery"><a class="anchor" href="#risk_process_discovery"></a>Process Discovery / Runtime</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Navigate to the <code>PROCESS DISCOVERY</code> tab of the details page.</p>
+</div>
+<div class="paragraph">
+<p>Even a perfectly configured application has the potential for an attacker to gain access and cause havoc.</p>
+</div>
+<div class="paragraph">
+<p>Here we show how RHACS continuously monitors runtime activity within pods in the deployment, building a baseline of observed behavior, and tracking deviations from that baseline.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>In the upper right, you’ll see buttons to link you to all policies, CVEs, and images, and a menu to bring you to reports by cluster, namespace, deployment, and component.</p>
+<p>Click on the header bar within the <code>Event Timeline</code> section ( in the picture, at any point on the surface covered by the red rectangle )</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/risks/04-risks.png" alt="RHACS Risks 4" width="500">
+</div>
+</div>
+<div class="paragraph">
+<p>The event timeline shows us, for each pod, the process activity that has occurred over time.</p>
+</div>
 </li>
 <li>
-<p>Point out the <strong>Top Riskiest Images</strong> panel in the upper right</p>
+<p>Click on the squares / circles for process activity</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/risks/05-risks.png" alt="RHACS Risks 5" width="700">
+</div>
+</div>
+<div class="paragraph">
+<p>If you click in the <em>greater than</em> symbol (pointed by the red arrow in the above picture) you can expand the activity and see the containers inside the pod.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/risks/05_1-risks.png" alt="RHACS Risks 51" width="700">
+</div>
+</div>
 </li>
 </ul>
 </div>
-<div class="admonitionblock warning">
+<div class="paragraph">
+<p>We can take advantage of the constrained lifecycle of containers for better runtime incident detection and response.</p>
+</div>
+<div class="paragraph">
+<p>Containers should be pretty boring - they’re not general purpose Virtual machines. They typically have a period of startup, with some initialization, and then settle down to a small number of processes running continuously and making or receiving connections.</p>
+</div>
+<div class="paragraph">
+<p>Deviations from the baseline can be used to take enforcement action and alert team members. Runtime activity rules can be combined with other activity</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="risk_filtering"><a class="anchor" href="#risk_filtering"></a>Filtering</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Most UI pages have a filters section at the top that allows you to narrow the reporting view to matching or non-matching criteria.</p>
+</div>
+<div class="paragraph">
+<p>Almost all of the attributes that RHACS gathers are filterable</p>
+</div>
+<div class="paragraph">
+<p>It’s really useful here in Risk when you know what you’re looking for - when you want answers to questions like “what applications have CVE-2020-1008 present".</p>
+</div>
+<div class="paragraph">
+<p>For example, let&#8217;s use the following filters:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">Filtering
+Process Name - Java
+CVE - CVE-2017-7376 (libxml2)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Translated:</strong> "Finding deployments that are running <code>java</code> processes and are affected by the <code>CVE-2017-7376</code> vulnerability".</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Click in the <code>Filters</code> bar (at the top, red rectangle). Start Typing "Process Name" and select the <code>Process Name</code> key ones it appears / autocompletes. Then type <code>java</code>, press enter and click away to get the filters dropdown to clear.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/risks/06-risks.png" alt="RHACS Risks 6" width="800">
+</div>
+</div>
+<div class="paragraph">
+<p>Do the same to add the <code>CVE</code> filter (is one of the keys shown by default).</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
+<i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-For the following sections, please note that the order in which the images appear or the number of components affected may vary depending on the version of the demo app (changes prone).
+<div class="paragraph">
+<p>Now that we’ve searched for interesting criteria, we can create a policy from the search filter to automatically identify our criteria going forward.
+We can do that by clicking the <code>Create Policy</code> button, at the upper right (indicated by the red arrow in the above picture) and following the form steps.</p>
+</div>
 </td>
 </tr>
 </table>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="image_overview_image_details"><a class="anchor" href="#image_overview_image_details"></a>Image overview and image details</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>In <strong>Top Riskiest Images</strong> panel, click on <code>VIEW ALL</code> button.
-Now you will see that the images are listed here in order of risk, based on the number and severity of the vulnerabilities present in the components in the images.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Lets see it:</p>
-<div class="imageblock">
-<div class="content">
-<img src="_images/vulnerabilities/top-riskiest-images.png" alt="Top Riskies Images" width="600">
-</div>
-</div>
-<div class="paragraph">
-<p>We can see the images which are more exposed. Not only we can see the number of CVEs affecting the images but which of them are fixable. You can click and get information about the CVEs and the fixable ones.</p>
-</div>
-</li>
-<li>
-<p>In the Top Riskiest Images, find and click on <code>mastercard-processor:latest</code>.</p>
-<div class="imageblock">
-<div class="content">
-<img src="_images/vulnerabilities/02-vuln.png" alt="Vuln 2" width="800">
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-if you don&#8217;t have the exact image in the Top Riskiest Images, go to "View All" button, and filter by the name of Mastercard processor.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>RHACS built-in vulnerability scanner breaks down images into layers and components - where components can be operating-system installed packages, or dependencies installed by programming languages like Python, Javascript, or Java.</p>
-</div>
-<div class="paragraph">
-<p>The Image Summary provides the important security details of the image overall, with links to the components. For example, in the <strong>DETAILS &amp; METADATA → Image OS</strong> panel, the information you see there tells you that this image has a serious security problem - the base image was imported several years ago (Debian 8 - 2015).</p>
-</div>
-<div class="paragraph">
-<p>You can also see, at the top, the warning that CVE data is stale - that this image has a base OS version whose distribution has stopped providing security information on, and has likely stopped publishing security fixes for.</p>
-</div>
-<div class="paragraph">
-<p>At the bottom, the Image Findings section focuses on Fixable vulnerabilities, sorted by CVSS.</p>
-</div>
-</li>
-<li>
-<p>Click on Dockerfile section:</p>
-<div class="imageblock">
-<div class="content">
-<img src="_images/vulnerabilities/03-vuln.png" alt="Vuln 3" width="700">
-</div>
-</div>
-<div class="paragraph">
-<p>The Dockerfile tab view shows the layer-by-layer view and, as you can see, the most recent layers are also several years old.</p>
-</div>
-<div class="paragraph">
-<p>Time is not kind to images and components - as vulnerabilities are discovered, RHACS will display newly discovered CVEs.</p>
-</div>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="scanning_images"><a class="anchor" href="#scanning_images"></a>Scanning images for vulnerabilities</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>By default information about vulnerabilities is show for all the images:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Active images, which are those images that are deployed.</p>
-</li>
-<li>
-<p>Inactive images, which are those images that are not deployed.</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/vulnerabilities/active_inactive.png" alt="ActiveInactive" width="700">
-</div>
-</div>
-<div class="paragraph">
-<p>Only active images will be scanned for vulnerabilities. If we want to scan inactive images we will need to mark the image as watched, so you will need to click on <strong>Manage Watches</strong>:</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/vulnerabilities/01-inactive.png" alt="ActiveInactive" width="700">
-</div>
-</div>
-<div class="paragraph">
-<p>Add the inactive image you want to scan for vulnerabilities:</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/vulnerabilities/02-inactive.png" alt="ActiveInactive" width="700">
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="filtering_vulnerabilities_scans"><a class="anchor" href="#filtering_vulnerabilities_scans"></a>Filtering vulnerabilities scans</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Using the search box we can filter the results for the vulnerabilities scan:</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/vulnerabilities/01-filter.png" alt="ActiveInactive" width="700">
-</div>
-</div>
-<div class="paragraph">
-<p>As usual que can use some tags to filter, as <strong>CVE</strong>, <strong>CVE Type</strong>, &#8230;&#8203;</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/vulnerabilities/02-filter.png" alt="ActiveInactive" width="700">
-</div>
-</div>
-<div class="paragraph">
-<p>We can use regular expresions as well. For instance, we are not usually interested in inactive images vulnerabilities because there is no deployment using it. For this reason we are not probably interested in checking the vulneratilities for the inactive images. We can filter them using <strong>Deployment r/.+</strong> as filter. That filter means to list all the images where the deployment field is not empty, i.e. active images:</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/vulnerabilities/03-filter.png" alt="ActiveInactive" width="700">
-</div>
-</div>
-<div class="paragraph">
-<p>As you can see only the active images are displayed to check the vulnerabilities.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="review_cve_images"><a class="anchor" href="#review_cve_images"></a>Image CVE Vulnerability Analysis</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>Select <code>visa-processor:latest-v2</code> image, go to the Observed CVEs tab in Image Findings section, and select <code>Fixable</code> and <code>True</code> on the filter bar.</p>
-<div class="paragraph">
-<p>The CVE list for each image focuses on the severe - CVSS &gt;7 - and the “fixable,” where the upstream package maintainers have published a fix.</p>
-</div>
-</li>
-<li>
-<p>We don’t think it’s practical to ask your teams to fix Linux or Javascript - but we think it’s reasonable to ask them to pick up fixes published by those communities.</p>
-<div class="imageblock">
-<div class="content">
-<img src="_images/vulnerabilities/04-vuln.png" alt="Vuln 4" width="700">
-</div>
-</div>
-</li>
-<li>
-<p>Click on a Fixable CVE in the list, like CVE-2018-14618</p>
-<div class="imageblock">
-<div class="content">
-<img src="_images/vulnerabilities/05-vuln.png" alt="Vuln 5" width="700">
-</div>
-</div>
-<div class="paragraph">
-<p>This CVE for example is very serious - scoring 9.8/10 - and fixable.</p>
-</div>
-<div class="paragraph">
-<p>It’s a vulnerability in curl and libcurl - and these packages are present either because it was part of a base image, or it was deliberately added by a developer in one of the Dockerfile layers.</p>
-</div>
-</li>
-</ul>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-RHACS scanner uses to fetch and update the vulnerability definitions from <a href="http://definitions.stackrox.io/" class="bare">http://definitions.stackrox.io/</a>. On the other hand collector-modules.stackrox.io is the other FQDN that will be used in online mode.
-These two are used by Central in RHACS to fetch vulnerability details and collector modules.
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="image_correlation_deployments"><a class="anchor" href="#image_correlation_deployments"></a>Image CVE correlation with Deployments</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>All of this CVE detail is well and good, but it’s a bit noisy.</p>
-</div>
-<div class="paragraph">
-<p>How do we judge the true risk - which vulnerabilities are likely to be exploited?</p>
-</div>
-<div class="paragraph">
-<p>In other words. Which vulnerabilities do we really have to fix first?</p>
-</div>
-<div class="paragraph">
-<p>RHACS can use other sources of information in OpenShift to judge the risk that a given vulnerability would be exploited, and hence to set priorities for fixes.</p>
-</div>
-<div class="paragraph">
-<p>The first risk factor - is the vulnerable component actually in a running deployment?</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Click on the Deployments button in the Related Entities column on the right.</p>
-<div class="imageblock">
-<div class="content">
-<img src="_images/vulnerabilities/06-vuln.png" alt="Vuln 6" width="700">
-</div>
-</div>
-<div class="paragraph">
-<p>These are the five deployments running right now with containers that come from images with this vulnerability present.
-“Up and running” is a risk factor - vulnerabilities are only going to be exploited if they’re in a running container somewhere in the cluster.</p>
-</div>
-<div class="paragraph">
-<p>We display the critical information here - so you can see that we have this present in the Production cluster, in Namespaces like Payments, which starts to provide context to the security team.</p>
-</div>
-<div class="paragraph">
-<p>The last column on the right is the Risk priority - which RHACS has already determined from configuration and runtime activity in the deployment.
-So - of these five deployments, the visa-processor is most likely to be exploited. How is this determined?</p>
-</div>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Continue to the next section - Risks for find out!</p>
+<p>Now let&#8217;s review the Network Graph and the Network Policies in RHACS!</p>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="03-overview-acs.html">RHACS Overview</a></span>
-  <span class="next"><a href="05-risk.html">Risk Management</a></span>
+  <span class="prev"><a href="04-vulnerabilities.html">Vulnerability Management</a></span>
+  <span class="next"><a href="06-network_graph.html">Network Graph</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
