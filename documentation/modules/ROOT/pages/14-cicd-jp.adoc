@@ -43,7 +43,7 @@ OpenShift Pipelines と OpenShift GitOps はそれぞれ Operator が用意さ�
 Web コンソールに cluster-admin でログインしたら、左のメニューから "Operators" > "OperatorHub" を選択し、OperatorHub の画面に移ります。 +
 OperatorHub の画面で、Red Hat OpenShift Pipelines の Operator を検索し、これをクリックします。
 
-image:cicd/lab4-pipelines-install-01.png[600,800]
+image:cicd/lab4-pipelines-install-01.PNG[600,800]
 
 image:cicd/lab4-pipelines-install-02.png[600,800]
 
