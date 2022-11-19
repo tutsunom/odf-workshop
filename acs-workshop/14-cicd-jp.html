@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Red Hat Advanced Cluster Security を使用したアプリケーションへの自動化セキュリティの実装とDevSecOpsの構築 :: ACS Workshop</title>
+    <link rel="canonical" href="https://tutsunom.github.io/acs-workshop/acs-workshop/14-cicd-jp.html">
+    <link rel="prev" href="13-cicd.html">
+    <link rel="next" href="15-contributors.html">
+    <meta name="generator" content="Antora 3.0.0">
+    <link rel="stylesheet" href="../_/css/site.css">
+<link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
+          src="../_/img/header_logo.png" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" href="https://tutsunom.github.io/acs-workshop">ACS Workshop</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">CheatSheets</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">CheatSheet A</a>
+            <a class="navbar-item" href="#">CheatSheet B</a>
+            <a class="navbar-item" href="#">CheatSheet C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Upcoming Events</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Event A</a>
+            <a class="navbar-item" href="#">Event B</a>
+            <a class="navbar-item" href="#">Event C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Tutorial A</a>
+            <a class="navbar-item" href="#">Tutorial B</a>
+            <a class="navbar-item" href="#">Tutorial C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="acs-workshop" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html">ACS Workshop</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="01-setup.html">Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-setup.html#prerequisite">Prerequisites</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02-getting_started.html">Getting Started</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-getting_started.html#install_acs_operator">Install RHACS Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-getting_started.html#install_acs_central">Install RHACS Central Cluster</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-getting_started.html#config_acs_securedcluster">Configuration of the RHACS Secured Cluster </a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-getting_started.html#deploy_demo_acs">Deploying Demo in RHACS</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-getting_started.html#deploy_apps">Deploying Apps</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03-overview-acs.html">RHACS Overview</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="03-overview-acs.html#acs_architecture">RHACS Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03-overview-acs.html#dashboard_acs">RHACS Dashboard</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03-overview-acs.html#dashboard_acs_header">Dashboard Header</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03-overview-acs.html#dashboard_acs_menu">Dashboard Left Menu</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03-overview-acs.html#dashboard_acs_information">Dashboard Information</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="04-vulnerabilities.html">Vulnerability Management</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#image_overview_image_details">Image overview and image details</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#vulnerability_management_panel">Review Vulnerability Management Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#scanning_images">Scanning images for vulnerabilities</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#filtering_vulnerabilities_scans">Filtering vulnerabilities scans</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#review_cve_images">Image CVE Vulnerability Analysis</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#image_correlation_deployments">Image CVE correlation with Deployments</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="05-risk.html">Risk Management</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-risk.html#risk_dashboard">Review Risk Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-risk.html#risk_single_deployment_details">Single Deployment Details</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-risk.html#risk_process_discovery">Process Discovery / Runtime</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-risk.html#risk_filtering">Filtering</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="06-network_graph.html">Network Graph</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-network_graph.html#network_graph_overview">Network Graph Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-network_graph.html#network_graph_views">Network Graph Views</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-network_graph.html#network_policy_simulator">Network Policy Simulator</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="07-violations.html">Violations</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#violations_overview">Violations Dashboard Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#violations_example">Violations Build &amp; Deploy Example</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#violations_runtime">Violations Runtime Example</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#violations_behaviour">Violations Behaviour</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#policy_summary">Policy Summary</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="08-compliance.html">Compliance</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard">Review Compliance Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard_scan">Execute the first Compliance Scan</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard_review">Review the Compliance Reports in the Compliance Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard_ns">Namespace Compliance Details</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard_report">Evidence Export</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_operator">Integrating Compliance Operator with RHACS </a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_operator_acs_review">Review Compliance Scans of the Compliance Operator in RHACS</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#acs_policy_compliance">Configure Policy in RHACS to Invoke Compliance related Controls</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#acs_policy_compliance_nist">Enforce Policies that Meet Guidance for NIST Control 4.2.2</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#acs_policy_compliance_nist_view">View Updated Compliance Scan Results in RHACS</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#acs_policy_compliance_nist_revert">Revert the Policy Changes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="09-configuration_management.html">Configuration Management</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="09-configuration_management.html#conf_management_overview">Configuration Management Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="09-configuration_management.html#conf_management_cis">Configuration Management CIS</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="10-system_policies.html">System Policies</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="10-system_policies.html#system_policies_overview">System Policies Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="10-system_policies.html#system_policies_example">System Policies Build and Deploy Example</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="10-system_policies.html#system_policies_enforcement">System Policies Enforcement</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="11-integrations.html">RHACS Integrations</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="11-integrations.html#integrate_with_internal_openshift_registry">Integrate with Internal Openshift Registry</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="11-integrations.html#integrate_with_internal_openshift_registry_config_acs">Configure RHACS integration for Internal Openshift Registry</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="11-integrations.html#integrate_acs_slack">Integrate RHACS with Slack</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="11-integrations.html#integrate_acs_oauth">Integrate RHACS with OpenShift OAuth</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="11-integrations.html#integrate_acs_sso">Integrate RHACS with OpenShift RHSSO</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="12-platform_configuration.html">RHACS Secure Cluster Management</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="12-platform_configuration.html#system_configuration">RHACS System Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="12-platform_configuration.html#system_health">RHACS System Health</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="12-platform_configuration.html#access_control">RHACS Access Control</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="13-cicd.html">DevSecOps Pipelines</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="13-cicd.html#install_devsecops_pipelines">Installing RHACS DevSecOps Pipeline</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="13-cicd.html#run_devsecops_pipelines">Running the demo of DevSecOps Pipeline</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="14-cicd-jp.html">RHACSを使用したアプリケーションへの自動化セキュリティの実装とDevSecOpsの構築</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#ci">継続的インテグレーション</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#devsecops">ACSを利用したDevSecOpsのステップ</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#cd">GitOpsを使った継続的デリバリー</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#dast">PostCI - ダイナミックアプリケーションセキュリティとテスト (DAST)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#policy_violation">セキュリティポリシーとCI</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#cd">GitOpsを使った継続的デリバリー</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#troubleshooting">トラブルシューティング</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="15-contributors.html">Contributors</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">ACS Workshop</span>
+    <span class="version">master</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">ACS Workshop</span>
+      <ul class="versions">
+        <li class="version is-current">
+          <a href="index.html">master</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">ACS Workshop</a></li>
+    <li><a href="14-cicd-jp.html">RHACSを使用したアプリケーションへの自動化セキュリティの実装とDevSecOpsの構築</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/tutsunom/acs-workshop/edit/master/documentation/modules/ROOT/pages/14-cicd-jp.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Red Hat Advanced Cluster Security を使用したアプリケーションへの自動化セキュリティの実装とDevSecOpsの構築</h1>
+<div class="sect1">
+<h2 id="_ラボの目的"><a class="anchor" href="#_ラボの目的"></a>ラボの目的</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>このラボの目標は、さまざまなセキュリティツールの組み合わせをオーケストレーションする、安全なソフトウェアファクトリを構築する方法を学ぶことです。<br>
+DevSecOps の出現により、セキュリティは前面と中心に置かれ、人、プロセス、および、技術の面で対処されるようになりました。<br>
+セキュリティツールはビルドプロセスに統合されており、CI/CDパイプラインに組み込まれたセキュリティゲートでセキュリティ要件が満たされない場合、簡単にビルドを中断することができます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_序章"><a class="anchor" href="#_序章"></a>序章</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>DevOpsと継続的インテグレーション／継続的デリバリー（CI/CD）の利点は、長年にわたって大きな成果とともに実証されてきました。<br>
+組織は常に、より少ない人数でより多くのことを行うことを求めてきました。セキュリティは多くの場合、ソフトウェア提供プロセスの末端のアドオンとして扱われ、ソフトウェアデリバリの遅延につながることも少なくありませんでした。<br>
+業界は、これを変えなければならないことを認識しました。<br>
+組織は、契約上および規制上の義務や社内のセキュリティ標準を引き続き満たす必要がありますが、機会を生かすためにソフトウェアデリバリを加速させる必要があります。組織がこれらの標準を満たし、DevOpsのスピードでデリバリーできるようにするために、セキュリティは、無関係になるか、最新のソフトウェアデリバリプラクティスに適合するかの選択に迫られています。<br>
+セキュリティはソフトウェアを迅速に提供するために不可欠であり、ソフトウェア品質の指標となっているため、"DevOps" に "Sec" を含めることが推奨されています。<br>
+DevSecOpsの登場により、Shift Leftはソフトウェアデリバリプロセスの早い段階で不具合を発見し、防止することを目的としたプラクティスとなりました。セキュリティツールは、ビルドプロセスに直接統合されます。その結果、CI/CDプロセスをより速く進め、デリバリーまでの期間を短縮しながら、各リリースの品質を継続的に向上させることができるのです。<br>
+この実習では、典型的な CI/CD アプリケーションパイプラインに自動化されたセキュリティコンプライアンス制御を実装するために使用される技術のいくつかに焦点を当てます。<br>
+DevSecOps パイプラインをサポートするために、多くのツールがインストールされ、事前に設定されています。これらのツールのほとんどは、Red Hat OpenShift クラスター内でコンテナ化されて実行されています。<br>
+以下は、私たちのラボでステップスルーするパイプラインです:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops01.png" alt="800" width="800"></span></p>
+</div>
+<div class="paragraph">
+<p>DevSecOpsのCI/CDパイプラインでは、次のような技術を使用します:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://tekton.dev">Tekton</a> をベースとした <a href="https://www.openshift.com/learn/topics/ci-cd">OpenShift Pipelines</a></p>
+</li>
+<li>
+<p><a href="https://argoproj.github.io/">ArgoCD</a> をベースとした <a href="https://www.openshift.com/blog/announcing-openshift-gitops">OpenShift GitOps</a></p>
+</li>
+<li>
+<p><a href="https://www.redhat.com/en/resources/advanced-cluster-security-for-kubernetes-datasheet">Red Hat Advanced Cluster Security for Kubernetes</a></p>
+</li>
+<li>
+<p><a href="https://docs.openshift.com/container-platform/latest/registry/architecture-component-imageregistry.html">OpenShift Container Registry</a></p>
+</li>
+<li>
+<p><a href="https://www.sonarqube.org/">SonarQube</a></p>
+</li>
+<li>
+<p><a href="https://www.sonatype.com/products/repository-oss?topnav=true">Nexus</a></p>
+</li>
+<li>
+<p><a href="https://junit.org/junit5/">JUnit</a></p>
+</li>
+<li>
+<p><a href="https://gogs.io/">Gogs</a></p>
+</li>
+<li>
+<p><a href="https://tekton.dev/docs/triggers/">Git Webhook</a></p>
+</li>
+<li>
+<p><a href="https://gatling.io/">Gatling</a></p>
+</li>
+<li>
+<p><a href="https://www.zaproxy.org/">Zap Proxy</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ci"><a class="anchor" href="#ci"></a>継続的インテグレーション</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>この最初のモジュールでは、サンプルで用意しているセキュアなパイプラインを OpenShift Pipeline で実行し、各ステップを確認してみます。<br>
+このラボでは、Tekton パイプラインの開始方法と、開発ライフサイクル内でセキュリティと gitops ツールを統合するためのタスクの使用方法を学習します。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>パイプラインを開始するには、3つの方法があります。以下の3つのOptionいずれかで、パイプラインを開始してください:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Option 1: Developer UIを使用して開始する場合</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>ブラウザで OpenShift Console の URL を参照します。</p>
+</li>
+<li>
+<p>提供されたadminユーザの認証情報を使用してコンソールにログインします。</p>
+</li>
+<li>
+<p>まだ開発者パースペクティブにいない場合は、左上の開発者コンソールに切り替えるためにDeveloperを選択します。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops04.png" alt="200" width="200"></span></p>
+</div>
+</li>
+<li>
+<p>ocp-workshop プロジェクトに移動します。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops05.png" alt="200" width="200"></span></p>
+</div>
+</li>
+<li>
+<p>左メニューの <code>Pipelines</code> をクリックすると、すべてのパイプラインが表示されます。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops06.png" alt="400" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>" petclinic-build-dev "パイプラインをクリックします。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops07.png" alt="600" width="800"></span></p>
+</div>
+</li>
+<li>
+<p>右上の “Actions” をクリック → “start” を選択します。</p>
+</li>
+<li>
+<p>"Workspaces"でPVCを選択し、パイプラインが実行時に使用する共有ストレージのパスとしてPVC petclinic-build-workspaceを選択します。</p>
+</li>
+<li>
+<p>"maven-settings" で「Config Map」を選択し、"maven-settings" をConfig Mapとして選択します。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops08.png" alt="200" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>start をクリックします。</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Option 2: コマンドラインからパイプラインを起動する場合。
+コマンドラインはテスト中にパイプラインを開始するのに便利な方法で、PRやgitへのpushをシミュレートしてパイプラインを起動させる方法です。CLIでパイプラインを開始するのが好きなユーザー向けです。</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>実行:</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">oc create -f <a href="https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/pipeline-build-dev-run.yaml" class="bare">https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/pipeline-build-dev-run.yaml</a> -n ocp-workshop</th>
+</tr>
+</thead>
+</table>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Option 3: 新しいコードがgit repoにpushされると、パイプラインを開始するトリガーにもなります。このラボでは、git repo は Gogs です。以下の手順は、「Gogs」git repo経由でコードをプッシュするためのものです。
+このオプションは、開発者の観点からすると最もポピュラーなものかもしれません。PR や git リポジトリへのプッシュからパイプラインが始まり、webhook が自動的にパイプラインを開始します。</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>開発コンソールから、左のナビメニューにある <code>Search</code> をクリックします。</p>
+</li>
+<li>
+<p>'route&#8217;と入力し、リストの中から<code>Route</code>をクリックします。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops09.png" alt="400" width="400"></span></p>
+</div>
+</li>
+<li>
+<p><code>Gogs</code> ルートをクリックすると、gogs の URL が表示されます:</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops10.png" alt="400" width="600"></span></p>
+</div>
+</li>
+<li>
+<p><code>サインイン</code>をクリックし、<em>gogsadmin</em>の認証情報でログインします。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops11.png" alt="500" width="400"></span></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User: gogsadmin</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password: openshift</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>gogsadminアカウント内のspring-petclinicリポジトリを選択します:</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops12.png" alt="400" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>README.mdをクリックし、<code>Edit this file</code>をクリックし、変更を加えてください:</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops13.png" alt="400" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>導入した変更をREADME.mdにコミットします:</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops14.png" alt="400" width="700"></span></p>
+</div>
+<div class="paragraph">
+<p>[注意] これはあくまでデモのためのものです。通常、master への push は推奨されず、代わりに他のブランチ (例えば develop) からの Pull Request / Merge Request を使用します。</p>
+</div>
+</li>
+<li>
+<p>パイプラインは自動的にトリガーされます。このラボのステップ 6 にスキップして、Pipeline Runs コンソールを確認してください。</p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>提供されたOpenShiftコンソールのURLを使って、ブラウザを開きます。</p>
+</li>
+<li>
+<p>提供されたクレデンシャルを使用してコンソールにログインします。</p>
+</li>
+<li>
+<p><code>Developer</code>をクリックすると、開発者用コンソールに切り替わります。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops04.png" alt="200" width="200"></span></p>
+</div>
+</li>
+<li>
+<p><code>ocp-workshop</code>プロジェクトが選択されていることを確認してください。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops15.png" alt="300" width="300"></span></p>
+</div>
+</li>
+<li>
+<p>左メニューの <code>Pipelines</code> をクリックすると、すべてのパイプラインが表示されます。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops16.png" alt="400" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>パイプラインの <code>petclinic-build-dev</code> をクリックし、<code>Pipeline Runs</code> タブをクリックします。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops17.png" alt="400" width="700"></span></p>
+</div>
+</li>
+<li>
+<p><code>Pipeline Runs</code> タブで実行中のパイプラインをクリックします。</p>
+<div class="paragraph">
+<p>パイプラインが起動していると下図のようなPipeline Run detailsが表示されますので、状況をご覧ください。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops18.png" alt="500" width="700"></span></p>
+</div>
+<div class="paragraph">
+<p>しばらくすると、パイプライン実行のステップ「image-check」で失敗します。これは、イメージに含まれる重要な深刻度の脆弱性がパイプラインゲートポリシーに引っかかり、デプロイが停止するためです。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops20.png" alt="500" width="700"></span></p>
+</div>
+<div class="paragraph">
+<p>パイプラインを正常に完了させるためには、この脆弱性を修正する必要があります。次のモジュールでそれを行います。以下は、正常に実行された場合の状態です。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops19.png" alt="500" width="700"></span></p>
+</div>
+<div class="paragraph">
+<p>次のモジュール、Lab 4.2では、何が起こったのか確認し、それを安全に解決する方法について説明します。</p>
+</div>
+<div class="paragraph">
+<p>[注意] 手動でパイプラインを実行するトリガーに加え、Gogs gitサーバー上のspring-petclinic gitリポジトリにpushするたびに、パイプラインが実行されます。</p>
+</div>
+</li>
+<li>
+<p>パイプラインを確認しましょう。パイプラインが開始されると、各ステップをクリックすることで、各ステップの詳細なログを確認することができます。次の数ステップで幾つかの確認方法を指示します。</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><strong>Source Clone</strong> - アプリのソースコードは、このラボにインストールされているGit（Gogs）サーバーからpullされています。</p>
+<div class="paragraph">
+<p>[注意] ファイルは、パイプラインにあらかじめ設定されたワークスペースを介して、パイプラインのステップ間で持続されます。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops24.png" alt="400" width="700"></span></p>
+</div>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>git repo の URL をコピーします。ブラウザのタブを開いてURLにアクセスし、コードを確認します</p>
+</li>
+<li>
+<p>URLは以下のようにGogsのgit repoに移動します。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops25.png" alt="600" width="700"></span></p>
+</div>
+</li>
+<li>
+<p><code>gogsadmin</code>をクリックします。このラボのために2つのリポジトリが用意されています。</p>
+<div class="paragraph">
+<p>gogsadminユーザの認証情報は以下の通りです:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User: gogsadmin</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pass: openshift</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p><strong>Dependency Report</strong> は、ソースコードからアプリの依存関係のレポートを作成し、レポートサーバーリポジトリにアップロードするパイプラインのステップです。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops26.png" alt="300" width="700"></span></p>
+</div>
+<div class="paragraph">
+<p>reportを見てみましょう!</p>
+</div>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>開発コンソールから、左のナビメニューにある <code>Search</code> をクリックします。</p>
+</li>
+<li>
+<p>Resourcesをクリックし、<code>route</code>と入力、リストから<code>Route</code>をクリックします。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops09.png" alt="400" width="400"></span></p>
+</div>
+</li>
+<li>
+<p>reports-repo のリンクをクリック。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops27.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>このページの <code>petclinic-build</code> リンクをクリックします。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops28.png" alt="300" width="500"></span></p>
+</div>
+</li>
+<li>
+<p>引き続き、spring-petclinic → target → site をクリックします。</p>
+</li>
+<li>
+<p>そのページから <code>Dependencies</code> をクリックします。そのページから、下にスクロールすることで詳細を調べることができます。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops29.png" alt="300" width="700"></span></p>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p><strong>Unit tests</strong> タスクは、依存性レポートと並行して実行されます。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops30.png" alt="300" width="700"></span></p>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p><strong>Release-app</strong> はアプリケーションをJARとしてパッケージ化し、Sonatype Nexusのスナップショットリポジトリにリリースします。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops31.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p><strong>Build-image</strong> ステップは、DEV環境でS2Iを使ってコンテナイメージをビルドし、OpenShiftの内部レジストリにプッシュし、spring-petclinic:[branch]-[commit-sha] および spring-petclinic:latest でタグ付けします。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops32.png" alt="300" width="700"></span></p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="devsecops"><a class="anchor" href="#devsecops"></a>Advanced Cluster Securityを利用したDevSecOpsのステップ</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Red Hat Advanced Cluster Security (ACS) for Kubernetes は、ビルトインのセキュリティポリシーを使用して、単一のコンソールからクラスタとアプリケーションを制御します。<br>
+第一世代のコンテナセキュリティプラットフォームは、コンテナにフォーカスしていますが、ACSはKubernetesにフォーカスしており、Kubernetesの宣言型データとビルトイン制御を活用したKubernetesネイティブアーキテクチャにより、リッチなコンテキスト、ネイティブな実施、継続的なハードニングを実現し、DevOpsチームとセキュリティチームのセキュリティ運用を支援します。さらに、Kubernetes にフォーカスした ACS は、DevOpsチームおよびセキュリティチームがセキュリティ維持を運用できるよう支援し、クラウドネイティブなアプリケーションスタックを保護するプロセスを簡素化します。</p>
+</div>
+<div class="paragraph">
+<p>このラボでは、ACS が CI/CD プロセスにどのように統合されるかを学びます。ACSはプロセスを簡素化するだけでなく、組織内のセキュリティチームに可視性を提供します。
+ <a href="https://docs.openshift.com/acs/cli/getting-started-cli.html">roxctl</a> と ACS API を使って、いくつかの追加のセキュリティステップを DevSecOps のパイプラインに統合しました:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>image scan</strong> のステップでは、ACSスキャナを使用して、最後のステップで生成され、プッシュされたイメージをスキャンします。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops33.png" alt="300" width="700"></span></p>
+</div>
+<div class="paragraph">
+<p>ログにある以下のエラーは、<code>pretty</code> フォーマットが非推奨であることが原因です。</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ERROR:	invalid output format "pretty" used. You can only specify json or csv</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>フォーマットを変更するには、以下の手順で行います。</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>左のメニューから <code>Pipelines</code> をクリックします。</p>
+</li>
+<li>
+<p><code>petclinic-build-dev</code> パイプラインをクリックします。</p>
+</li>
+<li>
+<p><code>Actions</code> &#8594; <code>Edit Pipeline</code>をクリックします。</p>
+</li>
+<li>
+<p><code>image-scan</code> タスクをクリックし、<code>pretty</code> の代わりに <code>csv</code> を使用します。</p>
+<div class="paragraph">
+<p><span class="image unresolved"><img src="cicd/lab4.2-image-scan.png" alt="500" width="700"></span></p>
+</div>
+</li>
+<li>
+<p><code>Save</code>をクリックします。</p>
+</li>
+<li>
+<p>オプションで <code>Actions</code> &#8594; rerun を選択すると、イメージスキャンの実際の出力が表示されます。</p>
+<div class="paragraph">
+<p><span class="image unresolved"><img src="cicd/lab4.2-image-scan-withlogs.png" alt="500" width="700"></span></p>
+</div>
+<div class="paragraph">
+<p>このステップのログには、ACSのイメージスキャンへの直接のリンクがあります。</p>
+</div>
+<div class="paragraph">
+<p>[注意] もし、そのリンク先にセキュリティ証明書の警告が表示されても無視してください。<br>
+コピーして別のタブに貼り付けると、スキャンしたイメージの詳細な情報を得ることができます。以下の情報を入力してください:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User: admin</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pass: stackrox</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>URLは、Vulnerability Managementに移動します。このImageに含まれる脆弱性(CVE)の概要を説明します。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops35.png" alt="500" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>Deployment タブで、
+ACSツールはこのイメージがデプロイされているかどうかを認識します。最初のパイプラインはすべてのゲートを通過しなかったので、最初はデプロイメントが表示されないでしょう。</p>
+</li>
+<li>
+<p>Component タブは、
+このイメージ内のすべてのコンポーネントのビューです。コンポーネントのアップグレードで修正可能な CVE の数、コンポーネントの CVE に関連する CVSS スコアのトップ、各コンポーネントを含む他のデプロイメントなどの関連情報が一覧表示されます。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops34.png" alt="500" width="700"></span></p>
+</div>
+<div class="paragraph">
+<p>例えば、tomcat 9.0.31 コンポーネントをクリックすると、下図のようにコンポーネントの詳細が表示されます。このページには、リスクの優先順位、CVE の情報、コンポーネントの場所、CVE を修正するためにアップグレードするコンポーネントのバージョンが表示されます。</p>
+</div>
+<div class="paragraph">
+<p><span class="image unresolved"><img src="cicd/lab4.2-tomcat-cve.png" alt="500" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>右上の “X” をクリックすると戻ることができます</p>
+</li>
+<li>
+<p>CVEsタブは、Imageのすべての脆弱性を表示します。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops36.png" alt="500" width="700"></span></p>
+</div>
+</li>
+<li>
+<p><code>Overview</code> タブに戻り、<code>Image findings</code> セクションにスクロールダウンすると、修正可能な CVE が表示されます。これらは、ACS が修正可能であることを認識している CVE です。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops37.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p><code>Image Findings</code>セクションの上にある <code>Dockerfile</code> セクションを '&gt;' をクリックして展開すると、ACS CVEデータベースにより、各ステップごとに詳細なイメージコンポーネントと関連するCVEが表示されます。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops38.png" alt="400" width="700"></span></p>
+</div>
+<div class="paragraph">
+<p>パイプラインの復習を続ける前に、ACSでの確認を自由に行ってください。セキュリティチェックとツールの機能を理解することは、このラボの重要な部分であり、安全なソフトウェア配信パイプラインの知識を高めるのに役立ちます。</p>
+</div>
+<div class="paragraph">
+<p>ここで、OpenShift Developerのコンソールに戻ります。</p>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>パイプラインの <strong>Image Check</strong> ステップ</p>
+<div class="paragraph">
+<p>[注意] ACSで定義されている様々なセキュリティポリシーのビルド時の違反</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops39.png" alt="400" width="700"></span></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops40.png" alt="400" width="700"></span></p>
+</div>
+<div class="paragraph">
+<p>このステップでは、このイメージを使用するすべてのデプロイメントについて、ACS で定義されたセキュリティ ポリシーのビルド時およびデプロイ時の違反をチェックします。ACSでセキュリティポリシーの実施を設定したため、セキュリティポリシー違反でこのパイプラインはこのタスクで失敗します。
+脆弱性の高いコンテナ型アプリケーションを展開しないためには、イメージのスキャンが重要です。</p>
+</div>
+</li>
+<li>
+<p><strong>Deploy-check</strong> は、ログにポリシーの違反が表示されます。ログには違反が表示されていますが、この例ではデプロイの強制がオンになっていないため、このタスクで失敗することはありませんでした。この後のラボで、ポリシーの詳細を確認します。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops41.png" alt="400" width="700"></span></p>
+</div>
+<div class="paragraph">
+<p>[注意] この3つのステップ（<strong>deploy-check, image-check, image-scan</strong>）は、DevSecOpsパイプラインの時間短縮のために並行して実行されます。</p>
+</div>
+</li>
+<li>
+<p>もし <strong>image-check</strong> が失敗したら、パイプラインの実行に移動して <code>image-check</code> をクリックします。ログの一番下に <code>Error: failed policies found: 1 policy violated that are failing the check.</code> と表示されます。このエラーの原因は、違反が発生した場合に ACS がビルドやデプロイからポリシーを強制するためです。パイプラインでは、Tektonタスクのroxctlを介してACSを統合しています。</p>
+<div class="paragraph">
+<p>Imageがポリシーに違反した場合、コードを修正し、チェックに合格するまでパイプラインを実行することがベストプラクティスです。ログには違反の一覧と対処法が報告されています。開発者は <code>image-check</code> タスクのログから情報を取得し、それに応じて変更を加えることができます。修正がGitにチェックインされると、パイプラインが起動されます。今回、<a href="#fiximage">Imageを修正するためのボーナスエクササイズ</a>を用意しました。もし、パイプライン上で他のタスクのテストを続けたい場合は、ポリシーに例外を追加して、spring-petclinicを除外することができます。
+ポリシーに例外を追加することは、開発者がコードを修正する必要があり、かつ、CIプロセスがテストを継続する必要がある場合に有効である。</p>
+</div>
+<div class="paragraph">
+<p>[注意] 違反を無くして、チェックに合格するようにコードを修正することが推奨されるアプローチであることに注意してください。</p>
+</div>
+<div class="paragraph">
+<p>spring-petclinicビルドのポリシーを迂回する例外を追加したい場合を想定しています。</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><strong>image-check</strong> タスクのログを調べると、以下のような失敗の原因となるメッセージが見つかります:</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✗ Image image-registry.openshift-image-registry.svc:5000/ocp-workshop/spring-petclinic@sha256:ece54d2923654c36f4e97bc0410f5c027871c5b7483e977cfc6c2bd56fef625d and '<strong>ERROR: Policy "Fixable Severity at least Important"</strong>'</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><code>ワッフルアイコン</code> <span class="image"><img src="_images/cicd/lab4-devsecops42.png" alt="20" width="20"></span> をクリックしてコンソールリンクを表示 → 以下のように <code>Red Hat Advanced Cluster Security For Kubernetes</code> を選択します。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops43.png" alt="700" width="300"></span></p>
+</div>
+</li>
+<li>
+<p>ACSコンソールにログインするよう促されます → <code>Advanced</code> をクリック → <code>Proceed to central-stackrox.apps.cluster&#8230;&#8203;</code> リンクをクリックして進みます。</p>
+</li>
+<li>
+<p>以下の情報を入力してください:</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User: admin</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pass: stackrox</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>ログインをクリックし、以下のようにパイプラインを再実行します。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops44.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>左上の <span class="image"><img src="_images/cicd/lab4-devsecops45.png" alt="20" width="20"></span> をクリック → Platform Configuration をクリック → Policies を選択します。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops46.png" alt="100" width="200"></span></p>
+</div>
+</li>
+<li>
+<p>Policies の下にある検索フィールドに、ポリシー名 <strong>Fixable Severity at least Important</strong> を入力し、Enterキーを押します。結果、ポリシーが表示されます。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops47.png" alt="300" width="700"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Fixable Severity at least Important</code> をクリックすると、ポリシーの詳細ページが表示されます。ポリシーページでは、<code>Actions</code> でポリシーの編集、クローン、エクスポート、無効化ができます。<code>Actions</code> の中にある <code>Edit policy</code> をクリックします。開発者はガイダンスの情報を使って、イメージを修正することができます。ライフサイクルステージの情報は、ポリシーの強制が行われる場所です。有効なポリシーに違反しているため、パイプラインのビルドとデプロイのステージを通過することはできません。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops48_new.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p><code>Policy details</code>で <code>Next</code> をクリックします。</p>
+</li>
+<li>
+<p><code>Policy behavior</code>で <code>Next</code> をクリックします。</p>
+</li>
+<li>
+<p><code>Policy criteria</code> の <code>Next</code> をクリックします。Imageを除外するために、<code>Policy scope</code> セクションの UI を表示します。</p>
+</li>
+<li>
+<p>Exclude imagesセクションで、<code>Excluded Images (Build Lifecycle only)</code> リストのオプションをフィルタリングするために以下をタイプします:</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">image-registry.openshift-image-registry.svc:5000/ocp-workshop/spring-petclinic</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><code>Create "image-registry.openshift-image-registry.svc:5000/ocp-workshop/spring-petclinic"</code>Imageを選択してください。</p>
+<div class="paragraph">
+<p><span class="image unresolved"><img src="cicd/lab4.2-5-exclude-image_new.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p><code>Next</code> をクリックします。</p>
+</li>
+<li>
+<p>ポリシーの変更内容を確認して、<code>Save</code> をクリックします。</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>これで、<code>Fixable Severity</code>のポリシーは以下のようになります。</p>
+<div class="paragraph">
+<p><span class="image unresolved"><img src="cicd/lab4.2-5-2Policy_new.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>OpenShift developer console に戻り、ナビの “ocp-workshop” プロジェクトの下にあるパイプラインをクリックします。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops52.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>パイプラインを再実行します。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops53.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>Pipeline Runsタブをクリックし、開始したPipeline Runをクリックします。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops54.png" alt="300" width="700"></span></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops55.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p><code class="注意">image-check</code> ステップで、重大ではないその他の ACS ポリシー違反に対する警告が引き続き表示されますが、パイプラインはブロックされず、正常に完了します。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops55a.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>ボーナスラボ： 余裕のある方は、 <a href="#fiximage">bonus lab</a> でImageを修正し、違反のないイメージの作成にチャレンジしてみてください。 <br>
+対応が終わったら、上で付与したポリシーの例外を削除します。</p>
+</li>
+<li>
+<p><strong>update deployment step</strong> タスクで、Kubernetes kustomization ファイルは、dev用のオーバーレイにある最新のイメージ [commit-sha] で更新されます。これにより、私たちのアプリケーションは、このパイプラインでビルドされた特定のイメージを使用してデプロイされることが保証されます。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops56.png" alt="300" width="700"></span></p>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="cd"><a class="anchor" href="#cd"></a>GitOpsを使った継続的デリバリー</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>GitOpsは、クラウドネイティブなアプリケーションの継続的なデプロイメントを実装するための宣言的な方法です。GitOpsを使用して、マルチクラスタKubernetes環境にわたるOpenShift Container Platformクラスタとアプリケーションを管理するための反復可能なプロセスを作成することができます。GitOpsは、複雑なデプロイメントを高速に処理し自動化することで、デプロイとリリースサイクルの時間を短縮します。<br>
+GitOps のワークフローは、アプリケーションを開発、テスト、ステージング、そして本番へとプッシュします。GitOps は新しいアプリケーションをデプロイするか既存のアプリケーションを更新するので、私たちはリポジトリを更新するだけでよく、他のすべては GitOps が自動化します。</p>
+</div>
+<div class="paragraph">
+<p>Argo CD は Git リポジトリに保存された設定を継続的に監視し、DEV および STAGE 環境にアプリケーションをデプロイする際に、Kustomize を使用して環境固有の設定をオーバーレイします。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops57.png" alt="300" width="700"></span></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>ArgoCD アプリケーションは、Gogs の git リポジトリにあるマニフェストを同期し、定義されたネームスペースに自動的に変更を適用します:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>上部のワッフルアイコンをクリックしてコンソールリンクに移動し、"Cluster Argo CD "を選択します。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops43.png" alt="300" width="300"></span></p>
+</div>
+</li>
+<li>
+<p>リンクは Argo CD のログインにリダイレクトされます。初めてArgo CDにログインする場合は、<code>Advanced</code> → <code>Proceed to openshift-gitops-server-openshift-gitops.apps&#8230;&#8203;</code> のリンクをクリックしてください。</p>
+</li>
+<li>
+<p>"admin" ユーザーとしてログインするためには、まず、以下のコマンドを実行して、そのパスワードを取得してください。</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">oc get secret/openshift-gitops-cluster -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d ; echo</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>ログインすると、以下のように Argo CD コンソールにアプリケーションがリストアップされます。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops58.png" alt="500" width="600"></span></p>
+</div>
+</li>
+<li>
+<p><code>dev-spring-petclinic</code> をクリックすると、アプリケーションにアクセスできます。</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>ArgoCD は、アプリケーションの branch/repo に定義されているすべてのマニフェストをデプロイします。アプリケーションには "Synced" と表示されています。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops59.png" alt="300" width="700"></span></p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><span class="image"><img src="_images/cicd/lab4-devsecops101.png" alt="100" width="90"></span> をクリックすると 'dev-spring-petclinic' アプリケーションの詳細が表示されます。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops102.png" alt="900" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>上記の詳細には、アプリケーションがデプロイされているネームスペースが表示されます。OpenShift Dev コンソールに戻り、左側のナビゲーションメニューから devsecops-dev project の下にある <code>Topology</code> をクリックします。矢印をクリックすると、アプリケーションの URL にアクセスできます。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops60.png" alt="300" width="500"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>アプリケーションは以下のように表示されます。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops61.png" alt="500" width="500"></span></p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Argo CD コンソールに戻ります。左上の <code>Applications</code> をクリックします。</p>
+<div class="paragraph">
+<p>[注意]  <code>stage-spring-petclinic</code> の namespace は devsecops-qa に設定されています。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops62.png" alt="300" width="300"></span></p>
+</div>
+</li>
+<li>
+<p><code>stage-spring-petclinic</code> をクリック</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops63.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>トップメニューの <span class="image"><img src="_images/cicd/lab4-devsecops64.png" alt="40" width="50"></span> をクリックして、アプリケーションを devsecops-qa にデプロイし、以下のように “Synced” されるまで待ちます。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops65.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>OpenShift Dev コンソールに戻り、左のナビゲーションメニューから devsecops-qa project の下にある <code>Topology</code> をクリックします。矢印アイコンをクリックして、アプリケーションの URL にアクセスします。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops66.png" alt="300" width="300"></span></p>
+</div>
+</li>
+<li>
+<p>以下のように、devsecops-qa プロジェクトにアプリケーションがデプロイされました。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops67.png" alt="300" width="500"></span></p>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="dast"><a class="anchor" href="#dast"></a>PostCI - ダイナミックアプリケーションセキュリティとテスト (DAST)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>動的アプリケーションセキュリティテスト (DAST)</strong> は、アプリケーションの実行状態において、セキュリティ上の脆弱性を示唆する状態を検出するために設計されています。DASTは、運用中のアプリケーションの脆弱性を特定する上で重要な役割を担っています。DASTの侵入テストを実行することで、攻撃者よりも先にそれらの脆弱性を発見することができます。
+このラボでは、例としてZAPを使用してアプリケーションセキュリティテストを実施します。アプリケーションがDevからQAに昇格した後、パフォーマンステストとペネトレーションテストが並行して開始されます。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Openshift Pipelines の CI は、ArgoCD アプリが完全に同期され (<strong>Wait Application step</strong>) 、私たちのアプリとすべてのリソースがデプロイされるまで待ちます。</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>成功した実行済のパイプラインに移動し、ステップ <strong>wait-application</strong> に移動します。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops68.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>ステップをクリックすると、以下のようなログが表示されます。</p>
+<div class="paragraph">
+<p>このステップでは、ArgoCD インスタンスへの認証を行い、Git リポジトリ（gogs）から OCP クラスタ内のターゲットプロジェクトに 'dev-spring-petclinic' アプリケーションの同期処理を開始します。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops69.png" alt="300" width="700"></span></p>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>パイプラインをクリックして、<strong>perf-test-clone</strong> のステップを実行します。</p>
+<div class="paragraph">
+<p>パフォーマンステストは、以下のようにパイプラインのワークスペースにクローン（<strong>Performance Tests Clone</strong>）されます。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops70.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>ステップ <strong>pentesting-test</strong> をクリックします。</p>
+<div class="paragraph">
+<p>Web スキャナ <a href="https://www.zaproxy.org/">OWASP Zap Proxy</a> を用いて、ベースラインを用いたペンテストを実行し（<strong>ペンテストテスト</strong>）、可能性のある脆弱性を確認します。Zap Proxyのレポートがレポートサーバーリポジトリにアップロードされます。
+結果はログの最下行からご覧ください。</p>
+</div>
+<div class="paragraph">
+<p>[注意] <code>Internal Server Error</code> で、レポートがアップロードできていない場合、ページ下部の <a href="https://github.com/RH-OPEN/SecurityDemos/blob/master/2021Labs/OpenShiftSecurity/documentation/lab4.adoc#%E3%82%A2%E3%83%83%E3%83%97%E3%83%AD%E3%83%BC%E3%83%89%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%81%B8%E3%81%AEzap%E3%83%97%E3%83%AD%E3%82%AD%E3%82%B7%E3%83%AC%E3%83%9D%E3%83%BC%E3%83%88%E3%81%AE%E3%82%A2%E3%83%83%E3%83%97%E3%83%AD%E3%83%BC%E3%83%89%E3%81%AB%E5%A4%B1%E6%95%97%E3%81%97%E3%81%BE%E3%81%97%E3%81%9F">アップロードサーバーへのzapプロキシレポートのアップロードに失敗しました</a> に従って、curlコマンドを修正し、パイプラインを再実行して下さい。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops72.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>パフォーマンスレポートがレポートサーバーリポジトリにアップロードされます。</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>左側のナビゲーションの <code>Route</code> をクリックし、<code>reports-repo</code> のルートロケーションをクリックします。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops73.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>リンクは、PipelineRun の名前に対応した名前を持っています。</p>
+</li>
+<li>
+<p>PipelineRun と同じ名称のリンクをクリックしてください。同様のリンクは以下の通りです。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops75.png" alt="300" width="400"></span></p>
+</div>
+</li>
+<li>
+<p>ルートの場所の下にある petclinic-build-dev-XXXX.html にアクセスしてください。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops76.png" alt="300" width="700"></span></p>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>並行して、負荷テスト <a href="https://gatling.io/">Gatling</a> を使ってパフォーマンステストが実行されます。パイプラインの実行から "performance-test" をクリックします。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops77.png" alt="300" width="700"></span></p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>レポートの場所を見るにはスクロールしてください</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops78.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>レポートのレポの場所に戻ります:</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops79.png" alt="300" width="400"></span></p>
+</div>
+</li>
+<li>
+<p>Pipeline Runの名前に一致するリンクをクリックし、<code>performance-test</code> タスクログにも表示されているパフォーマンステスト "addvisitsimulation" に対応するリンクを選択します。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops80.png" alt="200" width="400"></span></p>
+</div>
+</li>
+<li>
+<p>下の画像のようなパフォーマンステストのページをご覧ください。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops81.png" alt="400" width="700"></span></p>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="policy_violation"><a class="anchor" href="#policy_violation"></a>セキュリティポリシーとCIについて</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>このデモでは、パイプラインに適用されるセキュリティポリシーの制御、イメージのスキャン、アプリケーションのデプロイに使用されるさまざまなデプロイメントテンプレートの分析が可能です。<br>
+ACSで異なるセキュリティポリシーを適用し、このポリシー違反がDevSecOpsパイプラインの各ステップ（ステップ “image-check”, “image-scan”, “deploy-check”) に現れるとCIパイプラインを失敗させることが可能です。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>waffle icon</code> をクリックし、 <code>Red Hat Advanced Cluster Security for Kubernetes</code> を選択します。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops43.png" alt="300" width="300"></span></p>
+</div>
+</li>
+<li>
+<p>ACS コンソールに admin/stackrox というクレデンシャルでログインしてください。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops82.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>Platform Configuration → Policies をクリックします。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops83.png" alt="200" width="200"></span></p>
+</div>
+<div class="paragraph">
+<p>セキュリティポリシーは、BUILDレベル（イメージのビルド/プッシュ時）、またはDEPLOYMENTレベル（アプリケーションのデプロイを阻止する）で定義することができます。</p>
+</div>
+</li>
+<li>
+<p><code>Red Hat Package Manager in Image</code> をクリックします。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops84.png" alt="300" width="700"></span></p>
+</div>
+<div class="paragraph">
+<p>例えば、このセキュリティポリシーは、アプリケーションイメージにRHパッケージマネージャ（dnf、yum）が含まれているかどうかをチェックし、ビルドされたイメージにRHパッケージマネージャが含まれていることを検出するとパイプラインをFAILにします。</p>
+</div>
+</li>
+<li>
+<p>ポリシーの内容は変更することができます。また、ライフサイクルステージは、ポリシーとその他のプロパティで定義されます。ポリシーオプションを有効にすると、ユーザーがCIを制御して失敗または合格することができます。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops85.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p><code>Actions</code> &#8594; <code>Edit policy</code> をクリックします。</p>
+</li>
+<li>
+<p><code>Policy details</code> の <code>Next</code> をクリックします。</p>
+</li>
+<li>
+<p>レスポンスの方法は <code>Inform and enforce</code> を選択します。</p>
+</li>
+<li>
+<p>ビルド時 <code>Enforce on Build</code> を選択します。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops87.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p><code>Next</code>, <code>Next</code>, <code>Next</code> そして <code>Save</code> と順番にクリックします。
+このステップでは、ユーザがパイプラインを完全に制御できるようにします。定義されたセキュリティポリシーを超えるImageは、イメージレジストリにプッシュされたり、クラスタにデプロイされることはありません。</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="fiximage"><a class="anchor" href="#fiximage"></a>ボーナスラボ：Image を修正する</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>bad image</code>のビルドに強制合格するImageへの移行を示せる、完全なデモのために、Image ビルドのTektonタスクを更新し、Imageを修正することができます。
+この例では、ACS で <code>Red Hat Package Manager in Image</code> ポリシーの実施を有効にしています。これは、ベースイメージに yum と rpm の両方のパッケージマネージャーが存在するため、イメージチェックでパイプラインが失敗することになります。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>前のセクションで行ったように、<strong>Fixable Severity at least important</strong> ポリシーで違反を回避する例外を追加します。</p>
+</li>
+<li>
+<p><strong>Red Hat Package Manager in Image</strong> ポリシーの実施を有効にします:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>Platform Configuration</code> → <code>Policies</code> に移動します。</p>
+</li>
+<li>
+<p><code>Red Hat Package Manager in Image</code> のポリシーを検索します。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops88.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p><code>Red Hat Package Manager in Image</code> policy をクリックします。</p>
+</li>
+<li>
+<p><code>Actions</code> &#8594; <code>Edit policy</code> をクリックします。</p>
+</li>
+<li>
+<p><code>Next</code> をクリックします。</p>
+</li>
+<li>
+<p><code>Inform and enforce</code> を選択します。</p>
+</li>
+<li>
+<p><code>Configure enforcement behavior</code> の Build で <code>Enforce on Build</code> を選択し、確認します。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops87.png" alt="300" width="600"></span></p>
+</div>
+</li>
+<li>
+<p><code>Next</code> を続けてクリックし <code>Review policy</code> ページに移動します。</p>
+</li>
+<li>
+<p><code>Save</code> をクリックします(変更がある場合)。</p>
+</li>
+<li>
+<p>OpenShift Dev UI を開き、左側の Pipelines をクリック → <code>petclinic-build-dev</code> pipeline をクリック → 右上の Actions をクリック → <code>Start last run</code> を選択します。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops91.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>イメージに"rpm"と"yum"パッケージマネージャーがインストールされているため、<strong>image-check</strong>ステップで失敗することを確認し、確認します。<strong>image-check</strong>ステップからの提案に注目してください:</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops92.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>この改善案で効果的に Image を更新していきます。</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Tekton タスク <code>s2i-java-11</code> を更新するのではなく、タスクを置き換えます。</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>OpenShift Administrator UIから、ocp-workshopプロジェクトが選択されていることを確認してから、Pipelines &gt; Tasksに移動し、s2i-java-11タスクを削除してください。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops93.png" alt="300" width="700"></span></p>
+</div>
+</li>
+<li>
+<p>または、Tekton cli で</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tkn task delete s2i-java-11</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>コマンドターミナルから新しい更新タスクを適用します:</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kubectl apply -f <a href="https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/s2ijava-mgr.yaml" class="bare">https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/s2ijava-mgr.yaml</a> --namespace=ocp-workshop</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">または</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">oc apply -f <a href="https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/s2ijava-mgr.yaml" class="bare">https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/s2ijava-mgr.yaml</a>  -n ocp-workshop</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>OpenShift Dev UI を開き、パイプラインを再実行すると、デプロイメントが成功しました。developersの皆さん、おめでとうございます!</p>
+</li>
+<li>
+<p>パイプラインの実行結果は以下のようになります。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-bonus-result.png" alt="300" width="700"></span></p>
+</div>
+<div class="paragraph">
+<p>[注意] <a href="https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/s2ijava-mgr.yaml" class="bare">https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/s2ijava-mgr.yaml</a><strong class="<strong>labs-artifacts/s2ijava-mgr.yaml"></strong> </strong>ファイルに、どのようにImageが修正されたかの詳細が記載されていますので、ご確認ください。ビルドタスクにステップを追加し、buildahを活用してイメージからパッケージマネージャーを削除しています(ファイル内で "rpm" or "yum" を検索してください)。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops94.png" alt="300" width="700"></span></p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ボーナスラボ_cveを一時的にスヌーズする"><a class="anchor" href="#_ボーナスラボ_cveを一時的にスヌーズする"></a>ボーナスラボ: CVEを一時的にスヌーズする</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>もし、Imageを修正したり、ビルドのポリシーに例外を追加する代わりに、特定のCVEsをスヌーズしたいだけなら。ACSでは、ユーザーが一定期間、CVEを一時的に無効にすることができます。</p>
+</div>
+<div class="paragraph">
+<p>[注意] CVEs をスヌーズすると、すべてのポリシーで CVEs が一時的に無効になります。</p>
+</div>
+<div class="paragraph">
+<p>このラボでは、イメージチェックに失敗する原因となる CVE をスヌーズして、パイプラインの構築を続行します。image-checkタスクがログから違反情報を報告していることがわかります。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops95.png" alt="300" width="700"></span></p>
+</div>
+<div class="paragraph">
+<p>状況によっては、CVE を一定期間スヌーズさせたい場合があります。以下はその手順です:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>waffle icon</code> からACSコンソールに移動し、<code>Red Hat Advanced Clustered Security for Kubernetes</code> のリンクをクリックします。
+左メニューのVulnerability Managementをクリックし、上部にあるCVEsボタンをクリックします。</p>
+</li>
+<li>
+<p>スヌーズするCVEを探し、必要な期間を選択してスヌーズを設定することができます。</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops96.png" alt="300" width="700"></span></p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="troubleshooting"><a class="anchor" href="#troubleshooting"></a>トラブルシューティング</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_コード分析の失敗"><a class="anchor" href="#_コード分析の失敗"></a>コード分析の失敗</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>課題:
+mvn が maven install 'sonar:sonar' を実行しているときに、Code Analysis がエラーを出すことがあります:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">[[1;31mERROR[m] Failed to execute goal+
+[32morg.apache.maven.plugins:maven-compiler-plugin:3.8.1:testCompile[m [1m(default-testCompile)[m on
+project [36mspring-petclinic[m: [1;31mCompilation failure[m
+[[1;31mERROR[m]
+[1;31m/workspace/source/spring-petclinic/src/test/java/org/springframework/samples/petclinic/service/ClinicServiceTests.java:[30,51]
+cannot access org.springframework.samples.petclinic.owner.Pet[m
+[[1;31mERROR[m] [1;31m  bad class file:
+/workspace/source/spring-petclinic/target/classes/org/springframework/samples/petclinic/owner/Pet.class[m
+[[1;31mERROR[m] [1;31m    class file contains wrong class:
+org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest[m
+[[1;31mERROR[m] [1;31m    Please remove or make sure it appears in the correct subdirectory of the
+classpath.[m
+[[1;31mERROR[m] [1;31m[m
+[[1;31mERROR[m] -&gt; [1m[Help 1][m
+[[1;31mERROR[m]</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>解決方法:
+パイプラインを再実行すれば、追加で何かを変更することなく成功します。その後、結果は成功します:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[[1;34mINFO[m] Analyzed bundle 'petclinic' with 20 classes+
+[[1;34mINFO[m] Analyzed bundle 'petclinic' with 20 classes
+[[1;34mINFO[m]
+[[1;34mINFO[m] [1m--- [0;32mmaven-jar-plugin:3.1.2:jar[m [1m(default-jar)[m @
+[36mspring-petclinic[0;1m ---[m
+[[1;34mINFO[m]
+[[1;34mINFO[m] [1m--- [0;32mspring-boot-maven-plugin:2.2.5.RELEASE:repackage[m [1m(repackage)[m @
+[36mspring-petclinic[0;1m ---[m
+[[1;34mINFO[m] Replacing main artifact with repackaged archive
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time: 01:55 min
+[[1;34mINFO[m] Finished at: 2021-07-23T07:37:09Z
+[[1;34mINFO[m] Final Memory: 118M/1245M
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_junit_テストの失敗"><a class="anchor" href="#_junit_テストの失敗"></a>JUnit テストの失敗</h3>
+<div class="paragraph">
+<p>コード解析を参照。再実行するだけです。エラーが修正されます。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_アップロードサーバーへのzapプロキシレポートのアップロードに失敗しました"><a class="anchor" href="#_アップロードサーバーへのzapプロキシレポートのアップロードに失敗しました"></a>アップロードサーバーへのzapプロキシレポートのアップロードに失敗しました。</h3>
+<div class="paragraph">
+<p>zap proxy タスクが実行された後、間違ったフォルダ構造のためにレポートリポサーバへのアップロードに失敗する:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">+ ls -lhrt /zap/wrk
+total 76K
+
+-rw-r--r--. 1 zap zap 75K Aug 20 10:41 petclinic-build-devm9hqv.html
++ echo 'Uploading the report into the report server'
+Uploading the report into the report server
+
++ curl -u reports:reports -F path=petclinic-build-devm9hqv.html -F file=/zap/wrk/petclinic-build-devm9hqv.html -X POST http://reports-repo:8080/upload
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100   335  100    36  100   299   7200  59800 --:--:-- --:--:-- --:--:-- 67000
+{"message":"Internal Server Error"}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>zap-proxyタスクを修正し、99行目を以下の curl の内容に置き換えることで、正しくアップロードできるようになります。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">curl -u $(params.REPORTS_REPO_USERNAME):$(params.REPORTS_REPO_PASSWORD) -F path=$PIPELINERUN_NAME/$PIPELINERUN_NAME.html -F file=@/zap/wrk/$PIPELINERUN_NAME.html -X POST $(params.REPORTS_REPO_HOST)/upload; echo ""</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>その後、パイプラインを再実行し、効果的にzapプロキシレポートがレポートサーバーにアップロードされることを確認します:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">+ curl -u reports:reports -F path=petclinic-build-dev-6f4569/petclinic-build-dev-6f4569.html -F file=@/zap/wrk/petclinic-build-dev-6f4569.html -X POST http://reports-repo:8080/upload
+% Total % Received % Xferd Average Speed Time Time Time Current
+Dload Upload Total Spent Left Speed
+
+0 0 0 0 0 0 0 0 --:--:-- --:--:-- --:--:-- 0
+100 76435 100 89 100 76346 22250 18.2M --:File has been uploaded to petclinic-build-dev-6f4569/petclinic-build-dev-6f4569.html 🚀--:-- --:--:-- --:--:-- 18.2M
++ echo ''</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="_images/cicd/lab4-devsecops100.png" alt="300" width="700"></span></p>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="13-cicd.html">DevSecOps Pipelines</a></span>
+  <span class="next"><a href="15-contributors.html">Contributors</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
