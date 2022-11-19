@@ -384,10 +384,33 @@
 <article class="doc">
 <h1 class="page">Setup</h1>
 <div class="sect1">
-<h2 id="prerequisite"><a class="anchor" href="#prerequisite"></a>Setup OpenShift Cluster</h2>
+<h2 id="_setup_openshift_cluster"><a class="anchor" href="#_setup_openshift_cluster"></a>Setup OpenShift Cluster</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To run OpenShift4, you need to have one provisioned environment using <a href="https://demo.redhat.com">RHPDS</a> - Go to Catalog &#8594; Openshift 4.10 Workshop.</p>
+<p>To run OpenShift4, you need to have one provisioned environment using <a href="https://demo.redhat.com">RHPDS</a>.
+Go to Catalog &#8594; Openshift 4.10 Workshop &#8594; Order.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_login_openshift_web_console"><a class="anchor" href="#_login_openshift_web_console"></a>Login OpenShift Web console</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Once you have a workshop environment, you can also access OpenShift web console.<br>
+The web console URL is shown in RHPDS as well as cluster admin username/password.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If the language setting is NOT set to "English", it might to be good to set it "English" via User Preference menu. <br>
+If you continue this workshop without "English" setting, the pipeline will not display properly in the DevSecOps lab.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -395,7 +418,7 @@
 <h2 id="_connect_to_your_bastion_server"><a class="anchor" href="#_connect_to_your_bastion_server"></a>Connect to your bastion server</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Once you have a workshop environment, you need to access the bastion server in your environment via SSH.</p>
+<p>You also need to access the bastion server in your environment via SSH.</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -423,18 +446,52 @@ Kubernetes Version: v1.23.5+8471591</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_login_openshift_web_console"><a class="anchor" href="#_login_openshift_web_console"></a>Login OpenShift Web console</h2>
+<h2 id="_edit_the_default_project_template"><a class="anchor" href="#_edit_the_default_project_template"></a>Edit the default project template</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>If you have a workshop environment, you can access OpenShift web console.</p>
+<p>Then first of all, the default Project Template must be edited.<br>
+In the Openshift 4.10 Workshop environment provided by RHPDS, a Limit Range is automatically set for newly created projects. This can be an obstacle to the smooth running of the Workshop.</p>
 </div>
 <div class="paragraph">
-<p>The web console URL is shown in RHPDS as well as cluster admin username/password.</p>
+<p>Use the <code>oc edit</code> command to clear the Limit Range section.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc edit template project-request -n openshift-config</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Delete all of the following part from the <code>project-request</code> manifest and save it.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>- apiVersion: v1
+  kind: LimitRange
+  metadata:
+    name: ${PROJECT_NAME}-core-resource-limits
+    namespace: ${PROJECT_NAME}
+  spec:
+    limits:
+    - default:
+        cpu: 500m
+        memory: 1.5Gi
+      defaultRequest:
+        cpu: 50m
+        memory: 256Mi
+      max:
+        cpu: 4
+        memory: 6Gi
+      type: Container
+    - max:
+        cpu: 4
+        memory: 12Gi
+      type: Pod</pre>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="downloadtutorial"><a class="anchor" href="#downloadtutorial"></a>Get tutorial sources</h2>
+<h2 id="_get_tutorial_sources"><a class="anchor" href="#_get_tutorial_sources"></a>Get tutorial sources</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Before we start setting up the environment, let’s clone the tutorial sources and set the <code>TUTORIAL_HOME</code> environment variable to point to the root directory of the tutorial:</p>

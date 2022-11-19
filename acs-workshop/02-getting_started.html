@@ -412,7 +412,7 @@
 </div>
 </li>
 <li>
-<p>Confirm default installation parameters (auto update, <code>latest channel</code>, <code>rhacs-operator</code> namespace).</p>
+<p>Confirm installation parameters (auto update, <code>rhacs-3.70 channel</code>, <code>rhacs-operator</code> namespace).</p>
 <div class="imageblock">
 <div class="content">
 <img src="_images/install/02_install_acs_operator.png" alt="ACS Operator 3" width="800">
@@ -464,7 +464,28 @@
 </div>
 </div>
 <div class="paragraph">
-<p>The following is an example of the central custom resource. You can do this in two ways, via the web console or via the CLI.</p>
+<p>Then, create a secret with a password to be used by the admin user in ACS Central. You will specify this secret later when you create ACS Central.<br>
+This is not a mandatory work, but you should set <code>stackrox</code> as the admin password with <code>acs-password</code> secret for later labs in this workshop.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If you create Central without specifying a Secret, a random string will be set as the admin user&#8217;s password.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc create secret generic acs-password --from-literal=password=stackrox -n stackrox</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, let&#8217;s create Central. The following is an example of the central custom resource. You can do this in two ways, via the web console or via the CLI.</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -483,6 +504,8 @@ spec:
         enabled: false
       route:
         enabled: true
+    adminPasswordSecret:
+      name: acs-password
     persistence:
       persistentVolumeClaim:
         claimName: stackrox-db
@@ -580,30 +603,7 @@ spec:
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Once the installation is complete, obtain and copy the generated admin password from the <code>central-htpasswd</code> secret.</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>Using the command line:</p>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc -n stackrox get secret central-htpasswd -o go-template='{{index .data "password" | base64decode}}'</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Using the web console, <strong>Secrets</strong> view from the <code>Developer</code> perspective (search for <code>central-htpasswd</code> secret):</p>
-<div class="imageblock">
-<div class="content">
-<img src="_images/install/05_1_login_password.png" alt="ACS Operator 61" width="800">
-</div>
-</div>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>Extract the hostname of the generated route from the command line as follows or using the <code>Topology</code> view from the web console.</p>
+<p>Once the installation is complete, extract the hostname of the generated route from the command line as follows or using the <code>Topology</code> view from the web console.</p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get routes/central -n stackrox -o jsonpath='{.spec.host}'</code></pre>
@@ -611,7 +611,7 @@ spec:
 </div>
 </li>
 <li>
-<p>Login to <a href="https://&lt;route_hostname&gt" class="bare">https://&lt;route_hostname&gt</a>; using the <code>admin</code> username and the password extracted before.</p>
+<p>Login to <a href="https://&lt;route_hostname&gt" class="bare">https://&lt;route_hostname&gt</a>; using the <code>admin</code> username and the password <code>stackrox</code>.</p>
 <div class="imageblock">
 <div class="content">
 <img src="_images/install/05_2_login.png" alt="ACS Operator 62" width="800">
@@ -809,8 +809,10 @@ Independent of which option to install you used, you need to deploy the ACS Demo
 <p>Download the repo with the demo:</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ansible-galaxy collection install kubernetes.core
-pip install kubernetes jmespath
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">sudo dnf install -y ansible
+ansible-galaxy collection install kubernetes.core
+sudo pip3 install kubernetes openshift jmespath
+cd
 git clone <a href="https://github.com/rh-mobb/rhacs-demo" class="bare">https://github.com/rh-mobb/rhacs-demo</a>
 cd rhacs-demo</code></pre>
 </div>
@@ -832,16 +834,8 @@ you must be logged to the OpenShift cluster before you execute the playbook.
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ansible-playbook rhacs-demo.yaml -e stackrox_central_admin_password=[your_pass]<i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ansible-playbook rhacs-demo.yaml -e stackrox_central_admin_password=stackrox</code></pre>
 </div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>The same password you obtained in the step 1 of the <code>ACS login</code> section.</td>
-</tr>
-</table>
 </div>
 </li>
 <li>
@@ -867,14 +861,6 @@ ok: [localhost] =&gt; {
 </div>
 <div class="olist arabic">
 <ol class="arabic">
-<li>
-<p>Create a new project:</p>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc new-project test</code></pre>
-</div>
-</div>
-</li>
 <li>
 <p>Start some applications with critical vulnerabilities:</p>
 <div class="listingblock console-input">
