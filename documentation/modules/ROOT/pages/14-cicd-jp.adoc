@@ -45,26 +45,55 @@ OperatorHub の画面で、Red Hat OpenShift Pipelines の Operator を検索し
 
 image:cicd/lab4-pipelines-install-01.PNG[600,800]
 
-image:cicd/lab4-pipelines-install-02.png[600,800]
+画面の右側に Operator の詳細が表示されます。上部にある "Install" のボタンをクリックします。
 
-image:cicd/lab4-pipelines-install-03.png[600,800]
+image:cicd/lab4-pipelines-install-02.PNG[600,800]
+
+OpenShift Pipelines Operator の channel や Installation mode などの設定画面が表示されます。**設定は変更せず、デフォルトの設定のまま**下部にある "Install" のボタンをクリックします。これで自動的にインストールが始まります。 +
+(設定項目の選択肢が図と異なることがありますが、デフォルトのままで構いません)
+
+image:cicd/lab4-pipelines-install-03.PNG[600,800]
+
+再度左のメニューから "Operators" > "Installed Operators" を選択し、インストールされている Operator の一覧に、OpenShift Pipelines Operator が表示されていることを確認します。Operator の Status が "Succeeded" となるまで待ちます。
+(おおむね5分も待てばよいでしょう)
 
 同様に、Red Hat OpenShift GitOps もインストールします。
 
-image:cicd/lab4-gitops-install-01.png[600,800]
+image:cicd/lab4-gitops-install-01.PNG[600,800]
 
-image:cicd/lab4-gitops-install-02.png[600,800]
+image:cicd/lab4-gitops-install-02.PNG[600,800]
 
-image:cicd/lab4-gitops-install-03.png[600,800]
+OpenShift GitOps Operator の channel や Installation mode などの設定画面が表示されます。**設定は変更せず、デフォルトの設定のまま**下部にある "Install" のボタンをクリックします。これで自動的にインストールが始まります。 +
+(設定項目の選択肢が図と異なることがありますが、デフォルトのままで構いません)
 
+image:cicd/lab4-gitops-install-03.PNG[600,800]
+
+再度左のメニューから "Operators" > "Installed Operators" を選択し、インストールされている Operator の一覧に、OpenShift GitOps Operator が表示されていることを確認します。Operator の Status が "Succeeded" となるまで待ちます。
+(おおむね5分も待てばよいでしょう)
+
+=== サンプルパイプラインのデプロイ
+OpenShift Pipelines と OpenShift GitOps を使ってパイプラインを手で構築してもよいのですが、ここではサンプルで用意しているパイプラインを使って CI と CD を体験します。 +
+次のように Git リポジトリをクローンして、シェルスクリプトを実行します。シェルスクリプトでは Ansible の Playbook が実行され、自動的にパイプラインが作られます。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]	
+----
+cd
+git clone https://github.com/tutsunom/Devsecops-CI-CDPipeLineDemo.git
+cd Devsecops-CI-CDPipeLineDemo
+./install.sh
+----
+
+NOTE: 前段の System Policies の演習の最後に、**"Fixable Severity at least Important"** Policy を "Build" と "Deploy" のステージで enforce するように設定していると、Playbook は途中で fail します。 +
+これは、パイプラインで使用するアプリケーションがこの Policy に抵触し、その結果 Pod がデプロイできないためです。 +
+**"Fixable Severity at least Important"** Policy を "Deploy" で enforce しないように修正して、再度 Playbook を実施して下さい。
 
 [#ci]
 == 継続的インテグレーション
-
 このモジュールでは、サンプルで用意しているセキュアなパイプラインを OpenShift Pipelines で実行し、各ステップを確認してみます。 +
 このラボでは、Tekton パイプラインの開始方法と、開発ライフサイクル内でセキュリティと gitops ツールを統合するためのタスクの使用方法を学習します。
 
-. パイプラインを開始するには、3つの方法があります。以下の3つのOptionいずれかで、パイプラインを開始してください:
+. パイプラインを開始するには、いくつかの方法があります。以下のOptionいずれかで、パイプラインを開始してください:
 ** Option 1: Developer UIを使用して開始する場合
 .. ブラウザで OpenShift Console の URL を参照します。
 .. 提供されたadminユーザの認証情報を使用してコンソールにログインします。
@@ -92,19 +121,7 @@ image:cicd/lab4-devsecops08.png[200,700]
 +
 .. start をクリックします。
 +
-** Option 2: コマンドラインからパイプラインを起動する場合。
-コマンドラインはテスト中にパイプラインを開始するのに便利な方法で、PRやgitへのpushをシミュレートしてパイプラインを起動させる方法です。CLIでパイプラインを開始するのが好きなユーザー向けです。
-+
-.. 実行:
-+
-[source]
-
-|===
-|oc create -f https://raw.githubusercontent.com/RedHatDemos/SecurityDemos/master/2021Labs/OpenShiftSecurity/documentation/labs-artifacts/pipeline-build-dev-run.yaml -n cicd
-
-|===
-+
-** Option 3: 新しいコードがgit repoにpushされると、パイプラインを開始するトリガーにもなります。このラボでは、git repo は Gogs です。以下の手順は、「Gogs」git repo経由でコードをプッシュするためのものです。
+** Option 2: 新しいコードがgit repoにpushされると、パイプラインを開始するトリガーにもなります。このラボでは、git repo は Gogs です。以下の手順は、「Gogs」git repo経由でコードをプッシュするためのものです。
 このオプションは、開発者の観点からすると最もポピュラーなものかもしれません。PR や git リポジトリへのプッシュからパイプラインが始まり、webhook が自動的にパイプラインを開始します。
 +
 .. 開発コンソールから、左のナビメニューにある `Search` をクリックします。
@@ -121,8 +138,8 @@ image:cicd/lab4-devsecops10.png[400,600]
 image:cicd/lab4-devsecops11.png[500,400]
 +
 |===
-|User: gogsadmin
-|Password: openshift
+|User: gogs
+|Password: gogs
 |===
 +
 .. gogsadminアカウント内のspring-petclinicリポジトリを選択します:
