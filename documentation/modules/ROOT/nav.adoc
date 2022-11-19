@@ -75,9 +75,9 @@
 ** xref:12-platform_configuration.adoc#system_health[RHACS System Health]
 ** xref:12-platform_configuration.adoc#access_control[RHACS Access Control]
 
-* xref:13-cicd.adoc[DevSecOps Pipelines]
-** xref:13-cicd#install_devsecops_pipelines[Installing RHACS DevSecOps Pipeline]
-** xref:13-cicd#run_devsecops_pipelines[Running the demo of DevSecOps Pipeline]
+//* xref:13-cicd.adoc[DevSecOps Pipelines]
+//** xref:13-cicd#install_devsecops_pipelines[Installing RHACS DevSecOps Pipeline]
+//** xref:13-cicd#run_devsecops_pipelines[Running the demo of DevSecOps Pipeline]
 
 * xref:14-cicd-jp.adoc[RHACSを使用したアプリケーションへの自動化セキュリティの実装とDevSecOpsの構築]
 ** xref:14-cicd-jp#ci[継続的インテグレーション]
