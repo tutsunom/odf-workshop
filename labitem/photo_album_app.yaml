@@ -1,0 +1,144 @@
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app.kubernetes.io/name: python-s3-photo-album
+  name: python-s3-photo-album
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: photo-album:latest
+  source:
+    # Expect a local directory to be streamed to OpenShift as a build source
+    type: Git
+    git: 
+      uri: https://github.com/shawnhouston/photo-album-app.git
+  strategy:
+    type: Docker
+    dockerStrategy:
+      # Find the image build instructions in ./Dockerfile
+      dockerfilePath: Containerfile
+  triggers:
+  - type: ImageChange
+  - type: ConfigChange
+...
+---
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: "photo-album"
+spec:
+#  additionalConfig:
+#    bucketclass: namespace-only
+#    bucketclass: backingstore-only
+#    bucketclass: mirroring-only
+#    bucketclass: cache-me
+  generateBucketName: "photo-album"
+  storageClassName: openshift-storage.noobaa.io
+...
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  annotations:
+    description: Keeps track of changes in the application image
+  name: photo-album
+spec: {}
+...
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: photo-album
+  name: photo-album
+spec:
+  replicas: 1
+  selector:
+    app: photo-album
+    deploymentconfig: photo-album
+  strategy:
+    resources: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: photo-album
+        deploymentconfig: photo-album
+    spec:
+      containers:
+      - image: shouston/python-s3-photo-album
+        name: photo-album
+        env:
+          - name: BUCKET_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: photo-album
+                key: BUCKET_HOST
+          - name: BUCKET_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: photo-album
+                key: BUCKET_NAME
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: photo-album
+                key: AWS_ACCESS_KEY_ID
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: photo-album
+                key: AWS_SECRET_ACCESS_KEY          
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - photo-album
+      from:
+        kind: ImageStreamTag
+        name: photo-album:latest
+    type: ImageChange
+...
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: photo-album
+  name: photo-album
+spec:
+  ports:
+  - name: web
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: photo-album
+    deploymentconfig: photo-album
+...
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    openshift.io/host.generated: "true"
+  labels:
+    app: photo-album
+  name: photo-album
+spec:
+  subdomain: ""
+  to:
+    kind: Service
+    name: photo-album
+    weight: 100
+  wildcardPolicy: None
+...
