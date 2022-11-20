@@ -2,6 +2,19 @@
 include::_attributes.adoc[]
 :profile: acs
 
+== Gitリポジトリのクローン
+まずGitリポジトリをクローンし、ディレクトリに移動します。
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+git clone https://github.com/tutsunom/odf-workshop.git
+----
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+cd odf-workshop
+----
+
 == OCPクラスタのスケールと新しいWorkerノードの追加
 
 このセクションでは、ODFリソースのために3つのWorkerノードを追加してOCPクラスタをスケールする前に、まずOCP環境のWorkerノードを確認します。
@@ -42,12 +55,15 @@ cluster-d6qlm-mbttv-worker-us-east-2b   1         1         1       1           
 cluster-d6qlm-mbttv-worker-us-east-2c   1         1         1       1           27m
 ----
 
-インフラストラクチャーノードの演習と同様に、新しい *MachineSets* を作成して、各AWS AZにOCP クラスタのストレージ専用ノードを作成します。
+NOTE: 既存の *MachineSet* が3つのAZに無いOCPクラスタでもそのまま継続できます。後ほど対応します。
+
+新しい *MachineSets* を作成して、各AWS AZにOCP クラスタのストレージ専用ノードを作成します。
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 ----
-bash {{ HOME_PATH }}/support/machineset-generator.sh 3 workerocs 0 | oc create -f -
+chmod +x labitem/machineset-cli
+bash labitem/machineset-generator.sh 3 workerocs 0 | oc create -f -
 oc get machineset -n openshift-machine-api -l machine.openshift.io/cluster-api-machine-role=workerocs -o name | xargs oc patch -n openshift-machine-api --type='json' -p '[{"op": "add", "path": "/spec/template/spec/metadata/labels", "value":{"node-role.kubernetes.io/worker":"", "role":"storage-node", "cluster.ocs.openshift.io/openshift-storage":""} }]'
 oc get machineset -n openshift-machine-api -l machine.openshift.io/cluster-api-machine-role=workerocs -o name | xargs oc scale -n openshift-machine-api --replicas=1
 ----
@@ -72,6 +88,27 @@ cluster-d6qlm-mbttv-workerocs-us-east-2b-dx69b   Running   m5.4xlarge   us-east-
 cluster-d6qlm-mbttv-workerocs-us-east-2c-g7hlh   Running   m5.4xlarge   us-east-2   us-east-2c   4m38s
 ----
 
+[CAUTION]
+====
+既存の *MachineSet* が3つのAZに無いOCPクラスタでは、``Failed`` 状態の *Machine* が存在します。この場合は、``Failed`` 状態の *Machine* に対応する *MachineSet* を削除して下さい。 +
+代わりに、`Provisioning` または `Provisioned` の状態の *Machine* に対応する *MachineSet* を適宜 Scale-Out して、最終的に3台のworkerocs *Machine* を持つように設定して下さい。
+
+.``us-east-2c`` AZにのみ既存 *MachineSet* がある場合の例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+$ oc get machines -n openshift-machine-api | egrep 'NAME|workerocs'
+NAME                                             PHASE     TYPE         REGION      ZONE         AGE
+cluster-2mwq7-jls22-workerocs-us-east-2c-ch9ds   Running   m5.4xlarge   us-east-2   us-east-2c   18m
+cluster-2mwq7-jls22-workerocs-us-east-2c-r5smx   Running   m5.4xlarge   us-east-2   us-east-2c   19m
+cluster-2mwq7-jls22-workerocs-us-east-2c-scjvh   Running   m5.4xlarge   us-east-2   us-east-2c   18m
+
+$ oc get machineset -n openshift-machine-api | egrep 'NAME|workerocs'
+NAME                                       DESIRED   CURRENT   READY   AVAILABLE   AGE
+cluster-2mwq7-jls22-workerocs-us-east-2c   3         3         3       3           30m
+----
+====
+
 workerocs *Machines* はAWS EC2の `m5.4xlarge` インスタンスタイプを使用していることがわかります。
 
 NOTE: `m5.4xlarge` インスタンスタイプは、16vCPUと64GBのメモリを持ち、ODFで推奨されるスペックです。 +
@@ -84,7 +121,7 @@ NOTE: `m5.4xlarge` インスタンスタイプは、16vCPUと64GBのメモリを
 watch "oc get machinesets -n openshift-machine-api | egrep 'NAME|workerocs'"
 ----
 
-新しい workerocs *Machine Set* の全てで `READY` と `AVAILABLE` のカラムに数値(この場合は `1` )が表示されるまで待ちます。このステップには5分以上かかる場合があります。
+新しい workerocs *MachineSet* の全てで `READY` と `AVAILABLE` のカラムに数値(この場合は `1` )が表示されるまで待ちます。このステップには5分以上かかる場合があります。
 
 .出力例:
 [.console-output]
@@ -141,6 +178,7 @@ ip-10-0-219-73.us-east-2.compute.internal    Ready    worker   14m   v1.22.8+c02
 
 このセクションではOpenShift Data Foundation(ODF) Operatorをインストールし、新しく追加した3つのWorkerノードを使ってODFクラスタを作成します。 +
 以下がインストールされます。
+
 - ODF *OperatorGroup*
 - ODF *Subscription*
 - 他の全てのODF リソース (Operators, Ceph Pods, NooBaa Pods, StorageClasses)
@@ -181,12 +219,10 @@ image::ocs/OCS4-OCP-OperatorHub-Filter.png[OCP OperatorHub Filter]
 .OCP OperatorHub Install OpenShift Data Foundation
 image::ocs/OCS4-OCP4-OperatorHub-Install.png[OCP OperatorHub Install]
 
-次の画面で、設定が下図に示す通りであることを確認します。
+次の画面で、`channel` や `Installed Namespace` などを設定しますが、**デフォルトのまま Install をクリックします。**
 
 .OCP Subscribe to OpenShift Data Foundation
 image::ocs/OCS4-OCP4-OperatorHub-Subscribe.png[OCP OperatorHub Subscribe]
-
-*Install* をクリックします。
 
 ターミナルに戻って、下のコマンドを実行してインストール状況を確認できます。
 
@@ -394,7 +430,7 @@ NOTE: MCGは `noobaa-core` Pod内部の `db` コンテナで利用するため�
 == Rook-Ceph toolboxを利用したCephクラスタの確認
 
 このセクションでは、Rook-Ceph *toolbox* を利用して作成されたCephクラスタに対してcephコマンドを実行し、クラスタ構成を確認します。
-Rook-Ceph *toolbox* はODFに同梱されていないため、手動でデプロイする必要があります。
+Rook-Ceph *toolbox* は手動でデプロイする必要があります。
 
 以下のコマンドで `OCSInitialization ocsinit` を修正します。
 
