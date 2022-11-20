@@ -1,4 +1,4 @@
-* xref:01-setup.adoc[Setup]
+* xref:01-odf_deploy.adoc[ODF Operatorを使用したストレージのデプロイ]
 
 * xref:02-rbd_rwopvc.adoc[Ceph RBD volumeを使用するOCPアプリケーション]
 
