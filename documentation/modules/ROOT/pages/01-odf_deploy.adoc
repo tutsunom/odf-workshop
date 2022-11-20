@@ -331,7 +331,9 @@ image::ocs/OCS4-config-screen-partial3.png[Review and create new storage system]
 ----
 watch oc -n openshift-storage get pods
 ----
-.出力例
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
 ----
 NAME                                                              READY   STATUS      RESTARTS   AGE
 csi-cephfsplugin-5gmvm                                            3/3     Running     0          7m29s

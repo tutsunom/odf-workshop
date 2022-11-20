@@ -10,6 +10,8 @@ include::_attributes.adoc[]
 
 NOTE: Rails + PostgreSQLのデプロイを開始できるように、前のセクションをすべて完了したことを確認してください。
 
+=== アプリケーションのデプロイ
+
 はじめに新規のプロジェクトを作成します。
 
 [.console-input]
