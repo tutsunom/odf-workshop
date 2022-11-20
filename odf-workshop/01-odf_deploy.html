@@ -3,10 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>ODF Operatorを使用してストレージをデプロイする :: ODF Workshop</title>
-    <link rel="canonical" href="https://tutsunom.github.io/odf-workshop/odf-workshop/01-setup.html">
-    <link rel="prev" href="index.html">
-    <link rel="next" href="02-getting_started.html">
+    <title>ODF Operatorを使用したストレージのデプロイ :: ODF Workshop</title>
+    <link rel="canonical" href="https://tutsunom.github.io/odf-workshop/odf-workshop/01-odf_deploy.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 <link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
@@ -71,12 +69,12 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="01-setup.html">Setup</a>
+    <a class="nav-link" href="#01-setup.adoc">Setup</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#prerequisite">Prerequisites</a>
+    <a class="nav-link" href="#01-setup.adoc#prerequisite">Prerequisites</a>
   </li>
 </ul>
   </li>
@@ -376,147 +374,14 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">ODF Workshop</a></li>
-    <li><a href="01-setup.html">Setup</a></li>
+    <li><a href="01-odf_deploy.html">ODF Operatorを使用したストレージのデプロイ</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/tutsunom/odf-workshop/edit/master/documentation/modules/ROOT/pages/01-setup.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/tutsunom/odf-workshop/edit/master/documentation/modules/ROOT/pages/01-odf_deploy.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">ODF Operatorを使用してストレージをデプロイする</h1>
-<div class="sect1">
-<h2 id="_setup_openshift_cluster"><a class="anchor" href="#_setup_openshift_cluster"></a>Setup OpenShift Cluster</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>To run OpenShift4, you need to have one provisioned environment using <a href="https://demo.redhat.com">RHPDS</a>.
-Go to Catalog &#8594; Openshift 4.10 Workshop &#8594; Order.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_login_openshift_web_console"><a class="anchor" href="#_login_openshift_web_console"></a>Login OpenShift Web console</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Once you have a workshop environment, you can also access OpenShift web console.<br>
-The web console URL is shown in RHPDS as well as cluster admin username/password.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-If the language setting is NOT set to "English", it might to be good to set it "English" via User Preference menu. <br>
-If you continue this workshop without "English" setting, the pipeline will not display properly in the DevSecOps lab.
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_connect_to_your_bastion_server"><a class="anchor" href="#_connect_to_your_bastion_server"></a>Connect to your bastion server</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>You also need to access the bastion server in your environment via SSH.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ssh lab-user@&lt;YOUR_BASTION_SERVER&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Some CLI tools are already installed on you bastion server. You can check the OpenShift version using:</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc version</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The output should show oc version &gt;=4.10:</p>
-</div>
-<div class="listingblock console-output">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">Client Version: 4.10.36
-Server Version: 4.10.36
-Kubernetes Version: v1.23.5+8471591</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_edit_the_default_project_template"><a class="anchor" href="#_edit_the_default_project_template"></a>Edit the default project template</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Then first of all, the default Project Template must be edited.<br>
-In the Openshift 4.10 Workshop environment provided by RHPDS, a Limit Range is automatically set for newly created projects. This can be an obstacle to the smooth running of the Workshop.</p>
-</div>
-<div class="paragraph">
-<p>Use the <code>oc edit</code> command to clear the Limit Range section.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc edit template project-request -n openshift-config</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Delete all of the following part from the <code>project-request</code> manifest and save it.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>- apiVersion: v1
-  kind: LimitRange
-  metadata:
-    name: ${PROJECT_NAME}-core-resource-limits
-    namespace: ${PROJECT_NAME}
-  spec:
-    limits:
-    - default:
-        cpu: 500m
-        memory: 1.5Gi
-      defaultRequest:
-        cpu: 50m
-        memory: 256Mi
-      max:
-        cpu: 4
-        memory: 6Gi
-      type: Container
-    - max:
-        cpu: 4
-        memory: 12Gi
-      type: Pod</pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_get_tutorial_sources"><a class="anchor" href="#_get_tutorial_sources"></a>Get tutorial sources</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Before we start setting up the environment, let’s clone the tutorial sources and set the <code>TUTORIAL_HOME</code> environment variable to point to the root directory of the tutorial:</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone <a href="https://github.com/tutsunom/odf-workshop.git" class="bare">https://github.com/tutsunom/odf-workshop.git</a> odf-workshop</code></pre>
-</div>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export TUTORIAL_HOME="$(pwd)/odf-workshop"</code></pre>
-</div>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd $TUTORIAL_HOME</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>And then you are ready for installing RHACS on Openshift.</p>
-</div>
-</div>
-</div>
+<h1 class="page">ODF Operatorを使用したストレージのデプロイ</h1>
 <div class="sect1">
 <h2 id="_ocpクラスタのスケールと新しいworkerノードの追加"><a class="anchor" href="#_ocpクラスタのスケールと新しいworkerノードの追加"></a>OCPクラスタのスケールと新しいWorkerノードの追加</h2>
 <div class="sectionbody">
@@ -528,14 +393,14 @@ In the Openshift 4.10 Workshop environment provided by RHPDS, a Limit Range is a
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get nodes -l node-role.kubernetes.io/worker -l '!node-role.kubernetes.io/infra','!node-role.kubernetes.io/master'</code></pre>
 </div>
 </div>
-<div class="listingblock">
+<div class="listingblock console-output">
 <div class="title">出力例:</div>
 <div class="content">
-<pre>NAME                                         STATUS   ROLES    AGE   VERSION
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                                         STATUS   ROLES    AGE   VERSION
 ip-10-0-129-208.us-east-2.compute.internal   Ready    worker   15m   v1.22.8+c02bd9d
 ip-10-0-157-116.us-east-2.compute.internal   Ready    worker   15m   v1.22.8+c02bd9d
 ip-10-0-185-31.us-east-2.compute.internal    Ready    worker   15m   v1.22.8+c02bd9d
-ip-10-0-215-4.us-east-2.compute.internal     Ready    worker   15m   v1.22.8+c02bd9d</pre>
+ip-10-0-215-4.us-east-2.compute.internal     Ready    worker   15m   v1.22.8+c02bd9d</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -543,27 +408,27 @@ ip-10-0-215-4.us-east-2.compute.internal     Ready    worker   15m   v1.22.8+c02
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre>oc get machinesets -n openshift-machine-api | grep -v infra</pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get machinesets -n openshift-machine-api | grep -v infra</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>ここでは、既にクラスタに存在するWorkerノードを作成するために使用される、既存の <strong>MachineSets</strong> が表示されます。3つのAWS Availability Zone (AZ)それぞれに <strong>MachineSet</strong> が存在することが分かります。</p>
 </div>
-<div class="listingblock">
+<div class="listingblock console-output">
 <div class="title">出力例:</div>
 <div class="content">
-<pre>NAME                                    DESIRED   CURRENT   READY   AVAILABLE   AGE
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                                    DESIRED   CURRENT   READY   AVAILABLE   AGE
 cluster-d6qlm-mbttv-worker-us-east-2a   2         2         2       2           27m
 cluster-d6qlm-mbttv-worker-us-east-2b   1         1         1       1           27m
-cluster-d6qlm-mbttv-worker-us-east-2c   1         1         1       1           27m</pre>
+cluster-d6qlm-mbttv-worker-us-east-2c   1         1         1       1           27m</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>インフラストラクチャーノードの演習と同様に、新しい <strong>MachineSets</strong> を作成して、各AWS AZにOCP クラスタのストレージ専用ノードを作成します。</p>
 </div>
-<div class="listingblock execute">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">bash {{ HOME_PATH }}/support/machineset-generator.sh 3 workerocs 0 | oc create -f -
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">bash {{ HOME_PATH }}/support/machineset-generator.sh 3 workerocs 0 | oc create -f -
 oc get machineset -n openshift-machine-api -l machine.openshift.io/cluster-api-machine-role=workerocs -o name | xargs oc patch -n openshift-machine-api --type='json' -p '[{"op": "add", "path": "/spec/template/spec/metadata/labels", "value":{"node-role.kubernetes.io/worker":"", "role":"storage-node", "cluster.ocs.openshift.io/openshift-storage":""} }]'
 oc get machineset -n openshift-machine-api -l machine.openshift.io/cluster-api-machine-role=workerocs -o name | xargs oc scale -n openshift-machine-api --replicas=1</code></pre>
 </div>
@@ -571,21 +436,21 @@ oc get machineset -n openshift-machine-api -l machine.openshift.io/cluster-api-m
 <div class="paragraph">
 <p>新しい <strong>Machines</strong> が作成されていることを確認します。</p>
 </div>
-<div class="listingblock execute">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">oc get machines -n openshift-machine-api | egrep 'NAME|workerocs'</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get machines -n openshift-machine-api | egrep 'NAME|workerocs'</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>しばらくは <code>Provisioning</code> または <code>Provisioned</code> の状態にありますが、最終的には <code>Running</code> の状態になります。</p>
 </div>
-<div class="listingblock">
+<div class="listingblock console-output">
 <div class="title">出力例:</div>
 <div class="content">
-<pre>NAME                                             PHASE     TYPE         REGION      ZONE         AGE
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                                             PHASE     TYPE         REGION      ZONE         AGE
 cluster-d6qlm-mbttv-workerocs-us-east-2a-v8p5k   Running   m5.4xlarge   us-east-2   us-east-2a   4m39s
 cluster-d6qlm-mbttv-workerocs-us-east-2b-dx69b   Running   m5.4xlarge   us-east-2   us-east-2b   4m38s
-cluster-d6qlm-mbttv-workerocs-us-east-2c-g7hlh   Running   m5.4xlarge   us-east-2   us-east-2c   4m38s</pre>
+cluster-d6qlm-mbttv-workerocs-us-east-2c-g7hlh   Running   m5.4xlarge   us-east-2   us-east-2c   4m38s</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -606,21 +471,21 @@ cluster-d6qlm-mbttv-workerocs-us-east-2c-g7hlh   Running   m5.4xlarge   us-east-
 <div class="paragraph">
 <p>さて、私たちの新しい <strong>Machines</strong> がOCPクラスタに追加されているかどうかを確認します。</p>
 </div>
-<div class="listingblock execute">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">watch "oc get machinesets -n openshift-machine-api | egrep 'NAME|workerocs'"</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">watch "oc get machinesets -n openshift-machine-api | egrep 'NAME|workerocs'"</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>新しい workerocs <strong>Machine Set</strong> の全てで <code>READY</code> と <code>AVAILABLE</code> のカラムに数値(この場合は <code>1</code> )が表示されるまで待ちます。このステップには5分以上かかる場合があります。</p>
 </div>
-<div class="listingblock">
+<div class="listingblock console-output">
 <div class="title">出力例:</div>
 <div class="content">
-<pre>NAME                                       DESIRED   CURRENT   READY   AVAILABLE   AGE
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                                       DESIRED   CURRENT   READY   AVAILABLE   AGE
 cluster-d6qlm-mbttv-workerocs-us-east-2a   1         1         1       1           5m25s
 cluster-d6qlm-mbttv-workerocs-us-east-2b   1         1         1       1           5m25s
-cluster-d6qlm-mbttv-workerocs-us-east-2c   1         1         1       1           5m25s</pre>
+cluster-d6qlm-mbttv-workerocs-us-east-2c   1         1         1       1           5m25s</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -629,22 +494,22 @@ cluster-d6qlm-mbttv-workerocs-us-east-2c   1         1         1       1        
 <div class="paragraph">
 <p>最後に、3つのWorkerノードが追加されていることを確認します。全てのworker nodeの <code>STATUS</code> が <code>Ready</code> であることを確認します。</p>
 </div>
-<div class="listingblock execute">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">oc get nodes -l node-role.kubernetes.io/worker -l '!node-role.kubernetes.io/infra','!node-role.kubernetes.io/master'</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get nodes -l node-role.kubernetes.io/worker -l '!node-role.kubernetes.io/infra','!node-role.kubernetes.io/master'</code></pre>
 </div>
 </div>
-<div class="listingblock">
+<div class="listingblock console-output">
 <div class="title">出力例:</div>
 <div class="content">
-<pre>NAME                                         STATUS   ROLES    AGE   VERSION
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                                         STATUS   ROLES    AGE   VERSION
 ip-10-0-129-208.us-east-2.compute.internal   Ready    worker   45m   v1.22.8+c02bd9d
 ip-10-0-142-148.us-east-2.compute.internal   Ready    worker   13m   v1.22.8+c02bd9d
 ip-10-0-157-116.us-east-2.compute.internal   Ready    worker   45m   v1.22.8+c02bd9d
 ip-10-0-173-143.us-east-2.compute.internal   Ready    worker   13m   v1.22.8+c02bd9d
 ip-10-0-185-31.us-east-2.compute.internal    Ready    worker   45m   v1.22.8+c02bd9d
 ip-10-0-215-4.us-east-2.compute.internal     Ready    worker   45m   v1.22.8+c02bd9d
-ip-10-0-219-73.us-east-2.compute.internal    Ready    worker   13m   v1.22.8+c02bd9d</pre>
+ip-10-0-219-73.us-east-2.compute.internal    Ready    worker   13m   v1.22.8+c02bd9d</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -652,18 +517,18 @@ ip-10-0-219-73.us-east-2.compute.internal    Ready    worker   13m   v1.22.8+c02
 ODFを稼働させるノードには、<code>cluster.ocs.openshift.io/openshift-storage</code> という特定のラベルが付いている必要があります。<br>
 先に <code>workerocs</code> <strong>MachineSets</strong> を作成した時にこのラベルを追加しています。これらの <strong>MachineSets</strong> を使って作成されたすべての <strong>Machine</strong> はこのラベルを持つことになります。</p>
 </div>
-<div class="listingblock execute">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">oc get nodes -l cluster.ocs.openshift.io/openshift-storage=</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get nodes -l cluster.ocs.openshift.io/openshift-storage=</code></pre>
 </div>
 </div>
-<div class="listingblock">
+<div class="listingblock console-output">
 <div class="title">出力例:</div>
 <div class="content">
-<pre>NAME                                         STATUS   ROLES    AGE   VERSION
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                                         STATUS   ROLES    AGE   VERSION
 ip-10-0-142-148.us-east-2.compute.internal   Ready    worker   14m   v1.22.8+c02bd9d
 ip-10-0-173-143.us-east-2.compute.internal   Ready    worker   14m   v1.22.8+c02bd9d
-ip-10-0-219-73.us-east-2.compute.internal    Ready    worker   14m   v1.22.8+c02bd9d</pre>
+ip-10-0-219-73.us-east-2.compute.internal    Ready    worker   14m   v1.22.8+c02bd9d</code></pre>
 </div>
 </div>
 </div>
@@ -681,18 +546,18 @@ ip-10-0-219-73.us-east-2.compute.internal    Ready    worker   14m   v1.22.8+c02
 <div class="paragraph">
 <p>はじめに <code>openshift-storage</code> Namespace を作成します。</p>
 </div>
-<div class="listingblock execute">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">oc create namespace openshift-storage</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc create namespace openshift-storage</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>このNamespaceには、モニタリング用のラベルを追加する必要があります。これは、OCPストレージダッシュボードの Prometheus メトリクスとアラートを取得するために必要です。<br>
 <code>openshift-storage</code> Namespaceにラベルを付けるには、次のコマンドを使用します。</p>
 </div>
-<div class="listingblock execute">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">oc label namespace openshift-storage "openshift.io/cluster-monitoring=true"</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc label namespace openshift-storage "openshift.io/cluster-monitoring=true"</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -708,25 +573,11 @@ ip-10-0-219-73.us-east-2.compute.internal    Ready    worker   14m   v1.22.8+c02
 </table>
 </div>
 <div class="paragraph">
-<p><strong>Openshift Web Console</strong> を開きます。</p>
-</div>
-<div class="paragraph">
-<p>{{ MASTER_URL }}</p>
-</div>
-<div class="paragraph">
-<p><code>kubeadmin</code> としてログインします。パスワードはこちらです。</p>
-</div>
-<div class="listingblock copypaste">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">{{ KUBEADMIN_PASSWORD }}</code></pre>
-</div>
-</div>
-<div class="paragraph">
 <p>ログインしたら左側のメニューから、<strong>Operators</strong> &#8594; <strong>OperatorHub</strong> を選択します。</p>
 </div>
-<div class="imageblock unresolved">
+<div class="imageblock">
 <div class="content">
-<img src="images/ocs/OCS-OCP-OperatorHub.png" alt="OCP OperatorHub">
+<img src="_images/ocs/OCS-OCP-OperatorHub.png" alt="OCP OperatorHub">
 </div>
 <div class="title">Figure 1. OCP OperatorHub</div>
 </div>
@@ -734,27 +585,27 @@ ip-10-0-219-73.us-east-2.compute.internal    Ready    worker   14m   v1.22.8+c02
 <p>Now type <code>openshift data foundation</code> in the <strong>Filter by <em>keyword&#8230;&#8203;</em></strong> box.
 <strong>Filter by <em>keyword&#8230;&#8203;</em></strong> のボックスに、<code>openshift data foundation</code> と入力します。</p>
 </div>
-<div class="imageblock unresolved">
+<div class="imageblock">
 <div class="content">
-<img src="images/ocs/OCS4-OCP-OperatorHub-Filter.png" alt="OCP OperatorHub Filter">
+<img src="_images/ocs/OCS4-OCP-OperatorHub-Filter.png" alt="OCP OperatorHub Filter">
 </div>
 <div class="title">Figure 2. OCP OperatorHub filter on OpenShift Data Foundation Operator</div>
 </div>
 <div class="paragraph">
 <p>表示された <code>OpenShift Data Foundation Operator</code> を選択し、 <strong>Install</strong> ボタンを押します。</p>
 </div>
-<div class="imageblock unresolved">
+<div class="imageblock">
 <div class="content">
-<img src="images/ocs/OCS4-OCP4-OperatorHub-Install.png" alt="OCP OperatorHub Install">
+<img src="_images/ocs/OCS4-OCP4-OperatorHub-Install.png" alt="OCP OperatorHub Install">
 </div>
 <div class="title">Figure 3. OCP OperatorHub Install OpenShift Data Foundation</div>
 </div>
 <div class="paragraph">
 <p>次の画面で、設定が下図に示す通りであることを確認します。</p>
 </div>
-<div class="imageblock unresolved">
+<div class="imageblock">
 <div class="content">
-<img src="images/ocs/OCS4-OCP4-OperatorHub-Subscribe.png" alt="OCP OperatorHub Subscribe">
+<img src="_images/ocs/OCS4-OCP4-OperatorHub-Subscribe.png" alt="OCP OperatorHub Subscribe">
 </div>
 <div class="title">Figure 4. OCP Subscribe to OpenShift Data Foundation</div>
 </div>
@@ -764,18 +615,18 @@ ip-10-0-219-73.us-east-2.compute.internal    Ready    worker   14m   v1.22.8+c02
 <div class="paragraph">
 <p>ターミナルに戻って、下のコマンドを実行してインストール状況を確認できます。</p>
 </div>
-<div class="listingblock execute">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">watch oc -n openshift-storage get csv</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">watch oc -n openshift-storage get csv</code></pre>
 </div>
 </div>
-<div class="listingblock">
+<div class="listingblock console-output">
 <div class="title">出力例:</div>
 <div class="content">
-<pre>NAME                  DISPLAY                       VERSION   REPLACES              PHASE
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                  DISPLAY                       VERSION   REPLACES              PHASE
 mcg-operator.v4.9.8   NooBaa Operator               4.9.8     mcg-operator.v4.9.7   Succeeded
 ocs-operator.v4.9.8   OpenShift Container Storage   4.9.8     ocs-operator.v4.9.7   Succeeded
-odf-operator.v4.9.8   OpenShift Data Foundation     4.9.8     odf-operator.v4.9.7   Succeeded</pre>
+odf-operator.v4.9.8   OpenShift Data Foundation     4.9.8     odf-operator.v4.9.7   Succeeded</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -800,21 +651,21 @@ odf-operator.v4.9.8   OpenShift Data Foundation     4.9.8     odf-operator.v4.9.
 <div class="paragraph">
 <p>ODF Operatorのインストールが終わると、いくつかの新しいPodが <code>openshift-storage</code> Namespaceに作成されていることが確認できます。</p>
 </div>
-<div class="listingblock execute">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">oc -n openshift-storage get pods</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc -n openshift-storage get pods</code></pre>
 </div>
 </div>
-<div class="listingblock">
+<div class="listingblock console-output">
 <div class="title">出力例:</div>
 <div class="content">
-<pre>NAME                                               READY   STATUS    RESTARTS   AGE
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                                               READY   STATUS    RESTARTS   AGE
 noobaa-operator-75847d5b48-krtpt                   1/1     Running   0          5m37s
 ocs-metrics-exporter-7f855fc64c-xlc7s              1/1     Running   0          5m35s
 ocs-operator-7cdd8cc9f5-khwlg                      1/1     Running   0          5m35s
 odf-console-6bb644f8c4-vndfh                       1/1     Running   0          5m49s
 odf-operator-controller-manager-5b767b7f4c-6jm2j   2/2     Running   0          5m49s
-rook-ceph-operator-54d974474c-k82xz                1/1     Running   0          5m35s</pre>
+rook-ceph-operator-54d974474c-k82xz                1/1     Running   0          5m35s</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -823,18 +674,18 @@ rook-ceph-operator-54d974474c-k82xz                1/1     Running   0          
 <div class="paragraph">
 <p><strong>Create StorageSystem</strong> をクリックします。</p>
 </div>
-<div class="imageblock unresolved">
+<div class="imageblock">
 <div class="content">
-<img src="images/ocs/OCS4-OCP4-View-Operator.png" alt="Create storage system in openshift-storage namespace">
+<img src="_images/ocs/OCS4-OCP4-View-Operator.png" alt="Create storage system in openshift-storage namespace">
 </div>
 <div class="title">Figure 5. Create storage system in openshift-storage namespace</div>
 </div>
 <div class="paragraph">
 <p><code>Create StorageSystem</code> の画面が表示されます。</p>
 </div>
-<div class="imageblock unresolved">
+<div class="imageblock">
 <div class="content">
-<img src="images/ocs/OCS4-config-screen-partial1.png" alt="Configure storage system settings">
+<img src="_images/ocs/OCS4-config-screen-partial1.png" alt="Configure storage system settings">
 </div>
 <div class="title">Figure 6. Configure storage system settings</div>
 </div>
@@ -858,9 +709,9 @@ rook-ceph-operator-54d974474c-k82xz                1/1     Running   0          
 </tr>
 </table>
 </div>
-<div class="imageblock unresolved">
+<div class="imageblock">
 <div class="content">
-<img src="images/ocs/OCS4-config-screen-partial2.png" alt="Select capacity and nodes for new storage system">
+<img src="_images/ocs/OCS4-config-screen-partial2.png" alt="Select capacity and nodes for new storage system">
 </div>
 <div class="title">Figure 7. Select capacity and nodes for new storage system</div>
 </div>
@@ -884,17 +735,17 @@ rook-ceph-operator-54d974474c-k82xz                1/1     Running   0          
 <p><strong>Select nodes</strong> で、ODFクラスタで使うnodeを指定して <strong>Next</strong> をクリックします。
 ODF用のラベル <code>cluster.ocs.openshift.io/openshift-storage</code> が付けられたノードは、ここで自動で選択されるようになっています。そのため、はじめから3つのWorkerノードが選択されているはずです。以下のコマンドを実行して、間違いがないことを確認してみましょう。</p>
 </div>
-<div class="listingblock execute">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">oc get nodes --show-labels | grep ocs | cut -d ' ' -f1</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get nodes --show-labels | grep ocs | cut -d ' ' -f1</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p><strong>Next</strong> をクリックします 。</p>
 </div>
-<div class="imageblock unresolved">
+<div class="imageblock">
 <div class="content">
-<img src="images/ocs/ODF4.9-config-screen-partial3.png" alt="Select encryption and network">
+<img src="_images/ocs/ODF4.9-config-screen-partial3.png" alt="Select encryption and network">
 </div>
 <div class="title">Figure 8. ODF create a new storage cluster: Security and network</div>
 </div>
@@ -911,9 +762,9 @@ Multus CNIを使ってPodで複数のネットワークを使用できる構成�
 <div class="paragraph">
 <p><strong>Next</strong> をクリックします。</p>
 </div>
-<div class="imageblock unresolved">
+<div class="imageblock">
 <div class="content">
-<img src="images/ocs/OCS4-config-screen-partial3.png" alt="Review and create new storage system">
+<img src="_images/ocs/OCS4-config-screen-partial3.png" alt="Review and create new storage system">
 </div>
 <div class="title">Figure 9. Review and create new storage system</div>
 </div>
@@ -923,9 +774,9 @@ Multus CNIを使ってPodで複数のネットワークを使用できる構成�
 <div class="paragraph">
 <p>ターミナルウィンドウにすべての <strong>Pods</strong> が <code>Running</code> または <code>Completed</code> と表示されるまでお待ちください。これは5-10分かかります。</p>
 </div>
-<div class="listingblock execute">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">watch oc -n openshift-storage get pods</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">watch oc -n openshift-storage get pods</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -985,9 +836,9 @@ ODFを例にすると、ODFクラスタをデプロイすると最終的には <
 <div class="paragraph">
 <p><code>StorageCluster</code> のステータスは次のようにチェックできます。</p>
 </div>
-<div class="listingblock execute">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">oc get storagecluster -n openshift-storage</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get storagecluster -n openshift-storage</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -999,9 +850,9 @@ ODFを例にすると、ODFクラスタをデプロイすると最終的には <
 <p>このセクションでは、<strong>OpenShift Web Console</strong> に含まれている、ODF独自のダッシュボードを使ってストレージクラスタのステータスを確認します。<br>
 まず、ODF Operatorのインストール後に画面右上に次のようなポップアップが表示されている場合は、<strong>Refersh web console</strong> をクリックして画面を更新してください。</p>
 </div>
-<div class="imageblock unresolved">
+<div class="imageblock">
 <div class="content">
-<img src="images/ocs/ODF4.9-refresh-webconsole.png" alt="ODF Dashboard after successful operator installation">
+<img src="_images/ocs/ODF4.9-refresh-webconsole.png" alt="ODF Dashboard after successful operator installation">
 </div>
 <div class="title">Figure 10. ODF Dashboard after successful operator installation</div>
 </div>
@@ -1020,9 +871,9 @@ ODFのデプロイが完了したばかりの場合、ダッシュボードが�
 </tr>
 </table>
 </div>
-<div class="imageblock unresolved">
+<div class="imageblock">
 <div class="content">
-<img src="images/ocs/OCS-dashboard-healthy.png" alt="Storage Dashboard after successful storage installation">
+<img src="_images/ocs/OCS-dashboard-healthy.png" alt="Storage Dashboard after successful storage installation">
 </div>
 <div class="title">Figure 11. Storage Dashboard after successful storage installation</div>
 </div>
@@ -1049,9 +900,9 @@ ODFのデプロイが完了したばかりの場合、ダッシュボードが�
 <p><strong>Storage</strong> メニューの <strong>Storage Classes</strong> を選択することで、これら3つの <strong>StorageClass</strong> が表示されます。<br>
 また、以下のコマンドでも確認できます。</p>
 </div>
-<div class="listingblock execute">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">oc get storageclasses</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get storageclasses</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1082,57 +933,57 @@ Rook-Ceph <strong>toolbox</strong> はODFに同梱されていないため、手
 <div class="paragraph">
 <p>以下のコマンドで <code>OCSInitialization ocsinit</code> を修正します。</p>
 </div>
-<div class="listingblock execute">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">oc patch OCSInitialization ocsinit -n openshift-storage --type json --patch  '[{ "op": "replace", "path": "/spec/enableCephTools", "value": true }]'</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc patch OCSInitialization ocsinit -n openshift-storage --type json --patch  '[{ "op": "replace", "path": "/spec/enableCephTools", "value": true }]'</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p><code>rook-ceph-tools</code> Pod が <code>Running</code> になれば、次のようにtoolbox Podに入ることができます。</p>
 </div>
-<div class="listingblock execute">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">TOOLS_POD=$(oc get pods -n openshift-storage -l app=rook-ceph-tools -o name)
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">TOOLS_POD=$(oc get pods -n openshift-storage -l app=rook-ceph-tools -o name)
 oc rsh -n openshift-storage $TOOLS_POD</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p><strong>toolbox</strong> Podに入ったら、次のcephコマンドを実行してみて下さい。これらのコマンドによってCephクラスタの詳細な構成を確認することができます。</p>
 </div>
-<div class="listingblock execute">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">ceph status</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ceph status</code></pre>
 </div>
 </div>
-<div class="listingblock execute">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">ceph osd status</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ceph osd status</code></pre>
 </div>
 </div>
-<div class="listingblock execute">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">ceph osd tree</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ceph osd tree</code></pre>
 </div>
 </div>
-<div class="listingblock execute">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">ceph df</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ceph df</code></pre>
 </div>
 </div>
-<div class="listingblock execute">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">rados df</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">rados df</code></pre>
 </div>
 </div>
-<div class="listingblock execute">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">ceph versions</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ceph versions</code></pre>
 </div>
 </div>
-<div class="listingblock">
+<div class="listingblock console-output">
 <div class="title">出力例:</div>
 <div class="content">
-<pre>sh-4.4$ ceph status
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">sh-4.4$ ceph status
   cluster:
     id:     cbeb7c9d-2a30-4646-b5a6-72d5c1db914c
     health: HEALTH_OK
@@ -1151,23 +1002,19 @@ oc rsh -n openshift-storage $TOOLS_POD</code></pre>
     pgs:     97 active+clean
 
   io:
-    client:   1.2 KiB/s rd, 5.0 KiB/s wr, 2 op/s rd, 0 op/s wr</pre>
+    client:   1.2 KiB/s rd, 5.0 KiB/s wr, 2 op/s rd, 0 op/s wr</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p><span class="keyseq"><kbd>Ctrl</kbd>+<kbd>D</kbd></span> を押すか、 <code>exit</code> を実行して <strong>toolbox</strong> から出ることができます.</p>
 </div>
-<div class="listingblock execute">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">exit</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">exit</code></pre>
 </div>
 </div>
 </div>
 </div>
-<nav class="pagination">
-  <span class="prev"><a href="index.html">ODF Workshop</a></span>
-  <span class="next"><a href="02-getting_started.html">Getting Started</a></span>
-</nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
