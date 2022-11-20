@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Ceph RBD volumeを使用するOCPアプリケーション :: ODF Workshop</title>
+    <link rel="canonical" href="https://tutsunom.github.io/odf-workshop/odf-workshop/02-rbd_rwopvc.html">
+    <meta name="generator" content="Antora 3.0.0">
+    <link rel="stylesheet" href="../_/css/site.css">
+<link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
+          src="../_/img/header_logo.png" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" href="https://tutsunom.github.io/odf-workshop">ODF Workshop</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">CheatSheets</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">CheatSheet A</a>
+            <a class="navbar-item" href="#">CheatSheet B</a>
+            <a class="navbar-item" href="#">CheatSheet C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Upcoming Events</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Event A</a>
+            <a class="navbar-item" href="#">Event B</a>
+            <a class="navbar-item" href="#">Event C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Tutorial A</a>
+            <a class="navbar-item" href="#">Tutorial B</a>
+            <a class="navbar-item" href="#">Tutorial C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="odf-workshop" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html">ODF Workshop</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="#01-setup.adoc">Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#01-setup.adoc#prerequisite">Prerequisites</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="#02-getting_started.adoc">Getting Started</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#02-getting_started.adoc#install_acs_operator">Install RHACS Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#02-getting_started.adoc#install_acs_central">Install RHACS Central Cluster</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#02-getting_started.adoc#config_acs_securedcluster">Configuration of the RHACS Secured Cluster </a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#02-getting_started.adoc#deploy_demo_acs">Deploying Demo in RHACS</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#02-getting_started.adoc#deploy_apps">Deploying Apps</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03-overview-acs.html">RHACS Overview</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="03-overview-acs.html#acs_architecture">RHACS Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03-overview-acs.html#dashboard_acs">RHACS Dashboard</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03-overview-acs.html#dashboard_acs_header">Dashboard Header</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03-overview-acs.html#dashboard_acs_menu">Dashboard Left Menu</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="03-overview-acs.html#dashboard_acs_information">Dashboard Information</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="04-vulnerabilities.html">Vulnerability Management</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#image_overview_image_details">Image overview and image details</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#vulnerability_management_panel">Review Vulnerability Management Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#scanning_images">Scanning images for vulnerabilities</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#filtering_vulnerabilities_scans">Filtering vulnerabilities scans</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#review_cve_images">Image CVE Vulnerability Analysis</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-vulnerabilities.html#image_correlation_deployments">Image CVE correlation with Deployments</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="05-risk.html">Risk Management</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-risk.html#risk_dashboard">Review Risk Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-risk.html#risk_single_deployment_details">Single Deployment Details</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-risk.html#risk_process_discovery">Process Discovery / Runtime</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-risk.html#risk_filtering">Filtering</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="06-network_graph.html">Network Graph</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-network_graph.html#network_graph_overview">Network Graph Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-network_graph.html#network_graph_views">Network Graph Views</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-network_graph.html#network_policy_simulator">Network Policy Simulator</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="07-violations.html">Violations</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#violations_overview">Violations Dashboard Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#violations_example">Violations Build &amp; Deploy Example</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#violations_runtime">Violations Runtime Example</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#violations_behaviour">Violations Behaviour</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#policy_summary">Policy Summary</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="08-compliance.html">Compliance</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard">Review Compliance Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard_scan">Execute the first Compliance Scan</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard_review">Review the Compliance Reports in the Compliance Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard_ns">Namespace Compliance Details</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard_report">Evidence Export</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_operator">Integrating Compliance Operator with RHACS </a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_operator_acs_review">Review Compliance Scans of the Compliance Operator in RHACS</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#acs_policy_compliance">Configure Policy in RHACS to Invoke Compliance related Controls</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#acs_policy_compliance_nist">Enforce Policies that Meet Guidance for NIST Control 4.2.2</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#acs_policy_compliance_nist_view">View Updated Compliance Scan Results in RHACS</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#acs_policy_compliance_nist_revert">Revert the Policy Changes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="09-configuration_management.html">Configuration Management</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="09-configuration_management.html#conf_management_overview">Configuration Management Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="09-configuration_management.html#conf_management_cis">Configuration Management CIS</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="10-system_policies.html">System Policies</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="10-system_policies.html#system_policies_overview">System Policies Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="10-system_policies.html#system_policies_example">System Policies Build and Deploy Example</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="10-system_policies.html#system_policies_enforcement">System Policies Enforcement</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="11-integrations.html">RHACS Integrations</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="11-integrations.html#integrate_with_internal_openshift_registry">Integrate with Internal Openshift Registry</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="11-integrations.html#integrate_with_internal_openshift_registry_config_acs">Configure RHACS integration for Internal Openshift Registry</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="11-integrations.html#integrate_acs_slack">Integrate RHACS with Slack</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="11-integrations.html#integrate_acs_oauth">Integrate RHACS with OpenShift OAuth</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="11-integrations.html#integrate_acs_sso">Integrate RHACS with OpenShift RHSSO</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="12-platform_configuration.html">RHACS Secure Cluster Management</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="12-platform_configuration.html#system_configuration">RHACS System Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="12-platform_configuration.html#system_health">RHACS System Health</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="12-platform_configuration.html#access_control">RHACS Access Control</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="14-cicd-jp.html">RHACSを使用したアプリケーションへの自動化セキュリティの実装とDevSecOpsの構築</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="14-cicd-jp.html#setup">セットアップ</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="14-cicd-jp.html#ci">継続的インテグレーション</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="14-cicd-jp.html#devsecops">ACSを利用したDevSecOpsのステップ</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="14-cicd-jp.html#cd">GitOpsを使った継続的デリバリー</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="14-cicd-jp.html#dast">PostCI - ダイナミックアプリケーションセキュリティとテスト (DAST)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="14-cicd-jp.html#policy_violation">セキュリティポリシーとCI</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="14-cicd-jp.html#fiximage">ボーナスラボ</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="14-cicd-jp.html#troubleshooting">トラブルシューティング</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="15-contributors.html">Contributors</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">ODF Workshop</span>
+    <span class="version">master</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">ODF Workshop</span>
+      <ul class="versions">
+        <li class="version is-current">
+          <a href="index.html">master</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">ODF Workshop</a></li>
+    <li><a href="02-rbd_rwopvc.html">Ceph RBD volumeを使用するOCPアプリケーション</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/tutsunom/odf-workshop/edit/master/documentation/modules/ROOT/pages/02-rbd_rwopvc.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Ceph RBD volumeを使用するOCPアプリケーション</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>このセクションでは、<code>ocs-storagecluster-ceph-rbd</code> <strong>StorageClass</strong> を使ってRWO(ReadWriteOnce) Presistent Volume Claimを作成し、RailsアプリケーションとPostgreSQLデータベースをデプロイします。永続ストレージは、Cephプール <code>ocs-storagecluster-cephblockpool</code> にあるCeph RBD (RADOS Block Device) ボリュームです。</p>
+</div>
+<div class="paragraph">
+<p>ここで利用する OpenShift rails-pgsql-persistentテンプレートをベースに作成したテンプレートファイルを次のリンク先に作成しています。<br>
+<code><a href="https://raw.githubusercontent.com/tutsunom/ocs-training/jp/ocp4ocs4/configurable-rails-app.yaml" class="bare">https://raw.githubusercontent.com/tutsunom/ocs-training/jp/ocp4ocs4/configurable-rails-app.yaml</a></code><br>
+このファイルには、PVCが使用するStorageClassをエンドユーザーが指定できる追加のパラメーター <code>STORAGE_CLASS</code> が含まれています。ダウンロードして確認してみて下さい。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Rails + PostgreSQLのデプロイを開始できるように、前のセクションをすべて完了したことを確認してください。
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>はじめに新規のプロジェクトを作成します。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc new-project my-database-app</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>そして、<code>rails-pgsql-persistent</code> テンプレートを使用して新しいアプリケーションを作成します。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc new-app -f labitem/ocslab_rails-app.yaml -p STORAGE_CLASS=ocs-storagecluster-ceph-rbd -p VOLUME_CAPACITY=5Gi</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>デプロイが始まったら <code>oc status</code> コマンドでデプロイの様子を監視できます。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc status</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>次に、PVCを確認します。先程のテンプレートファイルの中にPVCのマニフェストが記載されているので、PVCが発行されています。PVCが作られていることを確認しましょう。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pvc -n my-database-app</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>以下に示すように、2つのpodが <code>Running</code> STATUSで、4つのpodが <code>Completed</code> STATUSになるまで待ちます。
+このステップには5分以上かかる場合があります。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">watch oc get pods -n my-database-app</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                                READY   STATUS      RESTARTS   AGE
+postgresql-1-deploy                 0/1     Completed   0          5m48s
+postgresql-1-lf7qt                  1/1     Running     0          5m40s
+rails-pgsql-persistent-1-build      0/1     Completed   0          5m49s
+rails-pgsql-persistent-1-deploy     0/1     Completed   0          3m36s
+rails-pgsql-persistent-1-hook-pre   0/1     Completed   0          3m28s
+rails-pgsql-persistent-1-pjh6q      1/1     Running     0          3m14s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="keyseq"><kbd>Ctrl</kbd>+<kbd>C</kbd></span> を押すと終了できます。</p>
+</div>
+<div class="paragraph">
+<p>アプリケーションがPersistent VolumeとしてCeph RBDボリュームを使用しているかどうかテストできます。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get route rails-pgsql-persistent -n my-database-app -o jsonpath --template="http://{.spec.host}/articles{'\n'}"</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"><a href="http://rails-pgsql-persistent-my-database-app.apps.cluster-ocs4-8613.ocs4-8613.sandbox944.opentlc.com/articles" class="bare">http://rails-pgsql-persistent-my-database-app.apps.cluster-ocs4-8613.ocs4-8613.sandbox944.opentlc.com/articles</a></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>出力されたURLをブラウザウィンドウにコピーしてアクセスします。</p>
+</div>
+<div class="paragraph">
+<p>Webページの <strong>New Article</strong> をクリックし、次の <code>username</code> と <code>password</code> を入力することで記事やコメントを作成することができます。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>username: openshift
+password: secret</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>何でもよいので、ここで1つ記事を作成してください。</p>
+</div>
+<div class="paragraph">
+<p>作成された記事とコメントはPostgreSQLデータベースに保存されます。PostgreSQLデータベースは、アプリケーションのデプロイ中に <code>ocs-storagecluster-ceph-rbd</code> <strong>StorageClass</strong> を使ってプロビジョニングされたCeph RBDボリュームにテーブルスペースを保存します。<br>
+そのため、PostgreSQLのPodを削除してもデータが失われることはありません。試しにPostgreSQLのPodを削除してみましょう。<br>
+PostgreSQLのPodは <strong>DeploymentConfig</strong> によって削除されても自動的に再作成され、すでに存在するPVを自動でマウントするようになっています。</p>
+</div>
+<div class="paragraph">
+<p>PostgreSQLのPodが再作成されたら、再びRailsのWebアプリケーションにアクセスしてみて下さい。キャッシュを消しても先に書いた記事が残っていることが確認できます。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc delete $(oc get pod -l name=postgresql -n my-database-app -o name) -n my-database-app</code></pre>
+</div>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+ターミナルのプロンプトが戻ってくるまで待って下さい。プロンプトが戻ってくるまで数分かかる場合があります。
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>先程作成したPVは、<code>ocs-storagecluster-cephblockpool</code> プール内に作られるCeph RBD(RADOS Block Device)ボリュームです。ここではPVとCeph RBDボリュームとがどのように対応しているか確認してみます。<br>
+ここでtoolboxにログインして、<code>ocs-storagecluster-cephblockpool</code> をもう一度見てみましょう。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">TOOLS_POD=$(oc get pods -n openshift-storage -l app=rook-ceph-tools -o name)
+oc rsh -n openshift-storage $TOOLS_POD</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>下記のようにアプリケーションのデプロイ前と同じCephコマンドを実行し、前のセクションの結果と比較します。
+<code>ocs-storagecluster-cephblockpool</code> のオブジェクト数が増えていることに注意して下さい。<br>
+また、3つ目のコマンドはCeph RBDボリュームをリストする処理をしますが、2つ表示されるはずです。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ceph df</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">rados df</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">rbd -p ocs-storagecluster-cephblockpool ls | grep vol</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="keyseq"><kbd>Ctrl</kbd>+<kbd>D</kbd></span> を押すか、 <code>exit</code> を実行してtoolboxから出ることができます。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">exit</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_pvとrbdの照会"><a class="anchor" href="#_pvとrbdの照会"></a>PVとRBDの照会</h3>
+<div class="paragraph">
+<p>どのPVがどのCeph RBDボリュームに対応するかの照会を行ってみましょう。<br>
+次のコマンドを実行してPVの <code>Volume Handle</code> を確認します。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pv -o 'custom-columns=NAME:.spec.claimRef.name,PVNAME:.metadata.name,STORAGECLASS:.spec.storageClassName,VOLUMEHANDLE:.spec.csi.volumeHandle'</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                              PVNAME                                     STORAGECLASS                  VOLUMEHANDLE
+ocs-deviceset-gp2-0-data-0pdj4t   pvc-0c76938c-466b-4419-9c65-2d697d0c6475   gp2                           &lt;none&gt;
+rook-ceph-mon-b                   pvc-4583b95b-41c9-4e3c-8729-426ce36481e9   gp2                           &lt;none&gt;
+db-noobaa-db-pg-0                 pvc-53d01ae5-7b35-40c0-904a-5aa4b24c2241   ocs-storagecluster-ceph-rbd   0001-0011-openshift-
+storage-0000000000000001-a5b03a0e-e22c-11ec-855c-0a580a82020c
+ocs-deviceset-gp2-1-data-0m5bzn   pvc-5a41d153-6067-4ba1-bd5f-805a53599f84   gp2                           &lt;none&gt;
+rook-ceph-mon-a                   pvc-5b74a2a5-8169-4e8f-b7c9-d832062139cb   gp2                           &lt;none&gt;
+rook-ceph-mon-c                   pvc-712abc46-28ae-4f7a-b54b-79f92c768b79   gp2                           &lt;none&gt;
+postgresql                        pvc-a726b00b-c97f-478c-a841-20276c2a4563   ocs-storagecluster-ceph-rbd   0001-0011-openshift-
+storage-0000000000000001-e61c53cd-e230-11ec-855c-0a580a82020c
+ocs-deviceset-gp2-2-data-04xwqf   pvc-ded9b4c7-8bd6-4e03-beab-ee416d4407fa   gp2                           &lt;none&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>VOLUMEHANDLE</code> カラムの後半部分は、Ceph RBDの名前と一致していることがわかります。この前に <code>csi-vol-</code> をつけることで完全なRBDを取得することができます。<br></p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">CSIVOL=$(oc get pv $(oc get pv | grep my-database-app | awk '{ print $1 }') -o jsonpath='{.spec.csi.volumeHandle}' | cut -d '-' -f 6- | awk '{print "csi-vol-"$1}')
+echo $CSIVOL</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">csi-vol-e61c53cd-e230-11ec-855c-0a580a82020c</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>再度toolboxを使ってCeph RBDボリュームの詳細を確認すると、上で出力されたものと同じ名前のRBDボリュームが表示されるはずです。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">TOOLS_POD=$(oc get pods -n openshift-storage -l app=rook-ceph-tools -o name)
+oc rsh -n openshift-storage $TOOLS_POD rbd -p ocs-storagecluster-cephblockpool info $CSIVOL</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">rbd image 'csi-vol-e61c53cd-e230-11ec-855c-0a580a82020c':
+        size 5 GiB in 1280 objects
+        order 22 (4 MiB objects)
+        snapshot_count: 0
+        id: 38f2ba527cd8
+        block_name_prefix: rbd_data.38f2ba527cd8
+        format: 2
+        features: layering
+        op_features:
+        flags:
+        create_timestamp: Thu Jun  2 05:00:18 2022
+        access_timestamp: Thu Jun  2 05:00:18 2022
+        modify_timestamp: Thu Jun  2 05:00:18 2022</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ceph_rbd_pvcの拡張"><a class="anchor" href="#_ceph_rbd_pvcの拡張"></a>Ceph RBD PVCの拡張</h3>
+<div class="paragraph">
+<p>OpenShift 4.5以降のバージョンでは、<code>ocs-storagecluster-ceph-rbd</code> <strong>StorageClass</strong> をベースに既存のPVCを拡張することができます。このセクションでは、PVC拡張を実行するための手順を説明します。</p>
+</div>
+<div class="paragraph">
+<p>まず、作成したばかりのアプリケーションで使用しているPVCを人為的に満杯にします。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc rsh -n my-database-app $(oc get pods -n my-database-app|grep postgresql | grep -v deploy | awk {'print $1}')</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">df</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">Filesystem     1K-blocks     Used Available Use% Mounted on
+overlay        125293548 18512264 106781284  15% /
+tmpfs              65536        0     65536   0% /dev
+tmpfs           32566396        0  32566396   0% /sys/fs/cgroup
+shm                65536       16     65520   1% /dev/shm
+tmpfs           32566396    54320  32512076   1% /etc/passwd
+/dev/nvme0n1p4 125293548 18512264 106781284  15% /etc/hosts
+/dev/rbd0        5095040    69280   5009376   2% /var/lib/pgsql/data
+tmpfs             524288       24    524264   1% /run/secrets/kubernetes.io/serviceaccount
+tmpfs           32566396        0  32566396   0% /proc/acpi
+tmpfs           32566396        0  32566396   0% /proc/scsi
+tmpfs           32566396        0  32566396   0% /sys/firmware</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>上の出力にあるように、<code>/dev/rbd0</code> という名前のデバイスは <code>/var/lib/pgsql/data</code> という名前でマウントされています。このディレクトリを人為的に満杯にします。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dd if=/dev/zero of=/var/lib/pgsql/data/fill.up bs=1M count=3850</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">3850+0 records in
+3850+0 records out
+4037017600 bytes (4.0 GB) copied, 13.6446 s, 296 MB/s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>マウントされたボリュームの使用容量を確認します。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">df</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">Filesystem     1K-blocks     Used Available Use% Mounted on
+overlay        125293548 18512272 106781276  15% /
+tmpfs              65536        0     65536   0% /dev
+tmpfs           32566396        0  32566396   0% /sys/fs/cgroup
+shm                65536       16     65520   1% /dev/shm
+tmpfs           32566396    54320  32512076   1% /etc/passwd
+/dev/nvme0n1p4 125293548 18512272 106781276  15% /etc/hosts
+/dev/rbd0        5095040  4011684   1066972  79% /var/lib/pgsql/data
+tmpfs             524288       24    524264   1% /run/secrets/kubernetes.io/serviceaccount
+tmpfs           32566396        0  32566396   0% /proc/acpi
+tmpfs           32566396        0  32566396   0% /proc/scsi
+tmpfs           32566396        0  32566396   0% /sys/firmware</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>上記の出力で観察されるように、<code>/var/lib/pgsql/data</code> のファイルシステム使用量は79%まで増加しています。デフォルトでは、OCPはPVCが75%の使用量を超えたときにPVCアラートを生成します。</p>
+</div>
+<div class="paragraph">
+<p>Podから出ます。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">exit</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>OCPのイベントログにアラートが表示されていることを確認しましょう。</p>
+</div>
+<div class="imageblock unresolved">
+<div class="content">
+<img src="images/ocs/OCS-PVCResize-pvcnearfull-alert.png" alt="PVC nearfull alert">
+</div>
+<div class="title">Figure 1. OpenShift Container Platform Events</div>
+</div>
+<div class="sect3">
+<h4 id="_pvcのyamlファイルを変更することによる拡張"><a class="anchor" href="#_pvcのyamlファイルを変更することによる拡張"></a>PVCのYAMLファイルを変更することによる拡張</h4>
+<div class="paragraph">
+<p>PVCを拡張するには、<strong>PVC</strong> で要求しているストレージ容量を変更する必要があります。これは、次のコマンドで <strong>PVC</strong> のマニフェストをYAMLファイルにエクスポートすることで簡単に実行できます。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pvc postgresql -n my-database-app -o yaml &gt; pvc.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>作成されたファイル <code>pvc.yaml</code> の中で、<code>spec:</code> セクションを確認します。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat pvc.yaml</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">[省略]
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: ocs-storagecluster-ceph-rbd
+  volumeMode: Filesystem
+  volumeName: pvc-a726b00b-c97f-478c-a841-20276c2a4563
+[省略]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>この <code>storage: 5Gi</code> の部分を <code>storage: 10Gi</code> に置き換えます。その結果、ファイル内のセクションは以下のような出力になるはずです。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">sed -ie 's/storage: 5Gi/storage: 10Gi/' pvc.yaml
+cat pvc.yaml</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">[省略]
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: ocs-storagecluster-ceph-rbd
+  volumeMode: Filesystem
+  volumeName: pvc-4d6838df-b4cd-4bb1-9969-1af93c1dc5e6
+[省略]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>次のコマンドで、更新した <strong>PVC</strong> のマニフェストを適用することができます。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f pvc.yaml -n my-database-app</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">Warning: resource persistentvolumeclaims/postgresql is missing the kubectl.kubernetes.io/last-applied-configuration annotation
+which is required by oc apply. oc apply should only be used on resources created declaratively by either oc create --save-confi
+g or oc apply. The missing annotation will be patched automatically.
+persistentvolumeclaim/postgresql configured</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>以下のコマンドで <strong>PVC</strong> の拡張の進捗状況を見ることができます。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc describe pvc postgresql -n my-database-app</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[省略]
+Finalizers:    [kubernetes.io/pvc-protection]
+Capacity:      10Gi
+Access Modes:  RWO
+VolumeMode:    Filesystem
+Used By:       postgresql-1-5vtp4
+Events:
+  Type     Reason                      Age   From
+                                 Message
+  ----     ------                      ----  ----
+                                 -------
+  Normal   Provisioning                45m   openshift-storage.rbd.csi.ceph.com_csi-rbdplugin-provisioner-789f79dcf-jwnzp_9972e
+629-2de3-411a-85da-39ffa1f8cfc6  External provisioner is provisioning volume for claim "my-database-app/postgresql"
+  Normal   ExternalProvisioning        45m   persistentvolume-controller
+                                 waiting for a volume to be created, either by external provisioner "openshift-storage.rbd.csi.
+ceph.com" or manually created by system administrator
+  Normal   ProvisioningSucceeded       45m   openshift-storage.rbd.csi.ceph.com_csi-rbdplugin-provisioner-789f79dcf-jwnzp_9972e
+629-2de3-411a-85da-39ffa1f8cfc6  Successfully provisioned volume pvc-a726b00b-c97f-478c-a841-20276c2a4563
+  Normal   Resizing                    55s   external-resizer openshift-storage.rbd.csi.ceph.com
+                                 External resizer is resizing volume pvc-a726b00b-c97f-478c-a841-20276c2a4563
+  Warning  ExternalExpanding           55s   volume_expand
+                                 Ignoring the PVC: didn't find a plugin capable of expanding the volume; waiting for an externa
+l controller to process this PVC.
+  Normal   FileSystemResizeRequired    55s   external-resizer openshift-storage.rbd.csi.ceph.com
+                                 Require file system resize of volume on node
+  Normal   FileSystemResizeSuccessful  27s   kubelet
+                                 MountVolume.NodeExpandVolume succeeded for volume "pvc-a726b00b-c97f-478c-a841-20276c2a4563"</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+拡張処理は一般的に30秒以上かかり、Podの負荷に依存します。これは、拡張にはベースとなるRBDイメージのサイズ変更(かなり高速)と、ブロックデバイスの上に位置するファイルシステムのサイズ変更が必要なためです。後者を実行するには、ファイルシステムを安全に拡張できるように静止させる必要があります。
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<strong>PVC</strong> の縮小はサポートされません。
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>また、<strong>PVC</strong> の拡張を確認する方法として、シンプルに以下のコマンドで <strong>PVC</strong> の情報を表示させる方法もあります。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pvc -n my-database-app</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME         STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS                  AGE
+postgresql   Bound    pvc-a726b00b-c97f-478c-a841-20276c2a4563   10Gi       RWO            ocs-storagecluster-ceph-rbd   49m</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<code>CAPACITY</code> カラムには、拡張処理が完了した時点で新しく要求されたサイズが表示されます。
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>PVC</strong> の拡張を確認するもう1つの方法は、CLIを介して <strong>PVC</strong> オブジェクトの2つのフィールドを調べることです。</p>
+</div>
+<div class="paragraph">
+<p><strong>PVC</strong> が現在の割り当てられているサイズを確認するには、次のコマンドを実行します。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">echo $(oc get pvc postgresql -n my-database-app -o jsonpath='{.status.capacity.storage}')</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">10Gi</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>PVC</strong> で要求されたサイズを確認するには、次のコマンドを実行します。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">echo $(oc get pvc postgresql -n my-database-app -o jsonpath='{.spec.resources.requests.storage}')</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">10Gi</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+両方の結果が同じ値を報告する場合、拡張は成功したことになります。
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_guiを使った拡張"><a class="anchor" href="#_guiを使った拡張"></a>GUIを使った拡張</h4>
+<div class="paragraph">
+<p><strong>PVC</strong> 拡張の最後の方法は、<strong>OpenShift Web Console</strong> を使って行うことです。以下のように進めます。</p>
+</div>
+<div class="paragraph">
+<p>最初のステップは、<strong>PVC</strong> が属するプロジェクトを選択することです。</p>
+</div>
+<div class="imageblock unresolved">
+<div class="content">
+<img src="images/ocs/OCS-PVCResize-select-project.png" alt="Select project">
+</div>
+<div class="title">Figure 2. Select the appropriate project</div>
+</div>
+<div class="paragraph">
+<p><strong>PVC</strong> のコンテキストメニュー(縦に3つの点が並んだアイコン)から、<code>Expand PVC</code> を選択します。</p>
+</div>
+<div class="imageblock unresolved">
+<div class="content">
+<img src="images/ocs/OCS-PVCResize-choose-expand-menu.png" alt="Choose expand from the contextual menu">
+</div>
+<div class="title">Figure 3. Choose Expand from menu</div>
+</div>
+<div class="paragraph">
+<p>表示されるダイアログボックスで、<strong>PVC</strong> の新しい容量を入力します。</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<strong>PVC</strong> のサイズを小さくすることはできません。
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock unresolved">
+<div class="content">
+<img src="images/ocs/OCS-PVCResize-enter-new-size.png" alt="Enter new size">
+</div>
+<div class="title">Figure 4. Enter the new size for the <strong>PVC</strong></div>
+</div>
+<div class="paragraph">
+<p>あとは拡張が完了し、新しいサイズ(15GiB)が反映されるのを待つだけです。</p>
+</div>
+<div class="imageblock unresolved">
+<div class="content">
+<img src="images/ocs/OCS-PVCResize-verify-resize-worked2.png" alt="Wait for expansion">
+</div>
+<div class="title">Figure 5. Wait for the expansion to complete</div>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
