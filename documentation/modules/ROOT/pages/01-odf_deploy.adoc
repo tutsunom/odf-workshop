@@ -391,7 +391,7 @@ oc get storagecluster -n openshift-storage
 
 `Phase` のカラムが `Ready` となっていれば、続けることができます。
 
-### ストレージダッシュボードの使用
+=== ストレージダッシュボードの使用
 
 このセクションでは、*OpenShift Web Console* に含まれている、ODF独自のダッシュボードを使ってストレージクラスタのステータスを確認します。 +
 まず、ODF Operatorのインストール後に画面右上に次のようなポップアップが表示されている場合は、*Refersh web console* をクリックして画面を更新してください。
