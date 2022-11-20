@@ -1,0 +1,497 @@
+= Ceph RBD volumeを使用するOCPアプリケーション
+include::_attributes.adoc[]
+:profile: acs
+
+このセクションでは、`ocs-storagecluster-ceph-rbd` *StorageClass* を使ってRWO(ReadWriteOnce) Presistent Volume Claimを作成し、RailsアプリケーションとPostgreSQLデータベースをデプロイします。永続ストレージは、Cephプール `ocs-storagecluster-cephblockpool` にあるCeph RBD (RADOS Block Device) ボリュームです。
+
+ここで利用する OpenShift rails-pgsql-persistentテンプレートをベースに作成したテンプレートファイルを次のリンク先に作成しています。 +
+`https://raw.githubusercontent.com/tutsunom/ocs-training/jp/ocp4ocs4/configurable-rails-app.yaml` +
+このファイルには、PVCが使用するStorageClassをエンドユーザーが指定できる追加のパラメーター `STORAGE_CLASS` が含まれています。ダウンロードして確認してみて下さい。
+
+NOTE: Rails + PostgreSQLのデプロイを開始できるように、前のセクションをすべて完了したことを確認してください。
+
+はじめに新規のプロジェクトを作成します。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc new-project my-database-app
+----
+
+そして、`rails-pgsql-persistent` テンプレートを使用して新しいアプリケーションを作成します。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc new-app -f labitem/ocslab_rails-app.yaml -p STORAGE_CLASS=ocs-storagecluster-ceph-rbd -p VOLUME_CAPACITY=5Gi
+----
+
+デプロイが始まったら `oc status` コマンドでデプロイの様子を監視できます。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc status
+----
+
+次に、PVCを確認します。先程のテンプレートファイルの中にPVCのマニフェストが記載されているので、PVCが発行されています。PVCが作られていることを確認しましょう。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get pvc -n my-database-app
+----
+
+以下に示すように、2つのpodが `Running` STATUSで、4つのpodが `Completed` STATUSになるまで待ちます。
+このステップには5分以上かかる場合があります。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+watch oc get pods -n my-database-app
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+NAME                                READY   STATUS      RESTARTS   AGE
+postgresql-1-deploy                 0/1     Completed   0          5m48s
+postgresql-1-lf7qt                  1/1     Running     0          5m40s
+rails-pgsql-persistent-1-build      0/1     Completed   0          5m49s
+rails-pgsql-persistent-1-deploy     0/1     Completed   0          3m36s
+rails-pgsql-persistent-1-hook-pre   0/1     Completed   0          3m28s
+rails-pgsql-persistent-1-pjh6q      1/1     Running     0          3m14s
+----
+kbd:[Ctrl+C] を押すと終了できます。
+
+アプリケーションがPersistent VolumeとしてCeph RBDボリュームを使用しているかどうかテストできます。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get route rails-pgsql-persistent -n my-database-app -o jsonpath --template="http://{.spec.host}/articles{'\n'}"
+----
+
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+http://rails-pgsql-persistent-my-database-app.apps.cluster-ocs4-8613.ocs4-8613.sandbox944.opentlc.com/articles
+----
+
+出力されたURLをブラウザウィンドウにコピーしてアクセスします。
+
+Webページの *New Article* をクリックし、次の `username` と `password` を入力することで記事やコメントを作成することができます。 +
+
+----
+username: openshift
+password: secret
+----
+
+何でもよいので、ここで1つ記事を作成してください。
+
+作成された記事とコメントはPostgreSQLデータベースに保存されます。PostgreSQLデータベースは、アプリケーションのデプロイ中に `ocs-storagecluster-ceph-rbd` *StorageClass* を使ってプロビジョニングされたCeph RBDボリュームにテーブルスペースを保存します。 +
+そのため、PostgreSQLのPodを削除してもデータが失われることはありません。試しにPostgreSQLのPodを削除してみましょう。 +
+PostgreSQLのPodは *DeploymentConfig* によって削除されても自動的に再作成され、すでに存在するPVを自動でマウントするようになっています。
+
+PostgreSQLのPodが再作成されたら、再びRailsのWebアプリケーションにアクセスしてみて下さい。キャッシュを消しても先に書いた記事が残っていることが確認できます。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc delete $(oc get pod -l name=postgresql -n my-database-app -o name) -n my-database-app
+----
+CAUTION: ターミナルのプロンプトが戻ってくるまで待って下さい。プロンプトが戻ってくるまで数分かかる場合があります。
+
+
+先程作成したPVは、`ocs-storagecluster-cephblockpool` プール内に作られるCeph RBD(RADOS Block Device)ボリュームです。ここではPVとCeph RBDボリュームとがどのように対応しているか確認してみます。 +
+ここでtoolboxにログインして、`ocs-storagecluster-cephblockpool` をもう一度見てみましょう。
+
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+TOOLS_POD=$(oc get pods -n openshift-storage -l app=rook-ceph-tools -o name)
+oc rsh -n openshift-storage $TOOLS_POD
+----
+
+下記のようにアプリケーションのデプロイ前と同じCephコマンドを実行し、前のセクションの結果と比較します。
+`ocs-storagecluster-cephblockpool` のオブジェクト数が増えていることに注意して下さい。 +
+また、3つ目のコマンドはCeph RBDボリュームをリストする処理をしますが、2つ表示されるはずです。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+ceph df
+----
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+rados df
+----
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+rbd -p ocs-storagecluster-cephblockpool ls | grep vol
+----
+kbd:[Ctrl+D] を押すか、 `exit` を実行してtoolboxから出ることができます。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+exit
+----
+
+=== PVとRBDの照会
+
+どのPVがどのCeph RBDボリュームに対応するかの照会を行ってみましょう。 +
+次のコマンドを実行してPVの `Volume Handle` を確認します。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get pv -o 'custom-columns=NAME:.spec.claimRef.name,PVNAME:.metadata.name,STORAGECLASS:.spec.storageClassName,VOLUMEHANDLE:.spec.csi.volumeHandle'
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+NAME                              PVNAME                                     STORAGECLASS                  VOLUMEHANDLE
+ocs-deviceset-gp2-0-data-0pdj4t   pvc-0c76938c-466b-4419-9c65-2d697d0c6475   gp2                           <none>
+rook-ceph-mon-b                   pvc-4583b95b-41c9-4e3c-8729-426ce36481e9   gp2                           <none>
+db-noobaa-db-pg-0                 pvc-53d01ae5-7b35-40c0-904a-5aa4b24c2241   ocs-storagecluster-ceph-rbd   0001-0011-openshift-
+storage-0000000000000001-a5b03a0e-e22c-11ec-855c-0a580a82020c
+ocs-deviceset-gp2-1-data-0m5bzn   pvc-5a41d153-6067-4ba1-bd5f-805a53599f84   gp2                           <none>
+rook-ceph-mon-a                   pvc-5b74a2a5-8169-4e8f-b7c9-d832062139cb   gp2                           <none>
+rook-ceph-mon-c                   pvc-712abc46-28ae-4f7a-b54b-79f92c768b79   gp2                           <none>
+postgresql                        pvc-a726b00b-c97f-478c-a841-20276c2a4563   ocs-storagecluster-ceph-rbd   0001-0011-openshift-
+storage-0000000000000001-e61c53cd-e230-11ec-855c-0a580a82020c
+ocs-deviceset-gp2-2-data-04xwqf   pvc-ded9b4c7-8bd6-4e03-beab-ee416d4407fa   gp2                           <none>
+----
+
+`VOLUMEHANDLE` カラムの後半部分は、Ceph RBDの名前と一致していることがわかります。この前に `csi-vol-` をつけることで完全なRBDを取得することができます。 +
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+CSIVOL=$(oc get pv $(oc get pv | grep my-database-app | awk '{ print $1 }') -o jsonpath='{.spec.csi.volumeHandle}' | cut -d '-' -f 6- | awk '{print "csi-vol-"$1}')
+echo $CSIVOL
+----
+
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+csi-vol-e61c53cd-e230-11ec-855c-0a580a82020c
+----
+
+再度toolboxを使ってCeph RBDボリュームの詳細を確認すると、上で出力されたものと同じ名前のRBDボリュームが表示されるはずです。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+TOOLS_POD=$(oc get pods -n openshift-storage -l app=rook-ceph-tools -o name)
+oc rsh -n openshift-storage $TOOLS_POD rbd -p ocs-storagecluster-cephblockpool info $CSIVOL
+----
+
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+rbd image 'csi-vol-e61c53cd-e230-11ec-855c-0a580a82020c':
+        size 5 GiB in 1280 objects
+        order 22 (4 MiB objects)
+        snapshot_count: 0
+        id: 38f2ba527cd8
+        block_name_prefix: rbd_data.38f2ba527cd8
+        format: 2
+        features: layering
+        op_features:
+        flags:
+        create_timestamp: Thu Jun  2 05:00:18 2022
+        access_timestamp: Thu Jun  2 05:00:18 2022
+        modify_timestamp: Thu Jun  2 05:00:18 2022
+----
+
+=== Ceph RBD PVCの拡張
+
+OpenShift 4.5以降のバージョンでは、`ocs-storagecluster-ceph-rbd` *StorageClass* をベースに既存のPVCを拡張することができます。このセクションでは、PVC拡張を実行するための手順を説明します。
+
+まず、作成したばかりのアプリケーションで使用しているPVCを人為的に満杯にします。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc rsh -n my-database-app $(oc get pods -n my-database-app|grep postgresql | grep -v deploy | awk {'print $1}')
+----
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+df
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+Filesystem     1K-blocks     Used Available Use% Mounted on
+overlay        125293548 18512264 106781284  15% /
+tmpfs              65536        0     65536   0% /dev
+tmpfs           32566396        0  32566396   0% /sys/fs/cgroup
+shm                65536       16     65520   1% /dev/shm
+tmpfs           32566396    54320  32512076   1% /etc/passwd
+/dev/nvme0n1p4 125293548 18512264 106781284  15% /etc/hosts
+/dev/rbd0        5095040    69280   5009376   2% /var/lib/pgsql/data
+tmpfs             524288       24    524264   1% /run/secrets/kubernetes.io/serviceaccount
+tmpfs           32566396        0  32566396   0% /proc/acpi
+tmpfs           32566396        0  32566396   0% /proc/scsi
+tmpfs           32566396        0  32566396   0% /sys/firmware
+----
+
+上の出力にあるように、`/dev/rbd0` という名前のデバイスは `/var/lib/pgsql/data` という名前でマウントされています。このディレクトリを人為的に満杯にします。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+dd if=/dev/zero of=/var/lib/pgsql/data/fill.up bs=1M count=3850
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+3850+0 records in
+3850+0 records out
+4037017600 bytes (4.0 GB) copied, 13.6446 s, 296 MB/s
+----
+
+マウントされたボリュームの使用容量を確認します。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+df
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+Filesystem     1K-blocks     Used Available Use% Mounted on
+overlay        125293548 18512272 106781276  15% /
+tmpfs              65536        0     65536   0% /dev
+tmpfs           32566396        0  32566396   0% /sys/fs/cgroup
+shm                65536       16     65520   1% /dev/shm
+tmpfs           32566396    54320  32512076   1% /etc/passwd
+/dev/nvme0n1p4 125293548 18512272 106781276  15% /etc/hosts
+/dev/rbd0        5095040  4011684   1066972  79% /var/lib/pgsql/data
+tmpfs             524288       24    524264   1% /run/secrets/kubernetes.io/serviceaccount
+tmpfs           32566396        0  32566396   0% /proc/acpi
+tmpfs           32566396        0  32566396   0% /proc/scsi
+tmpfs           32566396        0  32566396   0% /sys/firmware
+----
+
+上記の出力で観察されるように、`/var/lib/pgsql/data` のファイルシステム使用量は79%まで増加しています。デフォルトでは、OCPはPVCが75%の使用量を超えたときにPVCアラートを生成します。
+
+Podから出ます。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+exit
+----
+
+OCPのイベントログにアラートが表示されていることを確認しましょう。
+
+.OpenShift Container Platform Events
+image::images/ocs/OCS-PVCResize-pvcnearfull-alert.png[PVC nearfull alert]
+
+==== PVCのYAMLファイルを変更することによる拡張
+
+PVCを拡張するには、*PVC* で要求しているストレージ容量を変更する必要があります。これは、次のコマンドで *PVC* のマニフェストをYAMLファイルにエクスポートすることで簡単に実行できます。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get pvc postgresql -n my-database-app -o yaml > pvc.yaml
+----
+
+作成されたファイル `pvc.yaml` の中で、`spec:` セクションを確認します。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+cat pvc.yaml
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+[source,yaml]
+----
+[省略]
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: ocs-storagecluster-ceph-rbd
+  volumeMode: Filesystem
+  volumeName: pvc-a726b00b-c97f-478c-a841-20276c2a4563
+[省略]
+----
+
+この `storage: 5Gi` の部分を `storage: 10Gi` に置き換えます。その結果、ファイル内のセクションは以下のような出力になるはずです。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+sed -ie 's/storage: 5Gi/storage: 10Gi/' pvc.yaml
+cat pvc.yaml
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+[source,yaml]
+----
+[省略]
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: ocs-storagecluster-ceph-rbd
+  volumeMode: Filesystem
+  volumeName: pvc-4d6838df-b4cd-4bb1-9969-1af93c1dc5e6
+[省略]
+----
+
+次のコマンドで、更新した *PVC* のマニフェストを適用することができます。
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc apply -f pvc.yaml -n my-database-app
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+Warning: resource persistentvolumeclaims/postgresql is missing the kubectl.kubernetes.io/last-applied-configuration annotation
+which is required by oc apply. oc apply should only be used on resources created declaratively by either oc create --save-confi
+g or oc apply. The missing annotation will be patched automatically.
+persistentvolumeclaim/postgresql configured
+----
+
+以下のコマンドで *PVC* の拡張の進捗状況を見ることができます。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc describe pvc postgresql -n my-database-app
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+[省略]
+Finalizers:    [kubernetes.io/pvc-protection]
+Capacity:      10Gi
+Access Modes:  RWO
+VolumeMode:    Filesystem
+Used By:       postgresql-1-5vtp4
+Events:
+  Type     Reason                      Age   From
+                                 Message
+  ----     ------                      ----  ----
+                                 -------
+  Normal   Provisioning                45m   openshift-storage.rbd.csi.ceph.com_csi-rbdplugin-provisioner-789f79dcf-jwnzp_9972e
+629-2de3-411a-85da-39ffa1f8cfc6  External provisioner is provisioning volume for claim "my-database-app/postgresql"
+  Normal   ExternalProvisioning        45m   persistentvolume-controller
+                                 waiting for a volume to be created, either by external provisioner "openshift-storage.rbd.csi.
+ceph.com" or manually created by system administrator
+  Normal   ProvisioningSucceeded       45m   openshift-storage.rbd.csi.ceph.com_csi-rbdplugin-provisioner-789f79dcf-jwnzp_9972e
+629-2de3-411a-85da-39ffa1f8cfc6  Successfully provisioned volume pvc-a726b00b-c97f-478c-a841-20276c2a4563
+  Normal   Resizing                    55s   external-resizer openshift-storage.rbd.csi.ceph.com
+                                 External resizer is resizing volume pvc-a726b00b-c97f-478c-a841-20276c2a4563
+  Warning  ExternalExpanding           55s   volume_expand
+                                 Ignoring the PVC: didn't find a plugin capable of expanding the volume; waiting for an externa
+l controller to process this PVC.
+  Normal   FileSystemResizeRequired    55s   external-resizer openshift-storage.rbd.csi.ceph.com
+                                 Require file system resize of volume on node
+  Normal   FileSystemResizeSuccessful  27s   kubelet
+                                 MountVolume.NodeExpandVolume succeeded for volume "pvc-a726b00b-c97f-478c-a841-20276c2a4563"
+----
+
+NOTE: 拡張処理は一般的に30秒以上かかり、Podの負荷に依存します。これは、拡張にはベースとなるRBDイメージのサイズ変更(かなり高速)と、ブロックデバイスの上に位置するファイルシステムのサイズ変更が必要なためです。後者を実行するには、ファイルシステムを安全に拡張できるように静止させる必要があります。
+
+CAUTION: *PVC* の縮小はサポートされません。
+
+また、*PVC* の拡張を確認する方法として、シンプルに以下のコマンドで *PVC* の情報を表示させる方法もあります。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get pvc -n my-database-app
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+NAME         STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS                  AGE
+postgresql   Bound    pvc-a726b00b-c97f-478c-a841-20276c2a4563   10Gi       RWO            ocs-storagecluster-ceph-rbd   49m
+----
+
+NOTE: `CAPACITY` カラムには、拡張処理が完了した時点で新しく要求されたサイズが表示されます。
+
+*PVC* の拡張を確認するもう1つの方法は、CLIを介して *PVC* オブジェクトの2つのフィールドを調べることです。
+
+*PVC* が現在の割り当てられているサイズを確認するには、次のコマンドを実行します。
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+echo $(oc get pvc postgresql -n my-database-app -o jsonpath='{.status.capacity.storage}')
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+10Gi
+----
+
+*PVC* で要求されたサイズを確認するには、次のコマンドを実行します。
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+echo $(oc get pvc postgresql -n my-database-app -o jsonpath='{.spec.resources.requests.storage}')
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+10Gi
+----
+
+NOTE: 両方の結果が同じ値を報告する場合、拡張は成功したことになります。
+
+==== GUIを使った拡張
+*PVC* 拡張の最後の方法は、*OpenShift Web Console* を使って行うことです。以下のように進めます。
+
+最初のステップは、*PVC* が属するプロジェクトを選択することです。
+
+.Select the appropriate project
+image::images/ocs/OCS-PVCResize-select-project.png[Select project]
+
+*PVC* のコンテキストメニュー(縦に3つの点が並んだアイコン)から、`Expand PVC` を選択します。
+
+.Choose Expand from menu
+image::images/ocs/OCS-PVCResize-choose-expand-menu.png[Choose expand from the contextual menu]
+
+表示されるダイアログボックスで、*PVC* の新しい容量を入力します。
+
+CAUTION: *PVC* のサイズを小さくすることはできません。
+
+.Enter the new size for the *PVC*
+image::images/ocs/OCS-PVCResize-enter-new-size.png[Enter new size]
+
+あとは拡張が完了し、新しいサイズ(15GiB)が反映されるのを待つだけです。
+
+.Wait for the expansion to complete
+image::images/ocs/OCS-PVCResize-verify-resize-worked2.png[Wait for expansion]
