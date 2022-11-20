@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>PVCのクローンとスナップショット :: ODF Workshop</title>
+    <link rel="canonical" href="https://tutsunom.github.io/odf-workshop/odf-workshop/04-clone_snapshot.html">
+    <meta name="generator" content="Antora 3.0.0">
+    <link rel="stylesheet" href="../_/css/site.css">
+<link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
+          src="../_/img/header_logo.png" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" href="https://tutsunom.github.io/odf-workshop">ODF Workshop</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">CheatSheets</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">CheatSheet A</a>
+            <a class="navbar-item" href="#">CheatSheet B</a>
+            <a class="navbar-item" href="#">CheatSheet C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Upcoming Events</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Event A</a>
+            <a class="navbar-item" href="#">Event B</a>
+            <a class="navbar-item" href="#">Event C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Tutorial A</a>
+            <a class="navbar-item" href="#">Tutorial B</a>
+            <a class="navbar-item" href="#">Tutorial C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="odf-workshop" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html">ODF Workshop</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="#01-setup.adoc">Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#01-setup.adoc#prerequisite">Prerequisites</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="#02-getting_started.adoc">Getting Started</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#02-getting_started.adoc#install_acs_operator">Install RHACS Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#02-getting_started.adoc#install_acs_central">Install RHACS Central Cluster</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#02-getting_started.adoc#config_acs_securedcluster">Configuration of the RHACS Secured Cluster </a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#02-getting_started.adoc#deploy_demo_acs">Deploying Demo in RHACS</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#02-getting_started.adoc#deploy_apps">Deploying Apps</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="#03-overview-acs.adoc">RHACS Overview</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#03-overview-acs.adoc#acs_architecture">RHACS Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="#03-overview-acs.adoc#dashboard_acs">RHACS Dashboard</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#03-overview-acs.adoc#dashboard_acs_header">Dashboard Header</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#03-overview-acs.adoc#dashboard_acs_menu">Dashboard Left Menu</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#03-overview-acs.adoc#dashboard_acs_information">Dashboard Information</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="#04-vulnerabilities.adoc">Vulnerability Management</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#04-vulnerabilities.adoc#image_overview_image_details">Image overview and image details</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#04-vulnerabilities.adoc#vulnerability_management_panel">Review Vulnerability Management Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#04-vulnerabilities.adoc#scanning_images">Scanning images for vulnerabilities</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#04-vulnerabilities.adoc#filtering_vulnerabilities_scans">Filtering vulnerabilities scans</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#04-vulnerabilities.adoc#review_cve_images">Image CVE Vulnerability Analysis</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#04-vulnerabilities.adoc#image_correlation_deployments">Image CVE correlation with Deployments</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="05-risk.html">Risk Management</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-risk.html#risk_dashboard">Review Risk Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-risk.html#risk_single_deployment_details">Single Deployment Details</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-risk.html#risk_process_discovery">Process Discovery / Runtime</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-risk.html#risk_filtering">Filtering</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="06-network_graph.html">Network Graph</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-network_graph.html#network_graph_overview">Network Graph Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-network_graph.html#network_graph_views">Network Graph Views</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-network_graph.html#network_policy_simulator">Network Policy Simulator</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="07-violations.html">Violations</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#violations_overview">Violations Dashboard Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#violations_example">Violations Build &amp; Deploy Example</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#violations_runtime">Violations Runtime Example</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#violations_behaviour">Violations Behaviour</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-violations.html#policy_summary">Policy Summary</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="08-compliance.html">Compliance</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard">Review Compliance Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard_scan">Execute the first Compliance Scan</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard_review">Review the Compliance Reports in the Compliance Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard_ns">Namespace Compliance Details</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_dashboard_report">Evidence Export</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_operator">Integrating Compliance Operator with RHACS </a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#compliance_operator_acs_review">Review Compliance Scans of the Compliance Operator in RHACS</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#acs_policy_compliance">Configure Policy in RHACS to Invoke Compliance related Controls</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#acs_policy_compliance_nist">Enforce Policies that Meet Guidance for NIST Control 4.2.2</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#acs_policy_compliance_nist_view">View Updated Compliance Scan Results in RHACS</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-compliance.html#acs_policy_compliance_nist_revert">Revert the Policy Changes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="09-configuration_management.html">Configuration Management</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="09-configuration_management.html#conf_management_overview">Configuration Management Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="09-configuration_management.html#conf_management_cis">Configuration Management CIS</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="10-system_policies.html">System Policies</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="10-system_policies.html#system_policies_overview">System Policies Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="10-system_policies.html#system_policies_example">System Policies Build and Deploy Example</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="10-system_policies.html#system_policies_enforcement">System Policies Enforcement</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="11-integrations.html">RHACS Integrations</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="11-integrations.html#integrate_with_internal_openshift_registry">Integrate with Internal Openshift Registry</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="11-integrations.html#integrate_with_internal_openshift_registry_config_acs">Configure RHACS integration for Internal Openshift Registry</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="11-integrations.html#integrate_acs_slack">Integrate RHACS with Slack</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="11-integrations.html#integrate_acs_oauth">Integrate RHACS with OpenShift OAuth</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="11-integrations.html#integrate_acs_sso">Integrate RHACS with OpenShift RHSSO</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="12-platform_configuration.html">RHACS Secure Cluster Management</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="12-platform_configuration.html#system_configuration">RHACS System Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="12-platform_configuration.html#system_health">RHACS System Health</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="12-platform_configuration.html#access_control">RHACS Access Control</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="14-cicd-jp.html">RHACSを使用したアプリケーションへの自動化セキュリティの実装とDevSecOpsの構築</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="14-cicd-jp.html#setup">セットアップ</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="14-cicd-jp.html#ci">継続的インテグレーション</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="14-cicd-jp.html#devsecops">ACSを利用したDevSecOpsのステップ</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="14-cicd-jp.html#cd">GitOpsを使った継続的デリバリー</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="14-cicd-jp.html#dast">PostCI - ダイナミックアプリケーションセキュリティとテスト (DAST)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="14-cicd-jp.html#policy_violation">セキュリティポリシーとCI</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="14-cicd-jp.html#fiximage">ボーナスラボ</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="14-cicd-jp.html#troubleshooting">トラブルシューティング</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="15-contributors.html">Contributors</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">ODF Workshop</span>
+    <span class="version">master</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">ODF Workshop</span>
+      <ul class="versions">
+        <li class="version is-current">
+          <a href="index.html">master</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">ODF Workshop</a></li>
+    <li><a href="04-clone_snapshot.html">PVCのクローンとスナップショット</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/tutsunom/odf-workshop/edit/master/documentation/modules/ROOT/pages/04-clone_snapshot.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">PVCのクローンとスナップショット</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>OpenShift Container Storage(OCS) 4.6から、<strong>PVC</strong> のクローンやスナップショットを可能にする <code>Container Storage Interface</code> (CSI) の機能がサポートされるようになりました。これらの新しい機能は永続的なデータ保護のために非常に重要であり、CSIと連携できるサードパーティベンダーの <code>Backup and Restore</code> ソフトウェアと一緒に使用することができます。</p>
+</div>
+<div class="paragraph">
+<p>Ceph RBDとCephFSの <strong>PVC</strong> のスナップショットは、サードパーティベンダーの <code>Backup and Restore</code> ソフトウェアに加えて、<code>OpenShift APIs for Data Protection (OADP)</code> を使用してトリガーすることもできます。<code>OADP</code> はレッドハットがサポートしている <code>Operator</code> で、<strong>OperatorHub</strong> からインストールできます。永続データや OpenShiftのメタデータ(Pods, Services, Routes, Deployments の定義ファイルなど)のバックアップとリストアのテストに非常に有効なものです。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_pvcのクローン"><a class="anchor" href="#_pvcのクローン"></a>PVCのクローン</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>CSIボリュームクローンは特定の時点における既存の <strong>PV</strong> の複製で、ODFでは指定されたボリュームの複製を作成します。ダイナミックプロビジョニングで作成した <strong>PVC</strong> のクローンを使用することができます。</p>
+</div>
+<div class="sect2">
+<h3 id="_csiボリュームクローン"><a class="anchor" href="#_csiボリュームクローン"></a>CSIボリュームクローン</h3>
+<div class="paragraph">
+<p>この演習では、10GiBに拡張されたばかりの作成済みの <strong>PVC</strong> <code>postgresql</code> を使用します。先に進む前に、セクション <a href="02-rbd_rwopvc.html">Ceph RBD volumeを使用するOCPアプリケーション</a> を完了していることを確認してください。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pvc -n my-database-app | awk '{print $1}'</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME
+postgresql</code></pre>
+</div>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+先に進む前に、<code>postgresql</code> <strong>PVC</strong> を10Giに拡張していることを確認してください。拡張していない場合は、戻って<a href="02-rbd_rwopvc.html">Ceph RBD PVCの拡張</a> セクションを完了させてください。
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>PVCクローンを作成する前に、少なくとも1つの新しい記事を作成し保存して、<code>postgresql</code> <strong>PVC</strong> に新しいデータがあることを確認してください。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get route rails-pgsql-persistent -n my-database-app -o jsonpath --template="http://{.spec.host}/articles{'\n'}"</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"><a href="http://rails-pgsql-persistent-my-database-app.apps.cluster-ocs4-8613.ocs4-8613.sandbox944.opentlc.com/articles" class="bare">http://rails-pgsql-persistent-my-database-app.apps.cluster-ocs4-8613.ocs4-8613.sandbox944.opentlc.com/articles</a></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Webページの <strong>New Article</strong> をクリックし、次の <code>username</code> と <code>password</code> を入力することで記事やコメントを作成することができます。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>username: openshift
+password: secret</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>この <strong>PVC</strong> 内のデータ(記事)を保護するために、この <strong>PVC</strong> のクローンを作ります。クローンの作成は、<strong>OpenShift Web Console</strong> を使用するか、以下のようなYAMLファイルでリソースを作成することで行うことができます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgresql-clone
+  namespace: my-database-app
+spec:
+  storageClassName: ocs-storagecluster-ceph-rbd
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  dataSource:
+    kind: PersistentVolumeClaim
+    name: postgresql</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>OpenShift Web Console</strong> を使う場合は、 <strong>Storage</strong> &#8594; <strong>Persistent Volume Claim</strong> に移動して、目的の <strong>PVC</strong> で <strong>Clone PVC</strong> を実行します。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/ocs/OCP4-OCS4-Clone-PVC.png" alt="Persistent Volume Claim clone PVC using UI">
+</div>
+<div class="title">Figure 1. Persistent Volume Claim clone PVC using UI</div>
+</div>
+<div class="paragraph">
+<p>新しく作られるクローン <strong>PVC</strong> のサイズはグレーアウトされていて変更できません。クローン <strong>PVC</strong> のサイズはオリジナルと同じサイズが自動で指定されるためです。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/ocs/OCP4-OCS4-Clone-PVC-config.png" alt="Persistent Volume Claim clone configuration">
+</div>
+<div class="title">Figure 2. Persistent Volume Claim clone configuration</div>
+</div>
+<div class="paragraph">
+<p>ここで <strong>Clone</strong> を選択してクローンを実行しても構いません。<br>
+YAMLファイルでクローンするのであれば、ここでは <strong>Cancel</strong> を選択し、次のコマンドで <code>postgresql</code> <strong>PVC</strong> のクローンを実行できます。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f labitem/postgresql-clone.yaml</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">persistentvolumeclaim/postgresql-clone created</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>新しい <strong>PVC</strong> が作られていることを確認できます。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pvc -n my-database-app | grep clone</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">postgresql-clone   Bound    pvc-f5ef1ed3-6ee1-41e8-869f-6f32b6fcdb5a   10Gi       RWO            ocs-storagecluster-ceph-rbd   85s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>OpenShift Web Console</strong> でも、クローン <strong>PVC</strong> を確認できます。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/ocs/OCP4-OCS4-Clone-PVC-view.png" alt="Persistent Volume Claim clone view in UI">
+</div>
+<div class="title">Figure 3. Persistent Volume Claim clone view in UI</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_アプリケーションリカバリのためのcsi_ボリュームクローンの使用"><a class="anchor" href="#_アプリケーションリカバリのためのcsi_ボリュームクローンの使用"></a>アプリケーションリカバリのためのCSI ボリュームクローンの使用</h3>
+<div class="paragraph">
+<p>これで <code>postgresql</code> <strong>PVC</strong> のクローンができたので、データベースを破壊するテストの準備ができました。<br>
+ここでは、<code>postgresql</code> Podのデータベースが持つ、記事を保存している <code>articles</code> テーブルを削除します。<br>
+次のコマンドは、<code>articles</code> テーブルを削除する前に全てのテーブルを表示し、<code>articles</code> テーブルを削除した後に、再びすべてのテーブルを表示します。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc rsh -n my-database-app $(oc get pods -n my-database-app|grep postgresql | grep -v deploy | awk {'print $1}') psql -c "\c root" -c "\d+" -c "drop table articles cascade;" -c "\d+"</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">You are now connected to database "root" as user "postgres".
+                               List of relations
+ Schema |         Name         |   Type   |  Owner  |    Size    | Description
+--------------------------------------------------------------------------
+ public | ar_internal_metadata | table    | userOXL | 16 kB      |
+ public | articles             | table    | userOXL | 16 kB      |
+ public | articles_id_seq      | sequence | userOXL | 8192 bytes |
+ public | comments             | table    | userOXL | 8192 bytes |
+ public | comments_id_seq      | sequence | userOXL | 8192 bytes |
+ public | schema_migrations    | table    | userOXL | 16 kB      |
+(6 rows)
+
+NOTICE:  drop cascades to constraint fk_rails_3bf61af60d3 on table comments
+DROP TABLE
+                               List of relations
+ Schema |         Name         |   Type   |  Owner  |    Size    | Description
+--------------------------------------------------------------------------
+ public | ar_internal_metadata | table    | userOXL | 16 kB      |
+ public | comments             | table    | userOXL | 8192 bytes |
+ public | comments_id_seq      | sequence | userOXL | 8192 bytes |
+ public | schema_migrations    | table    | userOXL | 16 kB      |
+(4 rows)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>以下のリンクを使って、記事を作成したブラウザのタブに戻ります。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get route rails-pgsql-persistent -n my-database-app -o jsonpath --template="http://{.spec.host}/articles{'\n'}"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ブラウザを更新すると、アプリケーションがfailしたことが表示されます。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/ocs/rails-postgresql-failed.png" alt="Application failed because database table removed">
+</div>
+<div class="title">Figure 4. Application failed because database table removed</div>
+</div>
+<div class="paragraph">
+<p><strong>PVC</strong> のクローンは、クローン作成時のオリジナルの <strong>PVC</strong> の完全な複製であることを思い出してください。したがって、アプリケーションを復旧するために、<code>postgresql</code> <strong>PVC</strong> のクローンを使用することができます。</p>
+</div>
+<div class="paragraph">
+<p>まず、<code>rails-pgsql-persistent</code> の <strong>DeploymentConfig</strong> を0にスケールダウンして、Podが削除されるようにする必要があります。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc scale deploymentconfig rails-pgsql-persistent -n my-database-app --replicas=0</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">deploymentconfig.apps.openshift.io/rails-pgsql-persistent scaled</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Podが全て無くなったことを確認できます。<br></p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pods -n my-database-app | grep rails | egrep -v 'deploy|build|hook' | awk {'print $1}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>このコマンドの出力が何も表示されないようになるまで待ちましょう。必要であれば、繰り返してください。</p>
+</div>
+<div class="paragraph">
+<p>ここで、<code>postgesql</code> <strong>DeploymentConfig</strong> を <code>postgresql-clone</code> <strong>PVC</strong> を使用するように変更する必要があります。これは <code>oc patch</code> コマンドを使用して行うことができます。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc patch dc postgresql -n my-database-app --type json --patch  '[{ "op": "replace", "path": "/spec/template/spec/volumes/0/persistentVolumeClaim/claimName", "value": "postgresql-clone" }]'</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">deploymentconfig.apps.openshift.io/postgresql patched</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>rails-pgsql-persistent</code> <strong>DeploymentConfig</strong> を再び1にスケールアップします。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc scale deploymentconfig rails-pgsql-persistent -n my-database-app --replicas=1</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">deploymentconfig.apps.openshift.io/rails-pgsql-persistent scaled</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>新しく <code>postgresql</code> と <code>rails-pgsql-persistent</code> のPodが作られていることを確認しましょう。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pods -n my-database-app | egrep 'rails|postgresql' | egrep -v 'deploy|build|hook'</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">postgresql-4-hv5kb                  1/1     Running     0          5m58s
+rails-pgsql-persistent-1-dhwhz      1/1     Running     0          5m10s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>以下のリンクを使って、記事を作成したブラウザのタブに戻ります。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get route rails-pgsql-persistent -n my-database-app -o jsonpath --template="http://{.spec.host}/articles{'\n'}"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ブラウザを更新すると、アプリケーションがオンラインに戻り、記事が表示されていることが確認できます。さらに記事を追加することもできます。</p>
+</div>
+<div class="paragraph">
+<p>この手順は、<strong>PVC</strong> のクローンを作っておくことが、データ破損またはその可能性があるアプリケーションを復旧するための実用的な方法であることを示しています。</p>
+</div>
+<div class="paragraph">
+<p>次に、同様の機能である <strong>PVC</strong> スナップショットの作成について見てみましょう。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_pvc_スナップショット"><a class="anchor" href="#_pvc_スナップショット"></a>PVC スナップショット</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>PVC</strong> の最初のスナップショットを作成することは、その <strong>PVC</strong> のクローンを作成することと同じです。しかし、最初の <strong>PVC</strong> スナップショットが作成されて以降のスナップショットは、最初のスナップショットと <strong>PVC</strong> の現在のコンテンツとの間の差分のみを保存します。<br>
+スナップショットは、定期的(1時間ごとなど)に増分バックアップをスケジュールするバックアップユーティリティで頻繁に使用されます。スナップショットは差分のみを各スナップショットに格納するため、定期的に完全なクローンを作成するよりも容量効率が高くなります。</p>
+</div>
+<div class="paragraph">
+<p>スナップショットは、自身から <strong>PVC</strong> クローンを作成することで、新規ボリュームとしてアプリケーションに割り当てることができます。このクローンは、前のセクションで示したように、アプリケーションの復旧に使用することができます。</p>
+</div>
+<div class="sect2">
+<h3 id="_volumesnapshotclass"><a class="anchor" href="#_volumesnapshotclass"></a>VolumeSnapshotClass</h3>
+<div class="paragraph">
+<p>ボリューム スナップショットを作成するには、まず <strong>VolumeSnapshot</strong> リソースで参照される <strong>VolumeSnapshotClass</strong> リソースが必要です。ODFのデプロイでは、スナップショットを作成するための2つの <strong>VolumeSnapshotClass</strong> リソースが作成されます。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get volumesnapshotclasses</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ oc get volumesnapshotclasses
+NAME                                        DRIVER                                  DELETIONPOLICY   AGE
+[...]
+ocs-storagecluster-cephfsplugin-snapclass   openshift-storage.cephfs.csi.ceph.com   Delete           25h
+ocs-storagecluster-rbdplugin-snapclass      openshift-storage.rbd.csi.ceph.com      Delete           25h</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>VolumeSnapshotClass</strong> の名前から、一方はCephFS volumeのスナップショット作成用で、もう一方はCeph RBD volume用であることが分かります。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_csi_ボリュームスナップショットのプロビジョニング"><a class="anchor" href="#_csi_ボリュームスナップショットのプロビジョニング"></a>CSI ボリュームスナップショットのプロビジョニング</h3>
+<div class="paragraph">
+<p>この演習では、すでに作成されている <code>my-shared-storage</code> <strong>PVC</strong> を使用します。
+先に進む前に、<a href="03-cephfs_rwxpvc.html">CephFS volumeを使用するOCPアプリケーション</a> のセクションを完了していることを確認してください。</p>
+</div>
+<div class="paragraph">
+<p>スナップショットの作成は、<strong>OpenShift Web Console</strong> を使用するか、以下のようなYAMLファイルでリソースを作成することで行うことができます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: snapshot.storage.k8s.io/v1beta1
+kind: VolumeSnapshot
+metadata:
+  name: my-shared-storage-snapshot
+  namespace: my-shared-storage
+spec:
+  volumeSnapshotClassName: ocs-storagecluster-cephfsplugin-snapclass
+  source:
+    persistentVolumeClaimName: my-shared-storage</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>OpenShift Web Console</strong> を使う場合は、 <strong>Storage</strong> &#8594; <strong>Persistent Volume Claim</strong> に移動して、目的の <strong>PVC</strong> で <strong>Create Snapshot</strong> を実行します。
+<code>my-shared-storage</code> プロジェクトが選択されていることを確認してください。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/ocs/OCP4-OCS4-Snapshot.png" alt="Persistent Volume Claim snapshot using UI">
+</div>
+<div class="title">Figure 5. Persistent Volume Claim snapshot using UI</div>
+</div>
+<div class="paragraph">
+<p><strong>VolumeSnapshot</strong> の容量は、オリジナルと同じ容量になります。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/ocs/OCP4-OCS4-Snapshot-config.png" alt="Persistent Volume Claim snapshot configuration">
+</div>
+<div class="title">Figure 6. Persistent Volume Claim snapshot configuration</div>
+</div>
+<div class="paragraph">
+<p>ここで <strong>Create</strong> を選択してスナップショットを実行しても構いません。<br>
+YAMLファイルでスナップショットを作成するのであれば、ここでは <strong>Cancel</strong> を選択し、次のコマンドで <code>my-shared-storage</code> <strong>PVC</strong> のスナップショットを実行できます。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f labitem/my-shared-storage-snapshot.yaml</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">volumesnapshot.snapshot.storage.k8s.io/my-shared-storage-snapshot created</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>新しく <strong>VolumeSnapshot</strong> が作られていることを確認できます。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get volumesnapshot -n my-shared-storage</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                         READYTOUSE   SOURCEPVC           SOURCESNAPSHOTCONTENT   RESTORESIZE   SNAPSHOTCLASS
+  SNAPSHOTCONTENT                                    CREATIONTIME   AGE
+my-shared-storage-snapshot   true         my-shared-storage                           5Gi           ocs-storagecluster-cephfsplugin-snapclass
+  snapcontent-536088af-ca75-475e-8b4d-93cf96b686b4   33s            33s</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ボリュームスナップショットの復元"><a class="anchor" href="#_ボリュームスナップショットの復元"></a>ボリュームスナップショットの復元</h3>
+<div class="paragraph">
+<p>これで、<strong>OpenShift Web Console</strong> で新しく作られた <strong>VolumeSnapshot</strong> を復元することができます。<strong>Storage</strong> &#8594; <strong>Volume Snapshots</strong> に移動して、目的の <strong>VolumeSnapshot</strong> で <strong>Restore as new PVC</strong> を実行します。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/ocs/OCP4-OCS4-Snapshot-restore.png" alt="Persistent Volume Claim snapshot restore in UI">
+</div>
+<div class="title">Figure 7. Persistent Volume Claim snapshot restore in UI</div>
+</div>
+<div class="paragraph">
+<p>スナップショットから新しいクローンを作成するためには、元の <strong>PVC</strong> と同じ <strong>StorageClass</strong> を選択します。<br>
+作られるクローン <strong>PVC</strong> のサイズはグレーアウトされていて変更できません。クローン <strong>PVC</strong> のサイズはスナップショット元の <code>my-shared-storage</code> <strong>PVC</strong> と同じサイズが自動で指定されるためです。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/ocs/OCP4-OCS4-Snapshot-restore-config.png" alt="Persistent Volume Claim snapshot restore configuration">
+</div>
+<div class="title">Figure 8. Persistent Volume Claim snapshot restore configuration</div>
+</div>
+<div class="paragraph">
+<p><strong>Restore</strong> をクリックします。</p>
+</div>
+<div class="paragraph">
+<p><strong>VolumeSnapshot</strong> から復元された新しい <strong>PVC</strong> があるかどうかを確認します。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pvc -n my-shared-storage | grep restore</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">my-shared-storage-snapshot-restore   Bound    pvc-c1d2ea77-c059-4f5e-844e-72d512e466b1   5Gi        RWX            ocs-storagecluster-cephfs   4s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>出力された <strong>PVC</strong> は、データの破損や損失がある場合に、アプリケーションを復旧するために使用できます。</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
