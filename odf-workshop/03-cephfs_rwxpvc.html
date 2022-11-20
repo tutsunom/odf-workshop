@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Setup :: ODF Workshop</title>
-    <link rel="canonical" href="https://tutsunom.github.io/odf-workshop/odf-workshop/appendix-ceph.html">
+    <title>CephFS volumeを使用するOCPアプリケーション :: ODF Workshop</title>
+    <link rel="canonical" href="https://tutsunom.github.io/odf-workshop/odf-workshop/03-cephfs_rwxpvc.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 <link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
@@ -374,29 +374,113 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">ODF Workshop</a></li>
-    <li><a href="appendix-ceph.html">Setup</a></li>
+    <li><a href="03-cephfs_rwxpvc.html">CephFS volumeを使用するOCPアプリケーション</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/tutsunom/odf-workshop/edit/master/documentation/modules/ROOT/pages/appendix-ceph.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/tutsunom/odf-workshop/edit/master/documentation/modules/ROOT/pages/03-cephfs_rwxpvc.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Setup</h1>
+<h1 class="page">CephFS volumeを使用するOCPアプリケーション</h1>
 <div class="sect1">
-<h2 id="_setup_openshift_cluster"><a class="anchor" href="#_setup_openshift_cluster"></a>Setup OpenShift Cluster</h2>
+<h2 id="_アプリケーションのデプロイ"><a class="anchor" href="#_アプリケーションのデプロイ"></a>アプリケーションのデプロイ</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To run OpenShift4, you need to have one provisioned environment using <a href="https://demo.redhat.com">RHPDS</a>.
-Go to Catalog &#8594; Openshift 4.10 Workshop &#8594; Order.</p>
+<p>このセクションでは、<code>ocs-storagecluster-cephfs</code> <strong>StorageClass</strong> を使用して、同時に複数のPodで使用できるRWX(ReadWriteMany) <strong>PVC</strong> を作成します。ここでは <code>File Uploader</code> と呼ばれるアプリケーションを使用します。</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_login_openshift_web_console"><a class="anchor" href="#_login_openshift_web_console"></a>Login OpenShift Web console</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>Once you have a workshop environment, you can also access OpenShift web console.<br>
-The web console URL is shown in RHPDS as well as cluster admin username/password.</p>
+<p>はじめに新しいProjectを作成します</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc new-project my-shared-storage</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>次に <code>file-uploader</code> というサンプルPHPアプリケーションをデプロイします。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc new-app openshift/php~https://github.com/christianh814/openshift-php-upload-demo --name=file-uploader</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">--&gt; Found image f2b8dfb (4 weeks old) in image stream "openshift/php" under tag "7.4-ubi8" for "openshift/php"
+
+    Apache 2.4 with PHP 7.4
+    -----------------------
+    PHP 7.4 available as container is a base platform for building and running various PHP 7.4 applications and frameworks. PHP
+ is an HTML-embedded scripting language. PHP attempts to make it easy for developers to write dynamically generated web pages.
+PHP also offers built-in database integration for several commercial and non-commercial database management systems, so writing
+ a database-enabled webpage with PHP is fairly simple. The most common use of PHP coding is probably as a replacement for CGI s
+cripts.
+
+    Tags: builder, php, php74, php-74
+
+    * A source build using source code from <a href="https://github.com/christianh814/openshift-php-upload-demo" class="bare">https://github.com/christianh814/openshift-php-upload-demo</a> will be created
+      * The resulting image will be pushed to image stream tag "file-uploader:latest"
+      * Use 'oc start-build' to trigger a new build
+
+--&gt; Creating resources ...
+    imagestream.image.openshift.io "file-uploader" created
+    buildconfig.build.openshift.io "file-uploader" created
+    deployment.apps "file-uploader" created
+    service "file-uploader" created
+--&gt; Success
+    Build scheduled, use 'oc logs -f buildconfig/file-uploader' to track its progress.
+    Application is not exposed. You can expose services to the outside world by executing one or more of the commands below:
+     'oc expose service/file-uploader'
+    Run 'oc status' to view your app.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ビルドログを見ながら、アプリケーションのデプロイが終わるのを待ちます。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc logs -f bc/file-uploader -n my-shared-storage</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">Cloning "https://github.com/christianh814/openshift-php-upload-demo" ...
+        Commit: 288eda3dff43b02f7f7b6b6b6f93396ffdf34cb2 (trying to modularize)
+        Author: Christian Hernandez &lt;<a href="mailto:christian.hernandez@yahoo.com">christian.hernandez@yahoo.com</a>&gt;
+        Date:   Sun Oct 1 17:15:09 2017 -0700
+[...]
+---&gt; Installing application source...
+=&gt; sourcing 20-copy-config.sh ...
+---&gt; 06:13:01     Processing additional arbitrary httpd configuration provided by s2i ...
+=&gt; sourcing 00-documentroot.conf ...
+=&gt; sourcing 50-mpm-tuning.conf ...
+=&gt; sourcing 40-ssl-certs.sh ...
+STEP 9/9: CMD /usr/libexec/s2i/run
+COMMIT temp.builder.openshift.io/my-shared-storage/file-uploader-1:15d825ae
+time="2022-06-02T06:13:01Z" level=warning msg="Adding metacopy option, configured globally"
+Getting image source signatures
+[...]
+Writing manifest to image destination
+Storing signatures
+--&gt; fc6b7ec51dc
+Successfully tagged temp.builder.openshift.io/my-shared-storage/file-uploader-1:15d825ae
+fc6b7ec51dc704e22e6e81e6953144af54044b360964f727ca214952a7ee9e0c
+
+Pushing image image-registry.openshift-image-registry.svc:5000/my-shared-storage/file-uploader:latest ...
+Getting image source signatures
+[...]
+Writing manifest to image destination
+Storing signatures
+Successfully pushed image-registry.openshift-image-registry.svc:5000/my-shared-storage/file-uploader@sha256:934865d3d0ecef92024
+eaef2b416f47fa7a7598f820c48624cc57d39cce221c5
+Push successful</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The command prompt returns out of the tail mode once you see <em>Push successful</em>.
+<em>Push successful</em> が表示されるとデプロイ完了です。デプロイ完了までに5分ほどかかる場合があります。</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -405,113 +489,253 @@ The web console URL is shown in RHPDS as well as cluster admin username/password
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-If the language setting is NOT set to "English", it might to be good to set it "English" via User Preference menu. <br>
-If you continue this workshop without "English" setting, the pipeline will not display properly in the DevSecOps lab.
+ここでは <code>oc new-app</code> コマンドを使って直接アプリケーションコードのビルドを要求しているので、テンプレートがありません。このアプリケーションが <strong>Service</strong> を持つ単一のPodで、<strong>Route</strong> を持たないのはこのためです。
 </td>
 </tr>
 </table>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_connect_to_your_bastion_server"><a class="anchor" href="#_connect_to_your_bastion_server"></a>Connect to your bastion server</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>You also need to access the bastion server in your environment via SSH.</p>
+<p>このアプリケーションを <code>Route</code> 経由で公開し、高可用性のために3つのインスタンスに拡張することで、本番利用に対応できるようにしましょう。</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ssh lab-user@&lt;YOUR_BASTION_SERVER&gt;</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc expose svc/file-uploader -n my-shared-storage</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>Some CLI tools are already installed on you bastion server. You can check the OpenShift version using:</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc version</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc scale --replicas=3 deploy/file-uploader -n my-shared-storage</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pods -n my-shared-storage</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The output should show oc version &gt;=4.10:</p>
+<p>数分で3つの <code>file-uploader</code> Podが作られます。</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>PVが関連付けられていないPodには永続的なデータを保存しようとしないでください。
+Podとそのコンテナは定義上エフェメラルなものであり、保存されたデータはPodが何らかの理由で終了するとすぐに失われます。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>ReadWriteMany(RWX) の <strong>PVC</strong> を作成し、<code>oc set volume</code> コマンドを使用してアプリケーションにアタッチできます。
+次のように実行します。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc set volume deploy/file-uploader --add --name=my-shared-storage \
+-t pvc --claim-mode=ReadWriteMany --claim-size=1Gi \
+--claim-name=my-shared-storage --claim-class=ocs-storagecluster-cephfs \
+--mount-path=/opt/app-root/src/uploaded \
+-n my-shared-storage</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>このコマンドによって次のことが行われます。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>PVC</strong> を作成する</p>
+</li>
+<li>
+<p><code>volume</code> の定義が含まれるように <strong>Deployment</strong> を更新する</p>
+</li>
+<li>
+<p>指定された <code>mount-path</code> にボリュームをマウントするよう <strong>Deployment</strong> を更新する</p>
+</li>
+<li>
+<p>3つのアプリケーションのPodを改めてデプロイする</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>さて、ボリュームを追加した結果を見てみましょう。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pvc -n my-shared-storage</code></pre>
+</div>
 </div>
 <div class="listingblock console-output">
+<div class="title">出力例:</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">Client Version: 4.10.36
-Server Version: 4.10.36
-Kubernetes Version: v1.23.5+8471591</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS                AGE
+my-shared-storage   Bound    pvc-43a7067c-e39e-48c7-94cd-3bb16ea98488   1Gi        RWX            ocs-storagecluster-cephfs   2m33s</code></pre>
 </div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_edit_the_default_project_template"><a class="anchor" href="#_edit_the_default_project_template"></a>Edit the default project template</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Then first of all, the default Project Template must be edited.<br>
-In the Openshift 4.10 Workshop environment provided by RHPDS, a Limit Range is automatically set for newly created projects. This can be an obstacle to the smooth running of the Workshop.</p>
 </div>
 <div class="paragraph">
-<p>Use the <code>oc edit</code> command to clear the Limit Range section.</p>
+<p><code>ACCESSMODE</code> が <strong>RWX</strong>(<code>ReadWriteMany</code>)に設定されています。<br></p>
+</div>
+<div class="paragraph">
+<p>3つの <code>file-uploader</code> Podはすべて、同じ <strong>RWX PVC</strong> を使用しています。
+<strong>RWX</strong> の <code>ACCESSMODE</code> を使用することで、複数のノードにアプリケーションPodをスケジュールすることができます。<br>
+<strong>RWX</strong> の <code>ACCESSMODE</code> でないと、OpenShiftは複数のPodに同じ <strong>PV</strong> を接続しようとしません。仮に <strong>RWO</strong>(<code>ReadWriteOnce</code>) の <strong>PVC</strong> で <strong>PV</strong> をアタッチしたPodをスケールしようとすると、Podは全て同一のノード上に配置されることになります。</p>
+</div>
+<div class="paragraph">
+<p>次のコマンドでこのPVが3つの <code>file-uploader</code> Pod全てから同時にマウントされていることが確認できます。</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc edit template project-request -n openshift-config</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pod -n my-shared-storage --field-selector=status.phase=Running -o 'custom-columns=NAME:.metadata.name,PVCNAME:.spec.containers[].volumeMounts[].name,MOUNTPOINT:.spec.containers[].volumeMounts[].mountPath'</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">出力例:</div>
+<div class="content">
+<pre>NAME                             PVCNAME             MOUNTPOINT
+file-uploader-665884f976-blm9p   my-shared-storage   /opt/app-root/src/uploaded
+file-uploader-665884f976-htsvf   my-shared-storage   /opt/app-root/src/uploaded
+file-uploader-665884f976-hxmhh   my-shared-storage   /opt/app-root/src/uploaded</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Delete all of the following part from the <code>project-request</code> manifest and save it.</p>
+<p>それでは、ブラウザを使って <code>file-uploader</code> のWebアプリケーションを使い、新しいファイルをアップロードしてみましょう。<br>
+作成された <strong>Route</strong> を確認します。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get route file-uploader -n my-shared-storage -o jsonpath --template="http://{.spec.host}{'\n'}"</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"><a href="http://file-uploader-my-shared-storage.apps.cluster-d6qlm.d6qlm.sandbox458.opentlc.com" class="bare">http://file-uploader-my-shared-storage.apps.cluster-d6qlm.d6qlm.sandbox458.opentlc.com</a></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>出力されたURLを使用してブラウザでWebアプリケーションを指定します。</p>
+</div>
+<div class="paragraph">
+<p>このWebアプリケーションは、アップロードされたすべてのファイルをリストし、新しいファイルをアップロードする機能と、
+既存のデータをダウンロードする機能を提供します。現時点では何もありません。</p>
+</div>
+<div class="paragraph">
+<p>ローカルマシンから任意のファイルを選択し、アプリケーションにアップロードします。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/ocs/uploader_screen_upload.png" alt="uploader screen upload">
+</div>
+<div class="title">Figure 1. A simple PHP-based file upload tool</div>
+</div>
+<div class="paragraph">
+<p>完了したら、<strong>List uploaded files</strong> をクリックして、現在アップロードされているすべてのファイルのリストを表示します。</p>
+</div>
+<div class="sect2">
+<h3 id="_演習"><a class="anchor" href="#_演習"></a>演習</h3>
+<div class="paragraph">
+<p>また、先のコマンドで確認した3つの <code>file-uploader</code> Podの <code>MOUNTPOINT</code> に同じファイルが保存されていることを確認してみましょう。<br>
+<code>oc rsh</code> コマンドを使って、それぞれの <code>file-uploader</code> Pod に対して <code>MOUNTPOINT</code> のパスに対して <code>ls</code> コマンドを実行することで確認できます。</p>
+</div>
+<div class="paragraph">
+<p>ヒント:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>- apiVersion: v1
-  kind: LimitRange
-  metadata:
-    name: ${PROJECT_NAME}-core-resource-limits
-    namespace: ${PROJECT_NAME}
-  spec:
-    limits:
-    - default:
-        cpu: 500m
-        memory: 1.5Gi
-      defaultRequest:
-        cpu: 50m
-        memory: 256Mi
-      max:
-        cpu: 4
-        memory: 6Gi
-      type: Container
-    - max:
-        cpu: 4
-        memory: 12Gi
-      type: Pod</pre>
+<pre>oc -n my-shared-storage rsh &lt;Pod name&gt; ls &lt;MOUNTPOINT&gt;</pre>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_get_tutorial_sources"><a class="anchor" href="#_get_tutorial_sources"></a>Get tutorial sources</h2>
+<h2 id="_cephfs_pvの拡張"><a class="anchor" href="#_cephfs_pvの拡張"></a>CephFS PVの拡張</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Before we start setting up the environment, let’s clone the tutorial sources and set the <code>TUTORIAL_HOME</code> environment variable to point to the root directory of the tutorial:</p>
+<p>OpenShift 4.5以降のバージョンでは、<code>ocs-storagecluster-cephfs</code> <strong>StorageClass</strong> をベースに既存のPVCを拡張することができます。このセクションでは、CLIを使ってPVC拡張を実行する手順を説明します。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Ceph RBDベースの <strong>PVC</strong> を拡張するために説明された、他のすべての方法も利用可能です。
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><code>my-sharged-storage</code> の <strong>PVC</strong> サイズは現在 <code>1Gi</code> です。これを <code>oc patch</code> コマンドで <code>5Gi</code> まで大きくしてみましょう。</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone <a href="https://github.com/tutsunom/odf-workshop.git" class="bare">https://github.com/tutsunom/odf-workshop.git</a> odf-workshop</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc patch pvc my-shared-storage -n my-shared-storage --type json --patch  '[{ "op": "replace", "path": "/spec/resources/requests/storage", "value": "5Gi" }]'</code></pre>
 </div>
 </div>
-<div class="listingblock console-input">
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export TUTORIAL_HOME="$(pwd)/odf-workshop"</code></pre>
-</div>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd $TUTORIAL_HOME</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">persistentvolumeclaim/my-shared-storage patched</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>And then you are ready for installing RHACS on Openshift.</p>
+<p>それでは、RWXの <strong>PVC</strong> が拡張されたことを確認します。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pvc my-shared-storage -n my-shared-storage -o jsonpath='{.spec.resources.requests.storage}'</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">5Gi</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pvc my-shared-storage -n my-shared-storage -o jsonpath='{.status.capacity.storage}'</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">5Gi</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>出力が同じになるまで、両方のコマンドを繰り返します。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+CephFSベースのRWX <strong>PVC</strong> の拡張は、RBDベースの <strong>PVC</strong> とは異なり、ほぼ瞬時に行われます。これは、CephFSベースの <strong>PVC</strong> の拡張にはファイルシステムの拡張が含まれず、単にマウントされたファイルシステムのクォータを変更するだけだからです。
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+CAUTION: CephFS <strong>PVC</strong> の縮小はサポートされません。
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
