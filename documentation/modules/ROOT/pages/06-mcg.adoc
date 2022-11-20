@@ -1,0 +1,413 @@
+= Multi-Cloud Gateway
+include::_attributes.adoc[]
+:profile: acs
+
+このセクションでは、オブジェクトバケットを使用するアプリケーションをデプロイします。アプリケーションは、`Multi-Cloud Gateway (MCG)` を介して *ObjectBucketClaim (OBC)* というリソースを使うことで、動的にオブジェクトバケットを獲得します。 +
+また、`MCG Console` を使って *Object Bucket (OB)* に正しくオブジェクトが置かれていることを確認します。
+
+NOTE: `MCG Console` は *Openshift Web Console* とは完全に統合されていません。そのため `MCG Console` を使って作成したリソースは、OpenShift クラスタに反映されません。
+
+== NooBaa CLIのインストール
+MCGは `MCG Console` と *Openshift Web Console* の他にも、CLIが用意されています。 +
+CLIをインストールすると、`noobaa` コマンドが実行できるようになります。
+
+MCG CLIはODFのサブスクリプションがあればアクセスできるソフトウェアリポジトリから、RHELにインストールできます。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+sudo subscription-manager repos --enable=rh-odf-4-for-rhel-8-x86_64-rpms
+sudo dnf install -y mcg
+----
+
+もしMCG CLIをインストールできない場合は、OSSのNooBaa CLIをインストールしましょう。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+OS="linux"
+VERSION=$(curl -s https://api.github.com/repos/noobaa/noobaa-operator/releases/latest | jq -r '.name')
+curl -LO https://github.com/noobaa/noobaa-operator/releases/download/$VERSION/noobaa-$OS-$VERSION
+chmod +x noobaa-$OS-$VERSION
+sudo mv noobaa-$OS-$VERSION /usr/local/bin/noobaa
+----
+WARNING: OSSのNooBaa CLIはODFのサブスクリプションサポートの範囲外です。サポートを希望する場合は、MCG CLIを使いましょう。
+
+いずれかのCLIがインストールできたら、`noobaa` コマンドで確認します。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+noobaa version
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+noobaa version
+INFO[0000] CLI version: 5.9.0
+INFO[0000] noobaa-image: noobaa/noobaa-core:5.9.0
+INFO[0000] operator-image: noobaa/noobaa-operator:5.9.0
+----
+
+== MCGのステータス確認
+
+MCGのステータスを `noobaa` コマンドで確認します。`openshift-storage` Namespaceを指定して、次のコマンドを実行します。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+noobaa status -n openshift-storage
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+INFO[0000] CLI version: 5.9.0
+INFO[0000] noobaa-image: registry.redhat.io/odf4/mcg-core-rhel8@sha256:a6614c8fe182ba2c39ddb3aaa0f5a37bd392cc5d69bdbf05c7e96125ee3535a2
+INFO[0000] operator-image: registry.redhat.io/odf4/mcg-rhel8-operator@sha256:e535691f95556959dd61b651e0ab8afae82b67fae0ddf2284615b1502b93a108
+INFO[0000] noobaa-db-image: registry.redhat.io/rhel8/postgresql-12@sha256:fa920188f567e51d75aacd723f0964026e42ac060fed392036e8d4b3c7a8129f
+INFO[0000] Namespace: openshift-storage
+INFO[0000]
+INFO[0000] CRD Status:
+INFO[0000] ✅ Exists: CustomResourceDefinition "noobaas.noobaa.io"
+INFO[0000] ✅ Exists: CustomResourceDefinition "backingstores.noobaa.io"
+INFO[0000] ✅ Exists: CustomResourceDefinition "namespacestores.noobaa.io"
+INFO[0000] ✅ Exists: CustomResourceDefinition "bucketclasses.noobaa.io"
+INFO[0000] ✅ Exists: CustomResourceDefinition "objectbucketclaims.objectbucket.io"
+INFO[0000] ✅ Exists: CustomResourceDefinition "objectbuckets.objectbucket.io"
+INFO[0000]
+INFO[0000] Operator Status:
+INFO[0000] ✅ Exists: Namespace "openshift-storage"
+INFO[0000] ✅ Exists: ServiceAccount "noobaa"
+INFO[0000] ✅ Exists: ServiceAccount "noobaa-endpoint"
+INFO[0000] ✅ Exists: Role "mcg-operator.v4.9.8-noobaa-79b477964"
+INFO[0000] ✅ Exists: Role "mcg-operator.v4.9.8-noobaa-endpoint-6bfd8f48c7"
+INFO[0000] ✅ Exists: RoleBinding "mcg-operator.v4.9.8-noobaa-79b477964"
+INFO[0000] ✅ Exists: RoleBinding "mcg-operator.v4.9.8-noobaa-endpoint-6bfd8f48c7"
+INFO[0000] ✅ Exists: ClusterRole "mcg-operator.v4.9.8-f46845887"
+INFO[0000] ✅ Exists: ClusterRoleBinding "mcg-operator.v4.9.8-f46845887"
+INFO[0000] ✅ Exists: Deployment "noobaa-operator"
+INFO[0000]
+INFO[0000] System Wait Ready:
+INFO[0000] ✅ System Phase is "Ready".
+INFO[0000]
+INFO[0000]
+INFO[0000] System Status:
+INFO[0000] ✅ Exists: NooBaa "noobaa"
+INFO[0000] ✅ Exists: StatefulSet "noobaa-core"
+INFO[0000] ✅ Exists: ConfigMap "noobaa-config"
+INFO[0000] ✅ Exists: Service "noobaa-mgmt"
+INFO[0000] ✅ Exists: Service "s3"
+INFO[0000] ✅ Exists: Secret "noobaa-db"
+INFO[0000] ✅ Exists: ConfigMap "noobaa-postgres-config"
+INFO[0000] ✅ Exists: ConfigMap "noobaa-postgres-initdb-sh"
+INFO[0000] ✅ Exists: StatefulSet "noobaa-db-pg"
+INFO[0000] ✅ Exists: Service "noobaa-db-pg"
+INFO[0000] ✅ Exists: Secret "noobaa-server"
+INFO[0000] ✅ Exists: Secret "noobaa-operator"
+INFO[0000] ✅ Exists: Secret "noobaa-endpoints"
+INFO[0000] ✅ Exists: Secret "noobaa-admin"
+INFO[0000] ✅ Exists: Secret "noobaa-root-master-key"
+INFO[0000] ✅ Exists: StorageClass "openshift-storage.noobaa.io"
+INFO[0000] ✅ Exists: BucketClass "noobaa-default-bucket-class"
+INFO[0000] ✅ Exists: Deployment "noobaa-endpoint"
+INFO[0000] ✅ Exists: HorizontalPodAutoscaler "noobaa-endpoint"
+INFO[0000] ✅ (Optional) Exists: BackingStore "noobaa-default-backing-store"
+INFO[0000] ✅ (Optional) Exists: CredentialsRequest "noobaa-aws-cloud-creds"
+INFO[0000] ⬛ (Optional) Not Found: CredentialsRequest "noobaa-azure-cloud-creds"
+INFO[0000] ⬛ (Optional) Not Found: Secret "noobaa-azure-container-creds"
+INFO[0000] ⬛ (Optional) Not Found: Secret "noobaa-gcp-bucket-creds"
+INFO[0000] ⬛ (Optional) Not Found: CredentialsRequest "noobaa-gcp-cloud-creds"
+INFO[0000] ✅ (Optional) Exists: PrometheusRule "noobaa-prometheus-rules"
+INFO[0000] ✅ (Optional) Exists: ServiceMonitor "noobaa-mgmt-service-monitor"
+INFO[0000] ✅ (Optional) Exists: ServiceMonitor "s3-service-monitor"
+INFO[0000] ✅ (Optional) Exists: Route "noobaa-mgmt"
+INFO[0000] ✅ (Optional) Exists: Route "s3"
+INFO[0000] ✅ Exists: PersistentVolumeClaim "db-noobaa-db-pg-0"
+INFO[0000] ✅ System Phase is "Ready"
+INFO[0000] ✅ Exists:  "noobaa-admin"
+
+#------------------#
+#- Mgmt Addresses -#
+#------------------#
+
+ExternalDNS : [https://noobaa-mgmt-openshift-storage.apps.cluster-d6qlm.d6qlm.sandbox458.opentlc.com https://ab1768603a7e3435a9a5eef23dd385bb-1738493587.
+us-east-2.elb.amazonaws.com:443]
+ExternalIP  : []
+NodePorts   : [https://10.0.219.73:31910]
+InternalDNS : [https://noobaa-mgmt.openshift-storage.svc:443]
+InternalIP  : [https://172.30.112.229:443]
+PodPorts    : [https://10.131.2.19:8443]
+
+#--------------------#
+#- Mgmt Credentials -#
+#--------------------#
+
+email    : admin@noobaa.io
+password : +tymeanDJtTZkhhMQuKezQ==
+
+#----------------#
+#- S3 Addresses -#
+#----------------#
+
+ExternalDNS : [https://s3-openshift-storage.apps.cluster-d6qlm.d6qlm.sandbox458.opentlc.com https://aba4c23b3771e4d0b8e84b4134d0e34f-1563330099.us-east-2
+.elb.amazonaws.com:443]
+ExternalIP  : []
+NodePorts   : [https://10.0.219.73:30906]
+InternalDNS : [https://s3.openshift-storage.svc:443]
+InternalIP  : [https://172.30.72.123:443]
+PodPorts    : [https://10.131.2.21:6443]
+
+#------------------#
+#- S3 Credentials -#
+#------------------#
+
+AWS_ACCESS_KEY_ID     : Q4dCJr2hKLpEX4GAWH9q
+AWS_SECRET_ACCESS_KEY : OqtAermCqSmHTe9agjlNo/Tgj8MldpOmf41251Ux
+
+#------------------#
+#- Backing Stores -#
+#------------------#
+
+NAME                           TYPE     TARGET-BUCKET                                                 PHASE   AGE
+noobaa-default-backing-store   aws-s3   nb.1654144193284.cluster-d6qlm.d6qlm.sandbox458.opentlc.com   Ready   1d4h17m0s
+
+#--------------------#
+#- Namespace Stores -#
+#--------------------#
+
+No namespace stores found.
+
+#------------------#
+#- Bucket Classes -#
+#------------------#
+
+NAME                          PLACEMENT                                                        NAMESPACE-POLICY   PHASE   AGE
+noobaa-default-bucket-class   {"tiers":[{"backingStores":["noobaa-default-backing-store"]}]}   null               Ready   1d4h17m0s
+
+#-----------------#
+#- Bucket Claims -#
+#-----------------#
+
+No OBCs found.
+----
+
+CLIは最初に環境をチェックし、次に環境に関するすべての情報を出力します。MCGのステータスに加えて、MCGバケットへの接続に使用できる使用可能なS3エンドポイントアドレスとS3クレデンシャルが表示されます。 +
+S3アドレスはOpenShiftクラスタ内で内部的にルーティングするか、外部DNSを使用するかを選択できます。 +
+
+== Object Bucket Claimの作成
+
+*ObjectBucketClaim (OBC)* は、OCPアプリケーションが使用できるS3互換のバケットを動的に作る場合に使われます。*OBC* を作成すると、実体である *ObjectBucket (OB)* と、アプリケーションがオブジェクトストレージサービスを使用するために必要なすべての情報を含む *ConfigMap* と *Secret* が作られます。
+
+この機能のデモを行うために、Photo-Albumのデモアプリケーションを使用します。
+
+アプリケーションをビルドしてクラスタにデプロイします。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc apply -f labitem/photo_album_app.yaml
+----
+
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+buildconfig.build.openshift.io/python-s3-photo-album created
+objectbucketclaim.objectbucket.io/photo-album created
+imagestream.image.openshift.io/photo-album created
+deploymentconfig.apps.openshift.io/photo-album created
+service/photo-album created
+route.route.openshift.io/photo-album created
+----
+
+IMPORTANT: デプロイには最大5分以上かかる場合があります。
+
+次のコマンドを実行してPhoto-Albumがデプロイが完了したことを確認します。
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc -n demo get pods
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+NAME                   READY   STATUS      RESTARTS   AGE
+photo-album-1-build    0/1     Completed   0          3m8s
+photo-album-1-deploy   0/1     Completed   0          2m2s
+photo-album-1-dsvkk    1/1     Running     0          119s
+----
+
+Photo-Albumアプリケーションのデプロイ中に作成した、*OBC* を見ることができます。以下を実行してください。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc -n demo get obc 
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+NAME          STORAGE-CLASS                 PHASE   AGE
+photo-album   openshift-storage.noobaa.io   Bound   4m8s
+----
+
+*OBC* によって動的に作成された、*OB* も確認できます。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get ob 
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+NAME                   STORAGE-CLASS                 CLAIM-NAMESPACE   CLAIM-NAME   RECLAIM-POLICY   PHASE   AGE
+obc-demo-photo-album   openshift-storage.noobaa.io                                  Delete           Bound   6m8s
+----
+
+NOTE: *OB* は *PV* と同様に cluster-scoped なリソースなので、Namespaceを指定しなくても表示されます。
+
+
+また、以下のコマンドで新しいバケットの *ConfigMap* と *Secret* を表示することができます。 +
+*ConfigMap* には、バケット名、*Service*、ポートなどの重要な情報が含まれています。これらはすべて、S3エンドポイントへ接続するために使用されます。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc -n demo get cm photo-album -o yaml
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+[source,yaml]
+----
+apiVersion: v1
+data:
+  BUCKET_HOST: s3.openshift-storage.svc
+  BUCKET_NAME: photo-album-b1a7792d-dc51-498c-875a-42973290d09f
+  BUCKET_PORT: "443"
+  BUCKET_REGION: ""
+  BUCKET_SUBREGION: ""
+kind: ConfigMap
+[...]
+----
+
+*Secret* には、アプリケーションが新しいバケットにアクセスするために必要なクレデンシャルが含まれます。クレデンシャルやキーは `base64` でエンコードされて *Secret* に保存されます。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc -n demo get secret photo-album -o yaml
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+[source,yaml]
+----
+apiVersion: v1
+data:
+  AWS_ACCESS_KEY_ID: WUZSalBiMXRSMEM3aDdIeTRxcFk=
+  AWS_SECRET_ACCESS_KEY: cnJselMyNUx3RldRM3BmOGVlYmdBRnhUWGoyYmh3UTNlcnNHYUpRUQ==
+kind: Secret
+[...]
+----
+
+新しい *OBC* と *OB* が作成されると、MCG は関連する *Secret* と *ConfigMap* を作成し、photo-albumアプリケーションが新しいバケットを使用するために必要な全ての情報が含まれていることが分かるでしょう。
+
+新しい *Secret* と *ConfigMap* の情報をアプリケーションがどのように使用するかを確認するには、アプリをデプロイした後に *DeploymentConfig* を参照してください。*DeploymentConfig* の指定セクションで `env:` を見つけ、*ConfigMap* と *Secret* の詳細が環境変数にどのようにマッピングされているかを確認することができます。 +
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+---- 
+oc get dc photo-album -o yaml -n demo
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+[source,yaml]
+----
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+[...]
+    spec:
+      containers:
+      - env:
+        - name: BUCKET_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: BUCKET_HOST
+              name: photo-album
+        - name: BUCKET_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: BUCKET_NAME
+              name: photo-album
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              key: AWS_ACCESS_KEY_ID
+              name: photo-album
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              key: AWS_SECRET_ACCESS_KEY
+              name: photo-album
+[...]
+----
+
+新しいバケットにオブジェクトを作成するには、まず `photo-album` アプリケーションの *Route* を見つける必要があります。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get route photo-album -n demo -o jsonpath --template="http://{.spec.host}{'\n'}"
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+http://photo-album.apps.cluster-d6qlm.d6qlm.sandbox458.opentlc.com
+----
+
+このURLをコピーして、Webブラウザーのタブに貼り付けてください。
+
+.Select Photo and Upload
+image::ocs/photo-album-select-upload.png[Select Photo and Upload]
+
+ローカルマシンにあるお好きな写真を1枚以上選択して、 *Upload* ボタンをクリックしてください。
+
+.View photos after uploading
+image::ocs/photo-album-images.png[View photos after uploading]
+
+オブジェクトバケットにオブジェクトが正しく保存されているかを確認します。 +
+まず *OpenShift Web Console* でODFダッシュボードを開き、*Storage Systems* タブの下で `ocs-storagecluster-storagesystem` を選択します。次の画面で *Object* ダッシュボードを表示し、`System Name` の下にある `Mulitcloud Object Gateway` のリンクをクリックします。
+
+.Launch MCG console from Object dashboard
+image::ocs/System-Name-MCG-Console.png[Launch MCG console from Object dashboard]
+
+別のタブで `MCG Console` が開かれるので、ログインします。
+
+[WARNING]
+====
+"Access Denied" でログインできない場合は、`OK, Take Me To NooBaa Login` ボタンをクリックし、MCG Console の管理者アカウントでログインします。
+
+Email Address には `admin@noobaa.io` を指定します。 +
+Password は、`noobaa status -n openshift-storage` の出力の中に表記されているので、探してみて下さい。
+====
+
+画面左端にある `Buckets` を選択するとバケットの詳細に移動できます。ここで、`Object Buckets` タブを選択します。
+.Login to MCG Console and select Buckets
+image::ocs/MCG-Console-photo-album-buckets.png[Login to MCG Console and select Buckets]
+
+あなたのバケット名を選択し、次に `Objects` タブを選択すると、写真をアップロードした際に作成された個々のオブジェクトを表示することができます。
+
+.Validate uploaded photos are in your Object Bucket
+image::ocs/MCG-Console-photo-album-objects.png[Validate uploaded photos are in your object bucket]
