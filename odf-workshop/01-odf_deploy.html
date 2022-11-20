@@ -846,10 +846,10 @@ Multus CNIを使ってPodで複数のネットワークを使用できる構成�
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">watch oc -n openshift-storage get pods</code></pre>
 </div>
 </div>
-<div class="listingblock">
-<div class="title">出力例</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
 <div class="content">
-<pre>NAME                                                              READY   STATUS      RESTARTS   AGE
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                                                              READY   STATUS      RESTARTS   AGE
 csi-cephfsplugin-5gmvm                                            3/3     Running     0          7m29s
 csi-cephfsplugin-8z6tf                                            3/3     Running     0          7m29s
 csi-cephfsplugin-ksznb                                            3/3     Running     0          7m29s
@@ -889,7 +889,7 @@ rook-ceph-osd-1-6b4f4cccdf-w7g7w                                  2/2     Runnin
 rook-ceph-osd-2-64c888b48-gcs4n                                   2/2     Running     0          3m26s
 rook-ceph-osd-prepare-ocs-deviceset-gp2-0-data-0wnh5j--1-xhgmf    0/1     Completed   0          4m
 rook-ceph-osd-prepare-ocs-deviceset-gp2-1-data-08kht7--1-zw66k    0/1     Completed   0          4m
-rook-ceph-osd-prepare-ocs-deviceset-gp2-2-data-0blmfh--1-dzdqk    0/1     Completed   0          3m59s</pre>
+rook-ceph-osd-prepare-ocs-deviceset-gp2-2-data-0blmfh--1-dzdqk    0/1     Completed   0          3m59s</code></pre>
 </div>
 </div>
 <div class="paragraph">
