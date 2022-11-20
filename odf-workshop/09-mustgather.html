@@ -3,10 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Configuration Management :: ODF Workshop</title>
-    <link rel="canonical" href="https://tutsunom.github.io/odf-workshop/odf-workshop/09-configuration_management.html">
-    <link rel="prev" href="08-compliance.html">
-    <link rel="next" href="10-system_policies.html">
+    <title>must-gatherの使用 :: ODF Workshop</title>
+    <link rel="canonical" href="https://tutsunom.github.io/odf-workshop/odf-workshop/09-mustgather.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 <link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
@@ -184,127 +182,127 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="07-violations.html">Violations</a>
+    <a class="nav-link" href="#07-violations.adoc">Violations</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="07-violations.html#violations_overview">Violations Dashboard Overview</a>
+    <a class="nav-link" href="#07-violations.adoc#violations_overview">Violations Dashboard Overview</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="07-violations.html#violations_example">Violations Build &amp; Deploy Example</a>
+    <a class="nav-link" href="#07-violations.adoc#violations_example">Violations Build &amp; Deploy Example</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="07-violations.html#violations_runtime">Violations Runtime Example</a>
+    <a class="nav-link" href="#07-violations.adoc#violations_runtime">Violations Runtime Example</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="07-violations.html#violations_behaviour">Violations Behaviour</a>
+    <a class="nav-link" href="#07-violations.adoc#violations_behaviour">Violations Behaviour</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="07-violations.html#policy_summary">Policy Summary</a>
+    <a class="nav-link" href="#07-violations.adoc#policy_summary">Policy Summary</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="08-compliance.html">Compliance</a>
+    <a class="nav-link" href="#08-compliance.adoc">Compliance</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="08-compliance.html#compliance_dashboard">Review Compliance Dashboard</a>
+    <a class="nav-link" href="#08-compliance.adoc#compliance_dashboard">Review Compliance Dashboard</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="08-compliance.html#compliance_dashboard_scan">Execute the first Compliance Scan</a>
+    <a class="nav-link" href="#08-compliance.adoc#compliance_dashboard_scan">Execute the first Compliance Scan</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="08-compliance.html#compliance_dashboard_review">Review the Compliance Reports in the Compliance Dashboard</a>
+    <a class="nav-link" href="#08-compliance.adoc#compliance_dashboard_review">Review the Compliance Reports in the Compliance Dashboard</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="08-compliance.html#compliance_dashboard_ns">Namespace Compliance Details</a>
+    <a class="nav-link" href="#08-compliance.adoc#compliance_dashboard_ns">Namespace Compliance Details</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="08-compliance.html#compliance_dashboard_report">Evidence Export</a>
+    <a class="nav-link" href="#08-compliance.adoc#compliance_dashboard_report">Evidence Export</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="08-compliance.html#compliance_operator">Integrating Compliance Operator with RHACS </a>
+    <a class="nav-link" href="#08-compliance.adoc#compliance_operator">Integrating Compliance Operator with RHACS </a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="08-compliance.html#compliance_operator_acs_review">Review Compliance Scans of the Compliance Operator in RHACS</a>
+    <a class="nav-link" href="#08-compliance.adoc#compliance_operator_acs_review">Review Compliance Scans of the Compliance Operator in RHACS</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="08-compliance.html#acs_policy_compliance">Configure Policy in RHACS to Invoke Compliance related Controls</a>
+    <a class="nav-link" href="#08-compliance.adoc#acs_policy_compliance">Configure Policy in RHACS to Invoke Compliance related Controls</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="08-compliance.html#acs_policy_compliance_nist">Enforce Policies that Meet Guidance for NIST Control 4.2.2</a>
+    <a class="nav-link" href="#08-compliance.adoc#acs_policy_compliance_nist">Enforce Policies that Meet Guidance for NIST Control 4.2.2</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="08-compliance.html#acs_policy_compliance_nist_view">View Updated Compliance Scan Results in RHACS</a>
+    <a class="nav-link" href="#08-compliance.adoc#acs_policy_compliance_nist_view">View Updated Compliance Scan Results in RHACS</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="08-compliance.html#acs_policy_compliance_nist_revert">Revert the Policy Changes</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item is-current-page" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="09-configuration_management.html">Configuration Management</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#conf_management_overview">Configuration Management Overview</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#conf_management_cis">Configuration Management CIS</a>
+    <a class="nav-link" href="#08-compliance.adoc#acs_policy_compliance_nist_revert">Revert the Policy Changes</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="10-system_policies.html">System Policies</a>
+    <a class="nav-link" href="#09-configuration_management.adoc">Configuration Management</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="10-system_policies.html#system_policies_overview">System Policies Overview</a>
+    <a class="nav-link" href="#09-configuration_management.adoc#conf_management_overview">Configuration Management Overview</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="10-system_policies.html#system_policies_example">System Policies Build and Deploy Example</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="10-system_policies.html#system_policies_enforcement">System Policies Enforcement</a>
+    <a class="nav-link" href="#09-configuration_management.adoc#conf_management_cis">Configuration Management CIS</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="11-integrations.html">RHACS Integrations</a>
+    <a class="nav-link" href="#10-system_policies.adoc">System Policies</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#10-system_policies.adoc#system_policies_overview">System Policies Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#10-system_policies.adoc#system_policies_example">System Policies Build and Deploy Example</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#10-system_policies.adoc#system_policies_enforcement">System Policies Enforcement</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="#11-integrations.adoc">RHACS Integrations</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="11-integrations.html#integrate_with_internal_openshift_registry">Integrate with Internal Openshift Registry</a>
+    <a class="nav-link" href="#11-integrations.adoc#integrate_with_internal_openshift_registry">Integrate with Internal Openshift Registry</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="11-integrations.html#integrate_with_internal_openshift_registry_config_acs">Configure RHACS integration for Internal Openshift Registry</a>
+    <a class="nav-link" href="#11-integrations.adoc#integrate_with_internal_openshift_registry_config_acs">Configure RHACS integration for Internal Openshift Registry</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="11-integrations.html#integrate_acs_slack">Integrate RHACS with Slack</a>
+    <a class="nav-link" href="#11-integrations.adoc#integrate_acs_slack">Integrate RHACS with Slack</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="11-integrations.html#integrate_acs_oauth">Integrate RHACS with OpenShift OAuth</a>
+    <a class="nav-link" href="#11-integrations.adoc#integrate_acs_oauth">Integrate RHACS with OpenShift OAuth</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="11-integrations.html#integrate_acs_sso">Integrate RHACS with OpenShift RHSSO</a>
+    <a class="nav-link" href="#11-integrations.adoc#integrate_acs_sso">Integrate RHACS with OpenShift RHSSO</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="12-platform_configuration.html">RHACS Secure Cluster Management</a>
+    <a class="nav-link" href="#12-platform_configuration.adoc">RHACS Secure Cluster Management</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="12-platform_configuration.html#system_configuration">RHACS System Configuration</a>
+    <a class="nav-link" href="#12-platform_configuration.adoc#system_configuration">RHACS System Configuration</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="12-platform_configuration.html#system_health">RHACS System Health</a>
+    <a class="nav-link" href="#12-platform_configuration.adoc#system_health">RHACS System Health</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="12-platform_configuration.html#access_control">RHACS Access Control</a>
+    <a class="nav-link" href="#12-platform_configuration.adoc#access_control">RHACS Access Control</a>
   </li>
 </ul>
   </li>
@@ -314,36 +312,36 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="14-cicd-jp.html">RHACSを使用したアプリケーションへの自動化セキュリティの実装とDevSecOpsの構築</a>
+    <a class="nav-link" href="#14-cicd-jp.adoc">RHACSを使用したアプリケーションへの自動化セキュリティの実装とDevSecOpsの構築</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="14-cicd-jp.html#setup">セットアップ</a>
+    <a class="nav-link" href="#14-cicd-jp.adoc#setup">セットアップ</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="14-cicd-jp.html#ci">継続的インテグレーション</a>
+    <a class="nav-link" href="#14-cicd-jp.adoc#ci">継続的インテグレーション</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="14-cicd-jp.html#devsecops">ACSを利用したDevSecOpsのステップ</a>
+    <a class="nav-link" href="#14-cicd-jp.adoc#devsecops">ACSを利用したDevSecOpsのステップ</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="14-cicd-jp.html#cd">GitOpsを使った継続的デリバリー</a>
+    <a class="nav-link" href="#14-cicd-jp.adoc#cd">GitOpsを使った継続的デリバリー</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="14-cicd-jp.html#dast">PostCI - ダイナミックアプリケーションセキュリティとテスト (DAST)</a>
+    <a class="nav-link" href="#14-cicd-jp.adoc#dast">PostCI - ダイナミックアプリケーションセキュリティとテスト (DAST)</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="14-cicd-jp.html#policy_violation">セキュリティポリシーとCI</a>
+    <a class="nav-link" href="#14-cicd-jp.adoc#policy_violation">セキュリティポリシーとCI</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="14-cicd-jp.html#fiximage">ボーナスラボ</a>
+    <a class="nav-link" href="#14-cicd-jp.adoc#fiximage">ボーナスラボ</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="14-cicd-jp.html#troubleshooting">トラブルシューティング</a>
+    <a class="nav-link" href="#14-cicd-jp.adoc#troubleshooting">トラブルシューティング</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="15-contributors.html">Contributors</a>
+    <a class="nav-link" href="#15-contributors.adoc">Contributors</a>
   </li>
 </ul>
   </li>
@@ -376,111 +374,87 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">ODF Workshop</a></li>
-    <li><a href="09-configuration_management.html">Configuration Management</a></li>
+    <li><a href="09-mustgather.html">must-gatherの使用</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/tutsunom/odf-workshop/edit/master/documentation/modules/ROOT/pages/09-configuration_management.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/tutsunom/odf-workshop/edit/master/documentation/modules/ROOT/pages/09-mustgather.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Configuration Management</h1>
-<div id="preamble">
-<div class="sectionbody">
+<h1 class="page">must-gatherの使用</h1>
 <div class="paragraph">
-<p>Learn how to use the Configuration Management view and understand the correlation between various entities in your cluster to manage your cluster configuration efficiently.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="conf_management_overview"><a class="anchor" href="#conf_management_overview"></a>Configuration Management Overview</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Every OpenShift Container Platform cluster includes many different entities distributed throughout the cluster, which makes it more challenging to understand and act on the available information.</p>
+<p><code>must-gather</code> は、稼働中のOpenshiftクラスタに関するデータを収集するためのツールです。<code>must-gather</code> はデータ収集のために、事前に定義された複数のコンテナのセットを実行します。これらのコンテナは複数のプログラムを実行し、収集したファイルをローカルワークステーションのファイルシステムに書き込みます。ユーザーはこの収集したファイルをRed Hatのサポートケースにアップロードすることで、サポートエンジニアはクラスタに直接アクセスすることなく問題をデバッグするために使用することができます。この診断収集のためのユーティリティと方法は、RHELホスト用の`sosreports`に似ています。</p>
 </div>
 <div class="paragraph">
-<p>Red Hat Advanced Cluster Security for Kubernetes (RHACS) provides efficient configuration management that combines all these distributed entities on a single page. It brings together information about all your clusters, namespaces, nodes, deployments, images, secrets, users, groups, service accounts, and roles in a single Configuration Management view, helping you visualize different entities and the connections between them.</p>
+<p>ODFではストレージ固有のコマンドを実行するために、独自の <code>must-gather</code> ツールのイメージをリリースしています。</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>To open the Configuration Management view, select Configuration Management from the left-hand navigation menu. Similar to the Dashboard, it displays some useful widgets.</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>一般的なOpenShiftの <code>must-gather</code> は次のコマンドで実行できます。</p>
 </div>
-<div class="imageblock">
+<div class="listingblock console-input">
 <div class="content">
-<img src="_images/configmgmt/01-config.png" alt="Config 1" width="800">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc adm must-gather</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>These widgets are interactive and show the following information:</p>
+<p>あるいは、ODFに特化した <code>must-gather</code> の結果を得るにはこのようにします。</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Security policy violations by severity</p>
-</li>
-<li>
-<p>The state of CIS (Center for Information Security) Docker and Kubernetes benchmark controls</p>
-</li>
-<li>
-<p>Users with administrator rights in the most clusters</p>
-</li>
-<li>
-<p>Secrets used most widely in your clusters</p>
-</li>
-</ul>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc adm must-gather --image=registry.redhat.io/odf4/ocs-must-gather-rhel8:v4.10</code></pre>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="conf_management_cis"><a class="anchor" href="#conf_management_cis"></a>Configuration Management CIS</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>The header in the Configuration Management view shows you the number of policies and CIS controls in your cluster. The header includes drop-down menus that allow you to switch between entities. For example, you can:</p>
+<p>出力は、カレントディレクトリにある <code>must-gather.local.(random)</code> という新しいフォルダの中に保存されます。</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Click Policies to view all policies and their severity, or select CIS Controls to view detailed information about all controls.</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>実行時のオプションを表示するには、次のコマンドを実行します。</p>
 </div>
-<div class="imageblock">
+<div class="listingblock console-input">
 <div class="content">
-<img src="_images/configmgmt/02-config.png" alt="Config 2" width="800">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc adm must-gather -h</code></pre>
 </div>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Click Application and Infrastructure and select clusters, namespaces, nodes, deployments, images, and secrets to view detailed information.</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
 <div class="content">
-<img src="_images/configmgmt/03-config.png" alt="Config 3" width="400">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">Launch a pod to gather debugging information
+
+ This command will launch a pod in a temporary namespace on your cluster that gathers debugging information and then
+downloads the gathered information.
+
+ Experimental: This command is under active development and may change without notice.
+
+Usage:
+  oc adm must-gather [flags]
+
+Examples:
+  # gather information using the default plug-in image and command, writing into ./must-gather.local.&lt;rand&gt;
+  oc adm must-gather
+
+  # gather information with a specific local folder to copy to
+  oc adm must-gather --dest-dir=/local/directory
+
+  # gather information using multiple plug-in images
+  oc adm must-gather --image=quay.io/kubevirt/must-gather --image=quay.io/openshift/origin-must-gather
+
+  # gather information using a specific image stream plug-in
+  oc adm must-gather --image-stream=openshift/must-gather:latest
+
+  # gather information using a specific image, command, and pod-dir
+  oc adm must-gather --image=my/image:tag --source-dir=/pod/directory -- myspecial-command.sh
+
+Options:
+      --dest-dir='': Set a specific directory on the local machine to write gathered data to.
+      --image=[]: Specify a must-gather plugin image to run. If not specified, OpenShift's default must-gather image
+will be used.
+      --image-stream=[]: Specify an image stream (namespace/name:tag) containing a must-gather plugin image to run.
+      --node-name='': Set a specific node to use - by default a random master will be used
+      --source-dir='/must-gather/': Set the specific directory on the pod copy the gathered data from.
+
+Use "oc adm options" for a list of global command-line options (applies to all commands).</code></pre>
 </div>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Click RBAC Visibility and Configuration and select users and groups, service accounts, and roles to view detailed information.</p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/configmgmt/04-config.png" alt="Config 4" width="800">
-</div>
-</div>
-</div>
-</div>
-<nav class="pagination">
-  <span class="prev"><a href="08-compliance.html">Compliance</a></span>
-  <span class="next"><a href="10-system_policies.html">System Policies</a></span>
-</nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>

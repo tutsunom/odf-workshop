@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>OpenShift MonitoringでのODFの使用 :: ODF Workshop</title>
-    <link rel="canonical" href="https://tutsunom.github.io/odf-workshop/odf-workshop/05-openshift_monitoring.html">
+    <title>ODFクラスタの拡張 :: ODF Workshop</title>
+    <link rel="canonical" href="https://tutsunom.github.io/odf-workshop/odf-workshop/07-expand.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 <link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
@@ -374,140 +374,31 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">ODF Workshop</a></li>
-    <li><a href="05-openshift_monitoring.html">OpenShift MonitoringでのODFの使用</a></li>
+    <li><a href="07-expand.html">ODFクラスタの拡張</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/tutsunom/odf-workshop/edit/master/documentation/modules/ROOT/pages/05-openshift_monitoring.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/tutsunom/odf-workshop/edit/master/documentation/modules/ROOT/pages/07-expand.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">OpenShift MonitoringでのODFの使用</h1>
+<h1 class="page">ODFクラスタの拡張</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>OpenShiftには、オープンソースプロジェクトであるPrometheusと、その広範なエコシステムをベースとした、モニタリングスタックが同梱されています。このモニタリングスタックは事前設定されており、さらにユーザ自身が設定できるようになっています。また、クラスタコンポーネントをモニタリングし、発生した問題をクラスタ管理者に直ちに通知するためのアラートセットが含まれています。<br>
-本番環境においては、モニタリングスタックをブロックストレージベースの永続ストレージを使って構成することが強く推奨されます。永続ストレージを使用することで、メトリクスデータやアラートデータが永続ボリュームに保存され、Podの再起動や再作成に耐えられるようになるためです。<br>
-ODFでは、Ceph RBD volumeによってブロックストレージを提供します。このセクションでは、PrometheusとAlertManagerのストレージとしてODF Ceph RBD volumeを使って永続化する方法について詳しく説明します。</p>
+<p>ODFクラスタにストレージを追加することで、容量が追加されパフォーマンスが向上されます。<br>
+このセクションでは、現在のストレージクラスタにODF Workerノードを追加する方法について説明します。</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_openshift_monitoringのデフォルトストレージ"><a class="anchor" href="#_openshift_monitoringのデフォルトストレージ"></a>OpenShift Monitoringのデフォルトストレージ</h2>
+<h2 id="_workerノードを追加する"><a class="anchor" href="#_workerノードを追加する"></a>Workerノードを追加する</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>まず、<code>openshift-monitoring</code> Namespaceで作成されているPodと <strong>PVC</strong> を見つけましょう。</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pods -n openshift-monitoring</code></pre>
-</div>
-</div>
-<div class="listingblock console-output">
-<div class="title">出力例:</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                                               READY   STATUS    RESTARTS      AGE
-pod/alertmanager-main-0                            5/5     Running   0             2m6s
-pod/alertmanager-main-1                            5/5     Running   0             2m14s
-pod/alertmanager-main-2                            5/5     Running   0             2m24s
-pod/cluster-monitoring-operator-64fcf6fdd9-rrzq5   2/2     Running   0             30h
-pod/grafana-7fdc7d846d-lnr98                       2/2     Running   0             2m25s
-pod/kube-state-metrics-c4fd7d5d5-jq9vq             3/3     Running   0             2m27s
-pod/node-exporter-5k7bd                            2/2     Running   0             29h
-pod/node-exporter-7stxr                            2/2     Running   0             29h
-pod/node-exporter-ck2n4                            2/2     Running   0             29h
-pod/node-exporter-dp7kl                            2/2     Running   0             10m
-pod/node-exporter-f29xl                            2/2     Running   0             30h
-pod/node-exporter-fs299                            2/2     Running   0             29h
-pod/node-exporter-gch4v                            2/2     Running   0             29h
-pod/node-exporter-nv5sq                            2/2     Running   0             29h
-pod/node-exporter-ppn72                            2/2     Running   0             10m
-pod/node-exporter-qnqz8                            2/2     Running   0             30h
-pod/node-exporter-rw7d2                            2/2     Running   0             10m
-pod/node-exporter-x5crx                            2/2     Running   0             30h
-pod/node-exporter-zv6l7                            2/2     Running   0             29h
-pod/openshift-state-metrics-7f848466cf-lcvdh       3/3     Running   0             30h
-pod/prometheus-adapter-56fdd7694d-d67mn            1/1     Running   0             2m26s
-pod/prometheus-adapter-56fdd7694d-tfwk7            1/1     Running   0             2m27s
-pod/prometheus-k8s-0                               7/7     Running   0             2m7s
-pod/prometheus-k8s-1                               7/7     Running   0             2m20s
-pod/prometheus-operator-7c888bcd97-gpx58           2/2     Running   0             2m33s
-pod/telemeter-client-69bd5b755f-6pxv2              3/3     Running   0             2m27s
-pod/thanos-querier-6b55bc48bb-ft8q2                5/5     Running   0             29h
-pod/thanos-querier-6b55bc48bb-zhvlx                5/5     Running   0             29h</code></pre>
-</div>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pvc -n openshift-monitoring</code></pre>
-</div>
-</div>
-<div class="listingblock console-output">
-<div class="title">出力例:</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">No resources found in openshift-monitoring namespace.</code></pre>
-</div>
+<p>現在のストレージクラスタにODF Workerノードを追加します。その後、次のサブセクションでODFクラスタを拡張して新しいノードにストレージをプロビジョニングする方法について説明します。</p>
 </div>
 <div class="paragraph">
-<p>この時点では <strong>PVC</strong> は存在しません。これはモニタリングスタック内の Prometheus も AlertManager もエフェメラルなストレージ(EmptyDir)を使用しているためです。OpenShift がインストールされた直後はこの方法がとられます。<br>
-Prometheus は、Prometheus データベースと AlertManager のデータで構成されています。どちらかのデータが失われるとメトリクスやアラートのデータが失われるため、両方を永続化することがベストプラクティスです。</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_prometheus環境の変更"><a class="anchor" href="#_prometheus環境の変更"></a>Prometheus環境の変更</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Prometheus では、サポートされる全ての設定変更は中央の <strong>ConfigMap</strong> を通じて制御されます。したがって、この <strong>ConfigMap</strong> は変更を加える前に存在する必要があります。<br>
-Openshift のインストール直後は、Prometheus の環境を設定するための <strong>ConfigMap</strong> が存在しない場合があります。<strong>ConfigMap</strong> が存在するかどうかを確認するには、以下のように実行します。</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc -n openshift-monitoring get configmap cluster-monitoring-config</code></pre>
-</div>
-</div>
-<div class="listingblock console-output">
-<div class="title">ConfigMapが作成されていない場合の出力例:</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">Error from server (NotFound): configmaps "cluster-monitoring-config" not found</code></pre>
-</div>
-</div>
-<div class="listingblock console-output">
-<div class="title">ConfigMapが作成されている場合の出力例:</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                        DATA   AGE
-cluster-monitoring-config   1      10m</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>ConfigMap</strong> がない場合は、このコマンドで作成してください。</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f {{ HOME_PATH }}/support/ocslab_cluster-monitoring-noinfra.yaml</code></pre>
-</div>
-</div>
-<div class="listingblock console-output">
-<div class="title">出力例:</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">configmap/cluster-monitoring-config created</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>もし <strong>ConfigMap</strong> が既にあるならば、次のコマンドを実行して、既存の <strong>ConfigMap</strong> に変更を適用してください。</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f {{ HOME_PATH }}/support/ocslab_cluster-monitoring-withinfra.yaml</code></pre>
-</div>
-</div>
-<div class="listingblock console-output">
-<div class="title">出力例:</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">configmap/cluster-monitoring-config updated</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>作成された <strong>ConfigMap</strong> は次のコマンドで見ることができます。</p>
+<p>ノードを追加するには、<strong>MachineSet</strong> を追加するか、既存のODFノード用 <strong>MachieSet</strong> をスケールアップします。
+このトレーニングでは、既存のODFノード用 <strong>MachineSet</strong> をスケールアップして、より多くのworker nodeを生成します。</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -516,44 +407,93 @@ cluster-monitoring-config   1      10m</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Ceph RBD volumeのサイズである <code>40Gi</code> は、要件に応じて大きくしたり小さくしたりすることができます。
+ODF Workerノードを追加するときは、既存のノードに十分なCPUやメモリがない場合などが挙げられます。
 </td>
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>現在のworkerocs <strong>MachineSet</strong> と <strong>Machine</strong> の数を確認してください。</p>
+</div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc -n openshift-monitoring get configmap cluster-monitoring-config -o yaml</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get machinesets -n openshift-machine-api | egrep 'NAME|workerocs'</code></pre>
 </div>
 </div>
-<div class="listingblock">
-<div class="title">ConfigMap 出力例:</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">[...]
-    prometheusK8s:
-      volumeClaimTemplate:
-        metadata:
-          name: alertmanager
-        spec:
-          storageClassName: ocs-storagecluster-ceph-rbd
-          resources:
-            requests:
-              storage: 40Gi
-[...]
-    alertmanagerMain:
-      volumeClaimTemplate:
-        metadata:
-          name: prometheusdb
-        spec:
-          storageClassName: ocs-storagecluster-ceph-rbd
-          resources:
-            requests:
-              storage: 40Gi
-[...]</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                                       DESIRED   CURRENT   READY   AVAILABLE   AGE
+cluster-d6qlm-mbttv-workerocs-us-east-2a   1         1         1       1           32h
+cluster-d6qlm-mbttv-workerocs-us-east-2b   1         1         1       1           32h
+cluster-d6qlm-mbttv-workerocs-us-east-2c   1         1         1       1           32h</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>この新しい <code>cluster-monitoring-config</code> <strong>ConfigMap</strong> を作成すると、影響を受けるPodが自動的に再起動され、新しい永続ボリュームがマウントされます。</p>
+<p>このコマンドで、workerocs <strong>MachineSet</strong> をスケールアップしてみましょう。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get machinesets -n openshift-machine-api -o name | grep workerocs | xargs -n1 -t oc scale -n openshift-machine-api --replicas=2</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc scale -n openshift-machine-api --replicas=2 machineset.machine.openshift.io/cluster-d6qlm-mbttv-workerocs-us-east-2a
+machineset.machine.openshift.io/cluster-d6qlm-mbttv-workerocs-us-east-2a scaled
+oc scale -n openshift-machine-api --replicas=2 machineset.machine.openshift.io/cluster-d6qlm-mbttv-workerocs-us-east-2b
+machineset.machine.openshift.io/cluster-d6qlm-mbttv-workerocs-us-east-2b scaled
+oc scale -n openshift-machine-api --replicas=2 machineset.machine.openshift.io/cluster-d6qlm-mbttv-workerocs-us-east-2c
+machineset.machine.openshift.io/cluster-d6qlm-mbttv-workerocs-us-east-2c scaled</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>新しいWorkerノードが使用可能になるまで待ちます。全てのカラムで <code>2</code> と表示されるまで待ちましょう。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">watch "oc get machinesets -n openshift-machine-api | egrep 'NAME|workerocs'"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="keyseq"><kbd>Ctrl</kbd>+<kbd>C</kbd></span> を押すと終了できます。</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>workerocs <strong>MachineSet</strong> が3つのAZに無いOCPクラスタでは、最終的に6台のworkerocs <strong>Machine</strong> を持つように設定して下さい。</p>
+</div>
+<div class="listingblock console-output">
+<div class="title"><code>us-east-2c</code> AZにのみworkerocs <strong>MachineSet</strong> がある場合の例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ oc get machinesets -n openshift-machine-api -o name | grep workerocs | xargs -n1 -t oc scale -n openshift-machine-api --replicas=6
+
+$ oc get machines -n openshift-machine-api | egrep 'NAME|workerocs'
+NAME                                             PHASE     TYPE         REGION      ZONE         AGE
+cluster-2mwq7-jls22-workerocs-us-east-2c-5cqzh   Running   m5.4xlarge   us-east-2   us-east-2c   3m13s
+cluster-2mwq7-jls22-workerocs-us-east-2c-7hh5l   Running   m5.4xlarge   us-east-2   us-east-2c   3m13s
+cluster-2mwq7-jls22-workerocs-us-east-2c-ch9ds   Running   m5.4xlarge   us-east-2   us-east-2c   6h2m
+cluster-2mwq7-jls22-workerocs-us-east-2c-cqbkp   Running   m5.4xlarge   us-east-2   us-east-2c   3m13s
+cluster-2mwq7-jls22-workerocs-us-east-2c-r5smx   Running   m5.4xlarge   us-east-2   us-east-2c   6h2m
+cluster-2mwq7-jls22-workerocs-us-east-2c-scjvh   Running   m5.4xlarge   us-east-2   us-east-2c   6h2m
+
+$ oc get machineset -n openshift-machine-api | egrep 'NAME|workerocs'
+NAME                                       DESIRED   CURRENT   READY   AVAILABLE   AGE
+cluster-2mwq7-jls22-workerocs-us-east-2c   6         6         6       6           6h3m</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>新しいノードが使用可能になったら、次のようにラベルを確認できます。</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -562,32 +502,251 @@ Ceph RBD volumeのサイズである <code>40Gi</code> は、要件に応じて�
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-デフォルトのEmptyDirのストレージに書き込まれたデータを、新しい永続ボリュームに引き継ぐことはできません。したがって、バックエンドのストレージを変更した後は、空の状態のデータベースからメトリクスの収集とレポーティングを始めることになります。
+新しく追加したWorkerノードにも <code>cluster.ocs.openshift.io/openshift-storage=</code> ラベルは既に付けられています。これは <strong>MachineSet</strong> 自体にラベルの設定を行ったためで、新しく作られるノードにも自動的にラベルが付けられます。
 </td>
 </tr>
 </table>
 </div>
-<div class="paragraph">
-<p>数分後には、AlertManagerとPrometheusのPodが再起動します。<code>openshift-monitoring</code> Namespace に新しい <strong>PVC</strong> が表示され、それらが永続ストレージを提供するようになったことが確認できます。</p>
-</div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pvc -n openshift-monitoring</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get nodes -l cluster.ocs.openshift.io/openshift-storage -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}'</code></pre>
 </div>
 </div>
 <div class="listingblock console-output">
 <div class="title">出力例:</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                               STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS                  AGE
-alertmanager-alertmanager-main-0   Bound    pvc-592e4313-c435-4120-bfc5-0efa9fdafbf3   40Gi       RWO            ocs-storagecluster-ceph-rbd   3m37s
-alertmanager-alertmanager-main-1   Bound    pvc-43d31e4d-8ceb-442a-93c1-07f7fa17f5e9   40Gi       RWO            ocs-storagecluster-ceph-rbd   3m37s
-alertmanager-alertmanager-main-2   Bound    pvc-4139266e-7621-4eee-b14d-a69bee7e22c8   40Gi       RWO            ocs-storagecluster-ceph-rbd   3m37s
-prometheusdb-prometheus-k8s-0      Bound    pvc-1d470a18-ed7b-48f2-93d2-303448572376   40Gi       RWO            ocs-storagecluster-ceph-rbd   3m31s
-prometheusdb-prometheus-k8s-1      Bound    pvc-fff015f0-be83-4d68-bd42-7d3250cf1d9f   40Gi       RWO            ocs-storagecluster-ceph-rbd   3m31s</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ip-10-0-142-148.us-east-2.compute.internal
+ip-10-0-153-93.us-east-2.compute.internal
+ip-10-0-173-143.us-east-2.compute.internal
+ip-10-0-181-161.us-east-2.compute.internal
+ip-10-0-201-210.us-east-2.compute.internal
+ip-10-0-219-73.us-east-2.compute.internal</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>永続ストレージを変更した後もPrometheusとAlertManagerが正しく動作しているかは、後の<a href="#ODF環境のモニタリング">[ODF環境のモニタリング]</a>セクションで確認できます。</p>
+<p>ODFラベルが付いた新しいノードが作成できたので、次のステップでは、Cephクラスタにストレージを追加します。ODF Operatorは、ODFラベルの付いた新しいWorkerノードを優先してストレージを追加します。なぜなら、これらのノードにはまだODF Podがスケジュールされていないためです。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ストレージ容量を追加する"><a class="anchor" href="#_ストレージ容量を追加する"></a>ストレージ容量を追加する</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>このセクションでは、構成済みのODF Workerノードでストレージ容量とパフォーマンスを追加します。</p>
+</div>
+<div class="paragraph">
+<p>前のセクションを実行した後は、6つのODF Workerノードが存在するはずです。</p>
+</div>
+<div class="paragraph">
+<p>ストレージを追加するには、<strong>OpenShift Web Console</strong> に移動し、手順にしたがってODFストレージクラスタの概要を表示します。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>左側のメニューから <strong>Operators</strong> &#8594; <strong>Installed Operators</strong> をクリックする</p>
+</li>
+<li>
+<p><code>openshift-storage</code> Projectを選択する</p>
+</li>
+<li>
+<p><code>OpenShift Data Foundation Operator</code> をクリックする</p>
+</li>
+<li>
+<p>上部のナビゲーションバーで <code>Storage System</code> をクリックする</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/ocs/OCS4-OCP4-Storage-Cluster-overview-reachit.png" alt="OCS4 OCP4 Storage Cluster overview reachit">
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>表示される <code>ocs-storagecluster-storagesystem</code> の右端にある3つのドットをクリックして、オプションメニューを表示する</p>
+</li>
+<li>
+<p><code>Add Capacity</code> を選択し、新しいダイアログを開く</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/ocs/OCS4-add-capacity.png" alt="Add Capacity dialog">
+</div>
+<div class="title">Figure 1. Add Capacity dialog</div>
+</div>
+<div class="paragraph">
+<p>StorageClassは <code>gp2</code> を選ぶ必要があります。また、<code>Raw Capacity</code> に表示される容量を拡張できます。ODFは三重でレプリカを取るため、<code>Raw Capacity</code> は希望する追加容量はの3倍の容量になります。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<strong><code>Raw Capacity</code> は最初にODFクラスタを構成した時点で選択したストレージ容量で決まるため、変更することはできません。</strong>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>設定が完了したら、 <strong>Add</strong> をクリックして続行します。ストレージクラスタのステータスが再び <code>Ready</code> になるまで変化します。</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+新しいOSD Podが <code>Running</code> の状態になるには5分以上かかる場合があります。
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>次のコマンドで、新しいOSD Podが追加されていることが分かります。新しいOSD Podが、新規に追加したODF worker nodeの上で動いていることに注目して下さい。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pod -o=custom-columns=NAME:.metadata.name,STATUS:.status.phase,NODE:.spec.nodeName -n openshift-storage | grep osd | grep -v prepare</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">rook-ceph-osd-0-7c9cb6fdd9-fwvxs                                  Running     ip-10-0-142-148.us-east-2.compute.internal
+rook-ceph-osd-1-8568c7d4b4-7p8hs                                  Running     ip-10-0-219-73.us-east-2.compute.internal
+rook-ceph-osd-2-67d878cd95-qpbkg                                  Running     ip-10-0-173-143.us-east-2.compute.internal
+rook-ceph-osd-3-577c47b6b8-ffwg2                                  Running     ip-10-0-201-210.us-east-2.compute.internal
+rook-ceph-osd-4-5d665b7497-cbqz5                                  Running     ip-10-0-153-93.us-east-2.compute.internal
+rook-ceph-osd-5-6bf7684498-k24qb                                  Running     ip-10-0-181-161.us-east-2.compute.internal</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>以上でODFクラスタを拡張することができました。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_新しいストレージを確認する"><a class="anchor" href="#_新しいストレージを確認する"></a>新しいストレージを確認する</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>容量を追加し、OSD podの存在を確認したら、<strong>toolbox</strong> を使用して追加したストレージ容量を確認することができます。</p>
+</div>
+<div class="paragraph">
+<p>まずは次のコマンドで toolbox Podに入ります。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">TOOLS_POD=$(oc get pods -n openshift-storage -l app=rook-ceph-tools -o name)
+oc rsh -n openshift-storage $TOOLS_POD</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>次にCephクラスタのステータスを確認します。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ceph status</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">sh-4.4$ ceph status
+  cluster:
+    id:     cbeb7c9d-2a30-4646-b5a6-72d5c1db914c
+    health: HEALTH_OK
+
+  services:
+    mon: 3 daemons, quorum a,b,c (age 29h)
+    mgr: a(active, since 29h)
+    mds: 1/1 daemons up, 1 hot standby
+    osd: 6 osds: 6 up (since 7m), 6 in (since 8m) <i class="conum" data-value="1"></i><b>(1)</b>
+
+  data:
+    volumes: 1/1 healthy
+    pools:   4 pools, 289 pgs
+    objects: 1.76k objects, 5.9 GiB
+    usage:   18 GiB used, 12 TiB / 12 TiB avail <i class="conum" data-value="2"></i><b>(2)</b>
+    pgs:     289 active+clean
+
+  io:
+    client:   0 B/s rd, 1 op/s rd, 0 op/s wr</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>この出力から次のことがわかります。</p>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>現在合計6つのOSDを使用しているが、それらは <code>up</code> で <code>in</code> である。(つまり、OSDデーモンが実行されており、ストレージの領域として使用されている)</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>利用可能な物理容量が6TiBから12TiBに増加している。</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>これら以外にはCephステータスの出力は何も変わっていません。</p>
+</div>
+<div class="paragraph">
+<p>続いて、Cephクラスタのトポロジーを確認します。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ceph osd crush tree</code></pre>
+</div>
+</div>
+<div class="listingblock console-output">
+<div class="title">出力例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ID   CLASS  WEIGHT    TYPE NAME
+ -1         12.00000  root default
+ -5         12.00000      region us-east-2
+ -4          4.00000          zone us-east-2a
+-19          2.00000              host ocs-deviceset-gp2-1-data-1stbzz
+  4    ssd   2.00000                  osd.4
+ -3          2.00000              host ocs-deviceset-gp2-2-data-04xwqf
+  0    ssd   2.00000                  osd.0
+-14          4.00000          zone us-east-2b
+-13          2.00000              host ocs-deviceset-gp2-0-data-0pdj4t
+  2    ssd   2.00000                  osd.2
+-21          2.00000              host ocs-deviceset-gp2-2-data-1q4qp5
+  5    ssd   2.00000                  osd.5
+-10          4.00000          zone us-east-2c
+-17          2.00000              host ocs-deviceset-gp2-0-data-1dppqr
+  3    ssd   2.00000                  osd.3
+ -9          2.00000              host ocs-deviceset-gp2-1-data-0m5bzn
+  1    ssd   2.00000                  osd.1</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Workerノードが追加されたことで、それぞれの <code>zone</code> の中で <code>host</code> が拡張されている。</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>ODFで構成されたCephクラスタでは、それぞれのPoolごとにCRUSHルールが設定されています。どのルールでもデフォルトは <code>zone</code> でデータを複製するように設定されていて、高い冗長性を保ち、追加前のノードの負荷を緩和するために効果的な方法です。<br>
+また、元のOSDにある既存のデータは自動的にバランスされ、新旧のOSDが負荷を分担するようになります。</p>
+</div>
+<div class="paragraph">
+<p><span class="keyseq"><kbd>Ctrl</kbd>+<kbd>D</kbd></span> を押すか、<code>exit</code> を実行して toolbox から出ることができます.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">exit</code></pre>
+</div>
 </div>
 </div>
 </div>
