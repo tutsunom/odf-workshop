@@ -2,36 +2,35 @@
 :page-layout: home
 :!sectids:
 
-image::acs-logo.svg[RHACS Logo, 400]
+image::odf-logo.svg[RHODF Logo, 400]
 
 [.text-center.strong]
-== Red Hat Advanced Cluster Security for Kubernetes
+== Red Hat OpenShift Data Foundation
 
-Red Hat Advanced Cluster Security for Kubernetes (Red Hat Advanced Cluster Security or RHACS) provides the tools and capabilities to address the security needs of a cloud-native development approach on Kubernetes. 
+Red Hat OpenShift Data Foundation (ODF) は、コンテナ用ソフトウェア・デファインド・ストレージです。 +
+Red Hat OpenShift のデータおよびストレージサービス・プラットフォームとして設計された ODF は、クラウド全体でアプリケーションを迅速かつ効率的に開発し、デプロイするのに役立ちます。
 
-The RHACS solution offers visibility into the security of your cluster, vulnerability management, and security compliance through auditing, network segmentation awareness and configuration, security risk profiling, security-related configuration management, threat detection, and incident response. In addition, RHACS grants an ability to pull the actions from that tooling deep into the application code development process through APIs.
+ODF は、すべての基本的なストレージクラス、S3 互換のオブジェクトストレージ、データ複製、障害復旧機能などの重要な機能をサポートしており、アプリケーションデータをさまざまなアベイラビリティゾーンに配置できます。
 
-These security features represent the primary work any developer or administrator faces as they work across a range of environments, including multiple datacenters, private clouds, or public clouds that run Kubernetes clusters.
+ODF は、すべてのインフラストラクチャ・プラットフォームで一貫して共通の機能を提供し、開発者の作業を単純化します。開発者はアービトレーションの制限を受けることなく、アプリケーションとデータ管理を必要に応じてデプロイし、将来へ向けて状況の変化にも適応させていくことができます。
 
-== RHACS Features
+== 学習する内容
 
-image::acs_features.png[RHACS Features, 800]
+image::ocs/OCS-Pods-Diagram.png[OpenShift Data Foundation components, 800]
 
-Using Red Hat Advanced Cluster Security for Kubernetes (Red Hat Advanced Cluster Security), you can gain comprehensive Kubernetes security that includes the following use cases:
+この演習は、ODFのデプロイと管理方法に関心のある、システム管理者とアプリケーション開発者の両方を対象としています。 +
+この演習では、Red Hat OpenShift Container Platform (OCP) 4とODF Operatorを使用して、OCPワークロードの永続ストレージソリューションとして Ceph と Multi-Cloud-Gateway (MCG) をデプロイします。以下のような内容を学習します。
 
-* **Visibility**:  See your entire landscape of images, registries, containers, deployments, and runtime behavior.
-* **Vulnerability Management**: Identify and remediate vulnerabilities in both container images and Kubernetes across the entire software development life cycle.
-* **Compliance**: Audit your systems against CIS Benchmarks, NIST, PCI, and HIPAA, with interactive dashboards and one-click audit reports.
-* **Network Segmentation**: Visualize existing connections and enforce tighter segmentation using Kubernetes-native controls to reduce your blast radius.
-* **Risk Profiling**: See all your deployments ranked by risk level, using context from Kubernetes’ declarative data, to prioritize remediation.
-* **Configuration Management**: Apply best practices for Docker and Kubernetes to harden your environment for a more secure and stable application.
-* **Threat Detection**: Use rules, automated allow lists, and baselining to accurately identify suspicious activity in your running applications.
-* **Incident Response**: Take action, from failing builds and blocking deployments to killing pods and thwarting attacks, using Kubernetes for enforcement.
+* コンテナ化されたCephとMCGの設定とデプロイ
+* デプロイされたCephとMCGの検証
+* CephおよびRADOSコマンドを実行するためのtoolboxの導入
+* Ceph RBDをベースとしたRead-Write-Once (RWO) PVCを使用したアプリケーションの作成
+* CephFSをベースとしたRead-Write-Many (RWX) PVCを使用したアプリケーションの作成
+* PVCのクローンとスナップショット
+* PrometheusおよびAlertManagerへのODFの適用
+* MCGを使用したバケットの作成とアプリケーションからの使用
+* Cephクラスタのストレージの拡張
+* ODFのメトリクスとアラートの確認
+* サポート情報を収集するためのmust-gatherの使用
 
-IMPORTANT: This is not an official RH Advanced Cluster Security guide or workshop. Please contact with your RH representative if you want more information about Training or Guidelines about this topic / product.
-
-== Contributors
-
-This workshop has been developed and is maintained by https://github.com/rcarrata[Roberto Carratalá],  https://github.com/jadebustos[Jose Angel de Bustos] and https://github.com/josgonza-rh[Jose Antonio Gonzalez Prada].
-
-Thanks all the https://github.com/redhat-scholars/odf-workshop/graphs/contributors[contributors] that reviewed and contributed to this workshop!!
+NOTE: Cephの動作についてより詳しい情報が必要な場合は、このモジュールの演習を開始する前にlink:appendix-ceph.html[Cephの概要]のセクションを確認してください。
