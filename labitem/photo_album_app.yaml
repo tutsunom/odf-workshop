@@ -30,11 +30,6 @@ kind: ObjectBucketClaim
 metadata:
   name: "photo-album"
 spec:
-#  additionalConfig:
-#    bucketclass: namespace-only
-#    bucketclass: backingstore-only
-#    bucketclass: mirroring-only
-#    bucketclass: cache-me
   generateBucketName: "photo-album"
   storageClassName: openshift-storage.noobaa.io
 ...
