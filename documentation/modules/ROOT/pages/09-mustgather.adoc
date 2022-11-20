@@ -1,0 +1,73 @@
+= must-gatherの使用
+include::_attributes.adoc[]
+:profile: acs
+
+`must-gather` は、稼働中のOpenshiftクラスタに関するデータを収集するためのツールです。`must-gather` はデータ収集のために、事前に定義された複数のコンテナのセットを実行します。これらのコンテナは複数のプログラムを実行し、収集したファイルをローカルワークステーションのファイルシステムに書き込みます。ユーザーはこの収集したファイルをRed Hatのサポートケースにアップロードすることで、サポートエンジニアはクラスタに直接アクセスすることなく問題をデバッグするために使用することができます。この診断収集のためのユーティリティと方法は、RHELホスト用の`sosreports`に似ています。
+
+ODFではストレージ固有のコマンドを実行するために、独自の `must-gather` ツールのイメージをリリースしています。
+
+一般的なOpenShiftの `must-gather` は次のコマンドで実行できます。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc adm must-gather
+----
+
+あるいは、ODFに特化した `must-gather` の結果を得るにはこのようにします。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc adm must-gather --image=registry.redhat.io/odf4/ocs-must-gather-rhel8:v4.10
+----
+
+出力は、カレントディレクトリにある `must-gather.local.(random)` という新しいフォルダの中に保存されます。
+
+実行時のオプションを表示するには、次のコマンドを実行します。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc adm must-gather -h
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+Launch a pod to gather debugging information
+
+ This command will launch a pod in a temporary namespace on your cluster that gathers debugging information and then
+downloads the gathered information.
+
+ Experimental: This command is under active development and may change without notice.
+
+Usage:
+  oc adm must-gather [flags]
+
+Examples:
+  # gather information using the default plug-in image and command, writing into ./must-gather.local.<rand>
+  oc adm must-gather
+
+  # gather information with a specific local folder to copy to
+  oc adm must-gather --dest-dir=/local/directory
+
+  # gather information using multiple plug-in images
+  oc adm must-gather --image=quay.io/kubevirt/must-gather --image=quay.io/openshift/origin-must-gather
+
+  # gather information using a specific image stream plug-in
+  oc adm must-gather --image-stream=openshift/must-gather:latest
+
+  # gather information using a specific image, command, and pod-dir
+  oc adm must-gather --image=my/image:tag --source-dir=/pod/directory -- myspecial-command.sh
+
+Options:
+      --dest-dir='': Set a specific directory on the local machine to write gathered data to.
+      --image=[]: Specify a must-gather plugin image to run. If not specified, OpenShift's default must-gather image
+will be used.
+      --image-stream=[]: Specify an image stream (namespace/name:tag) containing a must-gather plugin image to run.
+      --node-name='': Set a specific node to use - by default a random master will be used
+      --source-dir='/must-gather/': Set the specific directory on the pod copy the gathered data from.
+
+Use "oc adm options" for a list of global command-line options (applies to all commands).
+----

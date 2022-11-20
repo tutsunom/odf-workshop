@@ -1,0 +1,116 @@
+= ODFのモニタリング
+include::_attributes.adoc[]
+:profile: acs
+
+このセクションでは、ODF環境のモニタリングに利用できるさまざまなツールについて説明します。このセクションでは、*OpenShift Web Console* を使用します。
+
+各種ツールは、*OpenShift Web Console* の左側メニューバーからアクセスできます。*Observe* メニューを展開し、次の3つのアイテムにアクセスします。
+
+* Alerting
+* Metrics
+* Dashboards
+
+== Alerting
+
+以下に示すように *Alerting* のページに移動します。
+
+.OCP Observe Menu choose Alerting
+image::ocs/metrics-alertingleftpanemenu.png[OCP Observe Menu choose Alerting]
+
+下図のような *Alerting* のページが表示されます。
+
+.OCP Alerting Homepage
+image::ocs/metrics-alertinghomepage.png[OCP Alerting Homepage]
+
+メインウィンドウに表示されるアラートは、自由にフィルターを使用することができます。
+
+* 1 - 状態、重要度、ソースで警告を選択する
+* 2 - 特定の文字列を検索する場合、`Name` または `Label` のどちらかを選択する
+* 3 - 検索する文字列を入力する
+
+アラートの状態は次のとおりです。
+
+* `Firing` - 確認されているアラート
+* `Silenced` - `Pending` や `Firing` 状態によって上がっていないアラート
+* `Pending` - トリガーされたが確認されていないアラート
+* `Not Firing` - トリガーされていないアラート
+
+NOTE: 定義された時間を超えて `Pending` が継続したアラートは、 `Firing` 状態に移行します。例えば `CephClusterWarningState` の場合は10分です。
+
+アラートの重要度は次のとおりです。
+
+* `Critical` - Criticalのタグ付けがされているアラート
+* `Warning` - Warningのタグ付けがされているアラート
+* `Info` - Informationalのタグ付けがされているアラート
+* `None` - 重要度が設定されていないアラート
+
+アラートのソースは次のとおりです。
+
+* `Platform` - OCPコンポーネントによって生成されたアラート
+* `User` - ユーザーアプリケーションによって生成されたアラート
+
+下図のように、アラートは複数の基準を組み合わせることで、精密にフィルタリングすることができます。
+
+.OCP Alerting Status Filtering
+image::ocs/metrics-alertingstatusfilter.png[OCP Alert Status Filtering]
+
+NOTE: 既存のアラートをすべて表示するには、すべてのフィルターをクリアします。
+
+`View Alerting Rule` を選択すると、アラートのトリガールールの詳細にアクセスできます。
+詳細には、トリガーするためにアラートが使用するPrometheusのクエリが含まれます。
+
+.OCP Alert Contextual Menu
+image::ocs/metrics-alertingcontextualmenu.png[OCP Alert Contextual Menu]
+
+.OCP Alert Detail Display
+image::ocs/metrics-alertingviewrule.png[OCP Alert Detailed Display]
+
+NOTE: 必要に応じて、アラートに埋め込まれたPrometheusクエリをクリックできます。
+これを行うと *Metrics* ページに移動し、アラートのを実行や更新をテストすることができます。
+
+== Metrics
+以下に示すように *Metrics* のページに移動します。
+
+.OCP Observe Menu choose Metrics
+image::ocs/metrics-metricsleftpanemenu.png[OCP Observe Menu choose Metrics]
+
+.OCP Monitoring Metrics Homepage
+image::ocs/metrics-queryfield.png[OCP Monitoring Metrics Homepage]
+
+クエリフィールドを使って、式を入力するか、名前でメトリクスを検索します。
+使用可能なメトリクスにより、OCP関連情報またはODF関連情報の両方を照会できます。
+クエリは、Prometheusクエリ構文とそのすべての利用可能な機能を使用することができます。
+
+簡単なクエリの例のテストしてみましょう。クエリフィールドに `ceph_osd_op` を入力し、
+kbd:[Enter] を実行します。
+
+.Simple Ceph Query
+image::ocs/metrics-simplecephquery.png[Ceph Simple Query]
+
+ウィンドウが更新され、次のようなグラフが表示されます。
+
+.Simple Ceph Graph
+image::ocs/metrics-simplecephgraph.png[Ceph Simple Graph]
+
+より複雑なクエリの例を試してみます。
+クエリフィールドに `rate(ceph_osd_op[5m])` または `irate(ceph_osd_op[5m])` を入力し、kbd:[Enter] を実行します。
+
+.Complex Ceph Query
+image::ocs/metrics-complexcephquery.png[Ceph Complex Query]
+
+ウィンドウが更新され、次のようなグラフが表示されます。
+
+.Complex Ceph Graph
+image::ocs/metrics-complexcephgraph.png[Ceph Complex Graph]
+
+すべてのOCPメトリクスが統合された *Metrics* ウィンドウからも利用できます
+例えば `irate(process_cpu_seconds_total[5m])` のようなOCP関連のメトリクスで自由に試してみてください。
+
+.Complex OCP Graph
+image::ocs/metrics-complexocpgraph.png[OCP Complex Graph]
+
+`sum(irate(process_cpu_seconds_total[5m]))` と `irate(process_cpu_seconds_total[5m])` の違いを見てみましょう。
+
+NOTE: Prometheusクエリ言語の詳細については、
+link:https://prometheus.io/docs/prometheus/latest/querying/basics/[Prometheus
+Query Documentation]を参照して下さい。

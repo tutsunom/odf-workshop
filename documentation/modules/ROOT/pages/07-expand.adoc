@@ -1,0 +1,255 @@
+= ODFクラスタの拡張
+include::_attributes.adoc[]
+:profile: acs
+
+ODFクラスタにストレージを追加することで、容量が追加されパフォーマンスが向上されます。 +
+このセクションでは、現在のストレージクラスタにODF Workerノードを追加する方法について説明します。
+
+== Workerノードを追加する
+
+現在のストレージクラスタにODF Workerノードを追加します。その後、次のサブセクションでODFクラスタを拡張して新しいノードにストレージをプロビジョニングする方法について説明します。
+
+ノードを追加するには、*MachineSet* を追加するか、既存のODFノード用 *MachieSet* をスケールアップします。
+このトレーニングでは、既存のODFノード用 *MachineSet* をスケールアップして、より多くのworker nodeを生成します。
+
+NOTE: ODF Workerノードを追加するときは、既存のノードに十分なCPUやメモリがない場合などが挙げられます。
+
+現在のworkerocs *MachineSet* と *Machine* の数を確認してください。
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get machinesets -n openshift-machine-api | egrep 'NAME|workerocs'
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+NAME                                       DESIRED   CURRENT   READY   AVAILABLE   AGE
+cluster-d6qlm-mbttv-workerocs-us-east-2a   1         1         1       1           32h
+cluster-d6qlm-mbttv-workerocs-us-east-2b   1         1         1       1           32h
+cluster-d6qlm-mbttv-workerocs-us-east-2c   1         1         1       1           32h
+----
+
+このコマンドで、workerocs *MachineSet* をスケールアップしてみましょう。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get machinesets -n openshift-machine-api -o name | grep workerocs | xargs -n1 -t oc scale -n openshift-machine-api --replicas=2
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+oc scale -n openshift-machine-api --replicas=2 machineset.machine.openshift.io/cluster-d6qlm-mbttv-workerocs-us-east-2a
+machineset.machine.openshift.io/cluster-d6qlm-mbttv-workerocs-us-east-2a scaled
+oc scale -n openshift-machine-api --replicas=2 machineset.machine.openshift.io/cluster-d6qlm-mbttv-workerocs-us-east-2b
+machineset.machine.openshift.io/cluster-d6qlm-mbttv-workerocs-us-east-2b scaled
+oc scale -n openshift-machine-api --replicas=2 machineset.machine.openshift.io/cluster-d6qlm-mbttv-workerocs-us-east-2c
+machineset.machine.openshift.io/cluster-d6qlm-mbttv-workerocs-us-east-2c scaled
+----
+
+新しいWorkerノードが使用可能になるまで待ちます。全てのカラムで `2` と表示されるまで待ちましょう。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+watch "oc get machinesets -n openshift-machine-api | egrep 'NAME|workerocs'"
+----
+kbd:[Ctrl+C] を押すと終了できます。
+
+[CAUTION]
+====
+workerocs *MachineSet* が3つのAZに無いOCPクラスタでは、最終的に6台のworkerocs *Machine* を持つように設定して下さい。
+
+.``us-east-2c`` AZにのみworkerocs *MachineSet* がある場合の例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+$ oc get machinesets -n openshift-machine-api -o name | grep workerocs | xargs -n1 -t oc scale -n openshift-machine-api --replicas=6
+
+$ oc get machines -n openshift-machine-api | egrep 'NAME|workerocs'
+NAME                                             PHASE     TYPE         REGION      ZONE         AGE
+cluster-2mwq7-jls22-workerocs-us-east-2c-5cqzh   Running   m5.4xlarge   us-east-2   us-east-2c   3m13s
+cluster-2mwq7-jls22-workerocs-us-east-2c-7hh5l   Running   m5.4xlarge   us-east-2   us-east-2c   3m13s
+cluster-2mwq7-jls22-workerocs-us-east-2c-ch9ds   Running   m5.4xlarge   us-east-2   us-east-2c   6h2m
+cluster-2mwq7-jls22-workerocs-us-east-2c-cqbkp   Running   m5.4xlarge   us-east-2   us-east-2c   3m13s
+cluster-2mwq7-jls22-workerocs-us-east-2c-r5smx   Running   m5.4xlarge   us-east-2   us-east-2c   6h2m
+cluster-2mwq7-jls22-workerocs-us-east-2c-scjvh   Running   m5.4xlarge   us-east-2   us-east-2c   6h2m
+
+$ oc get machineset -n openshift-machine-api | egrep 'NAME|workerocs'
+NAME                                       DESIRED   CURRENT   READY   AVAILABLE   AGE
+cluster-2mwq7-jls22-workerocs-us-east-2c   6         6         6       6           6h3m
+----
+====
+
+
+新しいノードが使用可能になったら、次のようにラベルを確認できます。
+
+NOTE: 新しく追加したWorkerノードにも `cluster.ocs.openshift.io/openshift-storage=` ラベルは既に付けられています。これは *MachineSet* 自体にラベルの設定を行ったためで、新しく作られるノードにも自動的にラベルが付けられます。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get nodes -l cluster.ocs.openshift.io/openshift-storage -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}'
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+ip-10-0-142-148.us-east-2.compute.internal
+ip-10-0-153-93.us-east-2.compute.internal
+ip-10-0-173-143.us-east-2.compute.internal
+ip-10-0-181-161.us-east-2.compute.internal
+ip-10-0-201-210.us-east-2.compute.internal
+ip-10-0-219-73.us-east-2.compute.internal
+----
+
+ODFラベルが付いた新しいノードが作成できたので、次のステップでは、Cephクラスタにストレージを追加します。ODF Operatorは、ODFラベルの付いた新しいWorkerノードを優先してストレージを追加します。なぜなら、これらのノードにはまだODF Podがスケジュールされていないためです。
+
+== ストレージ容量を追加する
+
+このセクションでは、構成済みのODF Workerノードでストレージ容量とパフォーマンスを追加します。
+
+前のセクションを実行した後は、6つのODF Workerノードが存在するはずです。
+
+ストレージを追加するには、*OpenShift Web Console* に移動し、手順にしたがってODFストレージクラスタの概要を表示します。
+
+ - 左側のメニューから *Operators* -> *Installed Operators* をクリックする
+ - `openshift-storage` Projectを選択する
+ - `OpenShift Data Foundation Operator` をクリックする
+ - 上部のナビゲーションバーで `Storage System` をクリックする
+
+
+image::ocs/OCS4-OCP4-Storage-Cluster-overview-reachit.png[]
+
+ - 表示される `ocs-storagecluster-storagesystem` の右端にある3つのドットをクリックして、オプションメニューを表示する
+ - `Add Capacity` を選択し、新しいダイアログを開く
+
+.Add Capacity dialog
+image::ocs/OCS4-add-capacity.png[Add Capacity dialog]
+
+StorageClassは `gp2` を選ぶ必要があります。また、`Raw Capacity` に表示される容量を拡張できます。ODFは三重でレプリカを取るため、`Raw Capacity` は希望する追加容量はの3倍の容量になります。
+
+NOTE: *`Raw Capacity` は最初にODFクラスタを構成した時点で選択したストレージ容量で決まるため、変更することはできません。*
+
+設定が完了したら、 *Add* をクリックして続行します。ストレージクラスタのステータスが再び `Ready` になるまで変化します。
+
+CAUTION: 新しいOSD Podが `Running` の状態になるには5分以上かかる場合があります。
+
+次のコマンドで、新しいOSD Podが追加されていることが分かります。新しいOSD Podが、新規に追加したODF worker nodeの上で動いていることに注目して下さい。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get pod -o=custom-columns=NAME:.metadata.name,STATUS:.status.phase,NODE:.spec.nodeName -n openshift-storage | grep osd | grep -v prepare
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+rook-ceph-osd-0-7c9cb6fdd9-fwvxs                                  Running     ip-10-0-142-148.us-east-2.compute.internal
+rook-ceph-osd-1-8568c7d4b4-7p8hs                                  Running     ip-10-0-219-73.us-east-2.compute.internal
+rook-ceph-osd-2-67d878cd95-qpbkg                                  Running     ip-10-0-173-143.us-east-2.compute.internal
+rook-ceph-osd-3-577c47b6b8-ffwg2                                  Running     ip-10-0-201-210.us-east-2.compute.internal
+rook-ceph-osd-4-5d665b7497-cbqz5                                  Running     ip-10-0-153-93.us-east-2.compute.internal
+rook-ceph-osd-5-6bf7684498-k24qb                                  Running     ip-10-0-181-161.us-east-2.compute.internal
+----
+
+以上でODFクラスタを拡張することができました。
+
+== 新しいストレージを確認する
+
+容量を追加し、OSD podの存在を確認したら、*toolbox* を使用して追加したストレージ容量を確認することができます。
+
+まずは次のコマンドで toolbox Podに入ります。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+TOOLS_POD=$(oc get pods -n openshift-storage -l app=rook-ceph-tools -o name)
+oc rsh -n openshift-storage $TOOLS_POD
+----
+
+次にCephクラスタのステータスを確認します。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+ceph status
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+sh-4.4$ ceph status
+  cluster:
+    id:     cbeb7c9d-2a30-4646-b5a6-72d5c1db914c
+    health: HEALTH_OK
+
+  services:
+    mon: 3 daemons, quorum a,b,c (age 29h)
+    mgr: a(active, since 29h)
+    mds: 1/1 daemons up, 1 hot standby
+    osd: 6 osds: 6 up (since 7m), 6 in (since 8m) <1>
+
+  data:
+    volumes: 1/1 healthy
+    pools:   4 pools, 289 pgs
+    objects: 1.76k objects, 5.9 GiB
+    usage:   18 GiB used, 12 TiB / 12 TiB avail <2>
+    pgs:     289 active+clean
+
+  io:
+    client:   0 B/s rd, 1 op/s rd, 0 op/s wr
+----
+
+この出力から次のことがわかります。
+
+<1> 現在合計6つのOSDを使用しているが、それらは `up` で `in` である。(つまり、OSDデーモンが実行されており、ストレージの領域として使用されている)
+<2> 利用可能な物理容量が6TiBから12TiBに増加している。
+
+これら以外にはCephステータスの出力は何も変わっていません。
+
+続いて、Cephクラスタのトポロジーを確認します。
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+ceph osd crush tree
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+ID   CLASS  WEIGHT    TYPE NAME
+ -1         12.00000  root default
+ -5         12.00000      region us-east-2
+ -4          4.00000          zone us-east-2a
+-19          2.00000              host ocs-deviceset-gp2-1-data-1stbzz
+  4    ssd   2.00000                  osd.4
+ -3          2.00000              host ocs-deviceset-gp2-2-data-04xwqf
+  0    ssd   2.00000                  osd.0
+-14          4.00000          zone us-east-2b
+-13          2.00000              host ocs-deviceset-gp2-0-data-0pdj4t
+  2    ssd   2.00000                  osd.2
+-21          2.00000              host ocs-deviceset-gp2-2-data-1q4qp5
+  5    ssd   2.00000                  osd.5
+-10          4.00000          zone us-east-2c
+-17          2.00000              host ocs-deviceset-gp2-0-data-1dppqr
+  3    ssd   2.00000                  osd.3
+ -9          2.00000              host ocs-deviceset-gp2-1-data-0m5bzn
+  1    ssd   2.00000                  osd.1
+----
+
+<1> Workerノードが追加されたことで、それぞれの `zone` の中で `host` が拡張されている。
+
+ODFで構成されたCephクラスタでは、それぞれのPoolごとにCRUSHルールが設定されています。どのルールでもデフォルトは `zone` でデータを複製するように設定されていて、高い冗長性を保ち、追加前のノードの負荷を緩和するために効果的な方法です。 +
+また、元のOSDにある既存のデータは自動的にバランスされ、新旧のOSDが負荷を分担するようになります。
+
+kbd:[Ctrl+D] を押すか、`exit` を実行して toolbox から出ることができます.
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+exit
+----

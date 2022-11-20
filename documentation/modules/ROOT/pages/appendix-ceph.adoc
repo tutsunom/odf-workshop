@@ -1,92 +1,220 @@
-= Setup
+= Appendix: Cephの概要
 include::_attributes.adoc[]
 
-== Setup OpenShift Cluster
-:profile: acs
+このセクションでは、ODFで使用されるストレージソリューションの理解を深めるために、Cephの基礎知識を説明します。
 
-To run OpenShift4, you need to have one provisioned environment using https://demo.redhat.com[RHPDS].
-Go to Catalog -> Openshift 4.10 Workshop -> Order.
-
-== Login OpenShift Web console
-
-Once you have a workshop environment, you can also access OpenShift web console. +
-The web console URL is shown in RHPDS as well as cluster admin username/password.
-
-NOTE: If the language setting is NOT set to "English", it might to be good to set it "English" via User Preference menu.  +
-If you continue this workshop without "English" setting, the pipeline will not display properly in the DevSecOps lab.
-
-== Connect to your bastion server
-
-You also need to access the bastion server in your environment via SSH.
-
-[.console-input]
-[source,bash,subs="attributes+,+macros"]	
-----	
-ssh lab-user@<YOUR_BASTION_SERVER>
-----
-
-Some CLI tools are already installed on you bastion server. You can check the OpenShift version using:
-
-[.console-input]
-[source,bash,subs="attributes+,+macros"]	
-----	
-oc version	
-----
-
-The output should show oc version >=4.10:	
-
-[.console-output]
-[source,bash,subs="attributes+,+macros"]	
-----	
-Client Version: {ocp-version}
-Server Version: {ocp-version}
-Kubernetes Version: {kubernetes-version}
-----
-
-== Edit the default project template
-
-Then first of all, the default Project Template must be edited. +
-In the Openshift 4.10 Workshop environment provided by RHPDS, a Limit Range is automatically set for newly created projects. This can be an obstacle to the smooth running of the Workshop.
-
-Use the `oc edit` command to clear the Limit Range section.
-
-[.console-input]
-[source,bash,subs="attributes+,+macros"]	
-----	
-oc edit template project-request -n openshift-config
-----
-
-Delete all of the following part from the `project-request` manifest and save it.
-
-----
-- apiVersion: v1
-  kind: LimitRange
-  metadata:
-    name: ${PROJECT_NAME}-core-resource-limits
-    namespace: ${PROJECT_NAME}
-  spec:
-    limits:
-    - default:
-        cpu: 500m
-        memory: 1.5Gi
-      defaultRequest:
-        cpu: 50m
-        memory: 256Mi
-      max:
-        cpu: 4
-        memory: 6Gi
-      type: Container
-    - max:
-        cpu: 4
-        memory: 12Gi
-      type: Pod
-----
-
-== Get tutorial sources
-
-:tutorial-url: https://github.com/tutsunom/odf-workshop.git
-:folder: odf-workshop
-include::https://raw.githubusercontent.com/redhat-developer-demos/rhd-tutorial-common/master/download-sources.adoc[]
+NOTE: この付録の内容は、Cephの重要なコンポーネントとCephの動作について学習することを目的としています。
+ODFではOpenShiftアプリケーションにストレージを提供するために、 *Operators* と *CustomResourceDefinitions(CRDs)* を使用した方法でCephをデプロイおよび管理します。
+これにより一般的なスタンドアロンのCephと比べて、Cephの高度な機能の一部が制限されていることがあります。
 
 
-And then you are ready for installing RHACS on Openshift.
+[.lead]
+*Cephの歴史*
+
+Cephプロジェクトは以下のタイムラインでわかるように長い歴史があります。
+
+.Ceph Project History
+image::ocs/ceph101-timeline.png[Ceph Project Timeline]
+
+[.lead]
+Cephは、OpenStackとKubernetesのストレージバックエンドとしてかなり長い間使用されてきた、歴戦のSoftware-defined Storage(SDS)ソリューションです。
+
+[.lead]
+*Architecture*
+
+Cephクラスタは、スケーラブルなストレージソリューションを提供すると同時に、ITインフラストラクチャ内に存在するさまざまなタイプのクライアントがデータにアクセスできるように、複数のアクセス方法を提供します。
+
+.Ceph Architecture
+image::ocs/ceph101-overview.png[Ceph From Above]
+
+[.lead]
+CephはResilientなアーキテクチャで、単一障害点(SPOF)がありません。
+
+[.lead]
+*RADOS*
+
+Cephの中核は、アーキテクチャ図の最下層にあるRADOS(Reliable Autonomic Distributed Object Store)と呼ばれるオブジェクトストアです。 +
+RADOSによってCephはストレージとしてデータを保存する機能を提供します。
+(つまり、IO要求を処理し、データを保護し、組み込みメカニズムによりデータの整合性と一貫性をチェックします) +
+RADOSは次のデーモンで構成されます。
+
+<1> MONs or Monitors
+<2> OSDs or Object Storage Devices
+<3> MGRs or Managers
+<4> MDSs or Meta Data Servers
+
+.*_MONs_*
+MONはCephのクラスタマップと状態を維持し、クラスタのサイズとトポロジーに応じて3または5といった奇数台で構成されます。
+MONは複数台で分散意思決定を提供することでスプリットブレインの状況を防ぎます。 +
+またMONはDataPathになく、クライアントとの間でIO要求を処理しません。
+
+.*_OSDs_*
+OSDは、データの保護(replication または erasure coding)、OSDまたはノード障害時のデータのリバランス、
+データの一貫性(既存のデータのscrubbingおよびdeep-scrubbing)を保証しながら、クライアントからのIO要求を処理しています。 +
+通常、1つのブロックデバイスごとに1つのOSDが展開され、Cephのスケーラブルな性質により、数千のOSDをクラスタに含めることができます。
+
+.*_MGRs_*
+MGRはMONと緊密に統合されており、クラスタ内の統計を収集します。 +
+さらに、Cephの機能拡張を目的としたpluggableなPythonインターフェイスを介して、拡張可能なフレームワークを提供します。
+Managerフレームワークを中心に開発されたモジュールの現在のリストは次のとおりです。
+
+* Balancer module
+* Placement Group auto-scaler module
+* Dashboard module
+* RESTful module
+* Prometheus module
+* Zabbix module
+* Rook module
+
+.*_MDSs_*
+MDSはディレクトリ階層やファイルのメタデータ(ownership, timestamp、modeなど)など、POSIX準拠の共有ファイルシステムのメタデータを管理します。
+すべてのメタデータはRADOSで保存され、クライアントでメタデータを管理することはありません。 +
+MDSは、CephFSによる共有ファイルシステムが構成されている場合にのみデプロイされます。
+
+Cephクラスタの基盤の全体像はさまざまな種類のデーモンまたはコンテナによって構成されています。
+
+.RADOS as it stands
+image::ocs/ceph101-rados.png[RADOS Overview]
+
+上の図では、円はMONを表し、「M」はMGRを表し、バーのある四角はOSDを表します。
+上の図ではクラスタは3つのMON、2つのMGR、23のOSDで動作しています。
+
+[.lead]
+*アクセス方式*
+
+Cephは、すべてのアプリケーションがそのユースケースに最適なストレージを使用できるように、すべてのアクセス方法を提供するように設計されています。
+
+.Different Storage Types Supported
+image::ocs/ceph101-differentstoragetypes.png[Ceph Access Modes]
+
+Cephは、
+
+* RADOS Block Device(RBD)アクセス方式によるブロックストレージ
+* Ceph Filesystem(CephFS)アクセス方式によるファイルストレージ
+* ネイティブの `librados` API、またはRADOS Gateway(RADOSGWまたはRGW)によるS3/Swiftプロトコルを使用するオブジェクトストレージ
+
+をサポートします。
+
+[.lead]
+*Librados*
+
+Libradosを使用すると、アプリケーション開発者はのCephクラスタがネイティブに持つAPIでコーディングできます。 +
+この結果、小さなフットプリントで大きな効率を得ることができます。
+
+.Application Native Object API
+image::ocs/ceph101-librados.png[librados]
+
+CephのネイティブAPIは、C, C++, Python, Java, Ruby, Erlang, Go, Rustなどのさまざまなラッパーを提供しています。
+
+[.lead]
+*RADOS Block Device (RBD)*
+
+このアクセス方法は、Red Hat Enterprise LinuxまたはOpenShiftバージョン3.xまたは4.xで使用されます。
+RBDは、カーネルモジュール(RHEL、OCP4) または `librbd` API(RHOSP)からアクセスできます。
+OCPの世界では、RBDはRWO PVCの必要性に対処するように設計されています。
+
+[.lead]
+*_Kernel Module (kRBD)_*
+
+kRBDドライバーは、ユーザースペースの `librbd` 方式と比較して優れたパフォーマンスを提供します。
+ただし、kRBDは現在制限されており `librbd` と同じレベルの機能を提供していません。例えば、RBDミラーリングはサポートされていません。
+
+.kRBD Diagram
+image::ocs/ceph101-krbd.png[Kernel based RADOS Block Device]
+
+[.lead]
+*_Userspace RBD (librbd)_*
+
+このアクセス方法は、RHEL 8.1 KernelからRed Hat OpenStackまたはOpenShiftでRBD-NBDドライバーを介して使用されます。 +
+このモードにより、RBDミラーリングなどの既存のRBD機能をすべて活用できます。
+
+.librbd Diagram
+image::ocs/ceph101-librbd.png[Userspace RADOS Block Device]
+
+[.lead]
+*_共有ファイルシステム (CephFS)_*
+
+この方法により、クライアントはPOSIX互換の共有ファイルシステムに同時にアクセスできます。 +
+クライアントは最初にメタデータサーバーに接続して、特定のi-nodeのオブジェクトの場所を取得し、最終的にOSDと直接通信してIO要求を実行します。
+
+.File Access (Ceph Filesystem or CephFS)
+image::ocs/ceph101-cephfs.png[Kernel Based CephFS Client]
+
+CephFSは通常はRWXのPVCに使用されますが、RWO PVCもサポートします。
+
+[.lead]
+*_S3/Swiftオブジェクトストレージ (Ceph RADOS Gateway)_*
+
+このアクセス方法は、Cephクラスタ上でAmazon S3およびOpenStack Swift互換のオブジェクトアクセスをサポートします。 +
+ODF MCGでは、RADOSGWを活用してObject Bucket Claimを処理することも可能です。この場合は、MCGからは、RADOSGWはS3互換性のあるS3 endpointとしてタグ付けされます。
+
+.Amazone S3 or OpenStack Swift (Ceph RADOS Gateway)
+image::ocs/ceph101-rgw.png[S3 and Swift Support]
+
+[.lead]
+*CRUSH*
+
+分散アーキテクチャであるCephクラスタは、クラスタ内の複数のOSDにデータを効率的に分散するように設計されています。 +
+そのためにCRUSH(Controlled Replication Under Scalable Hashing)と呼ばれる手法が使われます。 +
+CRUSHでは、すべてのオブジェクトはPlacement Group(PG)と呼ばれる、1つのユニークなハッシュバケットに割り当てられます。
+
+image::ocs/ceph101-crushfromobjecttoosd.png[From Object to OSD]
+
+CRUSHはCephクラスタのトポロジー構成の中心です。 +
+擬似ランダム配置アルゴリズムによってRADOS内のオブジェクトを分散し、CRUSHルールを使用してPGとOSDのマッピングを決定します。本質的にPGはオブジェクト(アプリケーション層)とOSD(物理層)の間の抽象化層と言えます。 +
+障害が発生した場合、PGは異なるOSDに再マップされ、最終的にストレージ管理者が選択したルールに一致するようにデータが再同期されます。
+
+[.lead]
+*クラスタのパーティショニング*
+
+クラスタはPoolと呼ばれる論理的なパーティションで分割されます。各プールには次のプロパティがあります。
+
+* Pool ID (変更不可)
+* 名前
+* PGの数
+* PGとOSDのマッピングを決定するCRUSHルール
+* データ保護のタイプ(Replication or Erasure Coding)
+* データ保護のタイプに関連するパラメータ
+** Rreplicated poolにおけるレプリカの数
+** Erasure Coded poolにおけるチャンク数(K+M)
+* クラスタの動作に影響を与えるさまざまなフラ
+
+[.lead]
+*PoolとPG*
+
+.Pools and PGs
+image::ocs/ceph101-thefullpicture.png[From Object to OSD]
+
+上の図は、クライアントIOにより保存されるオブジェクトから物理層のOSDまでの、End-to-Endの関係を示しています。
+
+NOTE: Poolにはサイズがなく、PGが作成されたOSDで使用可能なスペースを消費できます。また1つのPGは1つのプールのみに属します。
+
+[.lead]
+*データ保護*
+
+Cephは、次の図に示す2つのタイプのデータ保護をサポートしています。
+
+.Ceph Data Protection
+image::ocs/ceph101-dataprotection.png[Replicated Pools vs Erasure Coded Pools]
+
+Replicated poolは、オブジェクトを複製するため容量効率が低い(物理3バイトに対して実効は1バイト)一方で、ほとんどの場合においてErasure Coded poolよりも良好なパフォーマンスを示します。
+
+Erasure Coded poolは、パフォーマンスはReplicated poolに劣る一方で、高い容量効率を示します。
+Erasure Coded poolは使用するパリティの数を構成できるため、高いResiliencyと耐久性を提供できることです。
+Erasure Coded poolでは次のようなK+Mの比率をサポートします。
+
+* 4+2 (実効容量:物理容量 = 2:3)
+* 8+3 (実効容量:物理容量 = 8:11)
+* 8+4 (実効容量:物理容量 = 2:3)
+
+[.lead]
+*データの分散*
+
+Cephアーキテクチャを最大限に活用するために、libradosを除くすべてのアクセス方法でオブジェクに分割して保存されます。 +
+1GBのRBDイメージは複数のオブジェクトに分割されてRADOSに保存されます。CephFSやRADOSGWも同様です。
+
+.Data Distribution
+image::ocs/ceph101-rbdlayout.png[RADOS Block Device Layout]
+
+NOTE: デフォルトでは、各アクセス方法は4MBのオブジェクトサイズを使用します。
+上の図はRWO PVCをサポートする32MB RBDがCephクラスター全体にどのように分散して保存されるかを示しています。
