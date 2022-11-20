@@ -1,0 +1,375 @@
+= PVCのクローンとスナップショット
+include::_attributes.adoc[]
+:profile: acs
+
+OpenShift Container Storage(OCS) 4.6から、*PVC* のクローンやスナップショットを可能にする `Container Storage Interface` (CSI) の機能がサポートされるようになりました。これらの新しい機能は永続的なデータ保護のために非常に重要であり、CSIと連携できるサードパーティベンダーの `Backup and Restore` ソフトウェアと一緒に使用することができます。
+
+Ceph RBDとCephFSの *PVC* のスナップショットは、サードパーティベンダーの `Backup and Restore` ソフトウェアに加えて、`OpenShift APIs for Data Protection (OADP)` を使用してトリガーすることもできます。`OADP` はレッドハットがサポートしている `Operator` で、*OperatorHub* からインストールできます。永続データや OpenShiftのメタデータ(Pods, Services, Routes, Deployments の定義ファイルなど)のバックアップとリストアのテストに非常に有効なものです。
+
+== PVCのクローン
+
+CSIボリュームクローンは特定の時点における既存の *PV* の複製で、ODFでは指定されたボリュームの複製を作成します。ダイナミックプロビジョニングで作成した *PVC* のクローンを使用することができます。
+
+=== CSIボリュームクローン
+
+この演習では、10GiBに拡張されたばかりの作成済みの *PVC* `postgresql` を使用します。先に進む前に、セクション link:02-rbd_rwopvc.html[Ceph RBD volumeを使用するOCPアプリケーション] を完了していることを確認してください。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get pvc -n my-database-app | awk '{print $1}'
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+NAME
+postgresql
+----
+
+CAUTION: 先に進む前に、`postgresql` *PVC* を10Giに拡張していることを確認してください。拡張していない場合は、戻ってlink:02-rbd_rwopvc.html[Ceph RBD PVCの拡張] セクションを完了させてください。 
+
+PVCクローンを作成する前に、少なくとも1つの新しい記事を作成し保存して、`postgresql` *PVC* に新しいデータがあることを確認してください。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get route rails-pgsql-persistent -n my-database-app -o jsonpath --template="http://{.spec.host}/articles{'\n'}"  
+----
+
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+http://rails-pgsql-persistent-my-database-app.apps.cluster-ocs4-8613.ocs4-8613.sandbox944.opentlc.com/articles
+----
+
+Webページの *New Article* をクリックし、次の `username` と `password` を入力することで記事やコメントを作成することができます。 +
+
+----
+username: openshift
+password: secret
+----
+
+この *PVC* 内のデータ(記事)を保護するために、この *PVC* のクローンを作ります。クローンの作成は、*OpenShift Web Console* を使用するか、以下のようなYAMLファイルでリソースを作成することで行うことができます。
+
+[source,yaml]
+----
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgresql-clone
+  namespace: my-database-app
+spec:
+  storageClassName: ocs-storagecluster-ceph-rbd
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  dataSource:
+    kind: PersistentVolumeClaim
+    name: postgresql
+----
+
+*OpenShift Web Console* を使う場合は、 *Storage* -> *Persistent Volume Claim* に移動して、目的の *PVC* で *Clone PVC* を実行します。
+
+.Persistent Volume Claim clone PVC using UI
+image::ocs/OCP4-OCS4-Clone-PVC.png[Persistent Volume Claim clone PVC using UI]
+
+新しく作られるクローン *PVC* のサイズはグレーアウトされていて変更できません。クローン *PVC* のサイズはオリジナルと同じサイズが自動で指定されるためです。
+
+.Persistent Volume Claim clone configuration
+image::ocs/OCP4-OCS4-Clone-PVC-config.png[Persistent Volume Claim clone configuration]
+
+ここで *Clone* を選択してクローンを実行しても構いません。 +
+YAMLファイルでクローンするのであれば、ここでは *Cancel* を選択し、次のコマンドで `postgresql` *PVC* のクローンを実行できます。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc apply -f labitem/postgresql-clone.yaml
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+persistentvolumeclaim/postgresql-clone created
+----
+
+新しい *PVC* が作られていることを確認できます。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get pvc -n my-database-app | grep clone
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+postgresql-clone   Bound    pvc-f5ef1ed3-6ee1-41e8-869f-6f32b6fcdb5a   10Gi       RWO            ocs-storagecluster-ceph-rbd   85s
+----
+
+*OpenShift Web Console* でも、クローン *PVC* を確認できます。
+
+.Persistent Volume Claim clone view in UI
+image::ocs/OCP4-OCS4-Clone-PVC-view.png[Persistent Volume Claim clone view in UI]
+
+=== アプリケーションリカバリのためのCSI ボリュームクローンの使用
+
+これで `postgresql` *PVC* のクローンができたので、データベースを破壊するテストの準備ができました。 +
+ここでは、`postgresql` Podのデータベースが持つ、記事を保存している `articles` テーブルを削除します。 +
+次のコマンドは、`articles` テーブルを削除する前に全てのテーブルを表示し、`articles` テーブルを削除した後に、再びすべてのテーブルを表示します。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc rsh -n my-database-app $(oc get pods -n my-database-app|grep postgresql | grep -v deploy | awk {'print $1}') psql -c "\c root" -c "\d+" -c "drop table articles cascade;" -c "\d+"
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+You are now connected to database "root" as user "postgres".
+                               List of relations
+ Schema |         Name         |   Type   |  Owner  |    Size    | Description
+--------+----------------------+----------+---------+------------+-------------
+ public | ar_internal_metadata | table    | userOXL | 16 kB      |
+ public | articles             | table    | userOXL | 16 kB      |
+ public | articles_id_seq      | sequence | userOXL | 8192 bytes |
+ public | comments             | table    | userOXL | 8192 bytes |
+ public | comments_id_seq      | sequence | userOXL | 8192 bytes |
+ public | schema_migrations    | table    | userOXL | 16 kB      |
+(6 rows)
+
+NOTICE:  drop cascades to constraint fk_rails_3bf61af60d3 on table comments
+DROP TABLE
+                               List of relations
+ Schema |         Name         |   Type   |  Owner  |    Size    | Description
+--------+----------------------+----------+---------+------------+-------------
+ public | ar_internal_metadata | table    | userOXL | 16 kB      |
+ public | comments             | table    | userOXL | 8192 bytes |
+ public | comments_id_seq      | sequence | userOXL | 8192 bytes |
+ public | schema_migrations    | table    | userOXL | 16 kB      |
+(4 rows)
+----
+
+以下のリンクを使って、記事を作成したブラウザのタブに戻ります。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get route rails-pgsql-persistent -n my-database-app -o jsonpath --template="http://{.spec.host}/articles{'\n'}"  
+----
+
+ブラウザを更新すると、アプリケーションがfailしたことが表示されます。
+
+.Application failed because database table removed
+image::ocs/rails-postgresql-failed.png[Application failed because database table removed]
+
+*PVC* のクローンは、クローン作成時のオリジナルの *PVC* の完全な複製であることを思い出してください。したがって、アプリケーションを復旧するために、`postgresql` *PVC* のクローンを使用することができます。
+
+まず、`rails-pgsql-persistent` の *DeploymentConfig* を0にスケールダウンして、Podが削除されるようにする必要があります。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc scale deploymentconfig rails-pgsql-persistent -n my-database-app --replicas=0
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+deploymentconfig.apps.openshift.io/rails-pgsql-persistent scaled
+----
+
+Podが全て無くなったことを確認できます。 +
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get pods -n my-database-app | grep rails | egrep -v 'deploy|build|hook' | awk {'print $1}'
+----
+
+このコマンドの出力が何も表示されないようになるまで待ちましょう。必要であれば、繰り返してください。
+
+ここで、`postgesql` *DeploymentConfig* を `postgresql-clone` *PVC* を使用するように変更する必要があります。これは `oc patch` コマンドを使用して行うことができます。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc patch dc postgresql -n my-database-app --type json --patch  '[{ "op": "replace", "path": "/spec/template/spec/volumes/0/persistentVolumeClaim/claimName", "value": "postgresql-clone" }]'
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+deploymentconfig.apps.openshift.io/postgresql patched
+----
+
+`rails-pgsql-persistent` *DeploymentConfig* を再び1にスケールアップします。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc scale deploymentconfig rails-pgsql-persistent -n my-database-app --replicas=1
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+deploymentconfig.apps.openshift.io/rails-pgsql-persistent scaled
+----
+
+新しく `postgresql` と `rails-pgsql-persistent` のPodが作られていることを確認しましょう。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get pods -n my-database-app | egrep 'rails|postgresql' | egrep -v 'deploy|build|hook'
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+postgresql-4-hv5kb                  1/1     Running     0          5m58s
+rails-pgsql-persistent-1-dhwhz      1/1     Running     0          5m10s
+----
+
+以下のリンクを使って、記事を作成したブラウザのタブに戻ります。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get route rails-pgsql-persistent -n my-database-app -o jsonpath --template="http://{.spec.host}/articles{'\n'}"  
+----
+
+ブラウザを更新すると、アプリケーションがオンラインに戻り、記事が表示されていることが確認できます。さらに記事を追加することもできます。
+
+この手順は、*PVC* のクローンを作っておくことが、データ破損またはその可能性があるアプリケーションを復旧するための実用的な方法であることを示しています。
+
+次に、同様の機能である *PVC* スナップショットの作成について見てみましょう。
+
+== PVC スナップショット
+
+*PVC* の最初のスナップショットを作成することは、その *PVC* のクローンを作成することと同じです。しかし、最初の *PVC* スナップショットが作成されて以降のスナップショットは、最初のスナップショットと *PVC* の現在のコンテンツとの間の差分のみを保存します。 +
+スナップショットは、定期的(1時間ごとなど)に増分バックアップをスケジュールするバックアップユーティリティで頻繁に使用されます。スナップショットは差分のみを各スナップショットに格納するため、定期的に完全なクローンを作成するよりも容量効率が高くなります。
+
+スナップショットは、自身から *PVC* クローンを作成することで、新規ボリュームとしてアプリケーションに割り当てることができます。このクローンは、前のセクションで示したように、アプリケーションの復旧に使用することができます。
+
+=== VolumeSnapshotClass
+
+ボリューム スナップショットを作成するには、まず *VolumeSnapshot* リソースで参照される *VolumeSnapshotClass* リソースが必要です。ODFのデプロイでは、スナップショットを作成するための2つの *VolumeSnapshotClass* リソースが作成されます。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get volumesnapshotclasses
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+$ oc get volumesnapshotclasses
+NAME                                        DRIVER                                  DELETIONPOLICY   AGE
+[...]
+ocs-storagecluster-cephfsplugin-snapclass   openshift-storage.cephfs.csi.ceph.com   Delete           25h
+ocs-storagecluster-rbdplugin-snapclass      openshift-storage.rbd.csi.ceph.com      Delete           25h
+----
+
+*VolumeSnapshotClass* の名前から、一方はCephFS volumeのスナップショット作成用で、もう一方はCeph RBD volume用であることが分かります。
+
+=== CSI ボリュームスナップショットのプロビジョニング
+
+この演習では、すでに作成されている `my-shared-storage` *PVC* を使用します。
+先に進む前に、link:03-cephfs_rwxpvc.html[CephFS volumeを使用するOCPアプリケーション] のセクションを完了していることを確認してください。
+
+スナップショットの作成は、*OpenShift Web Console* を使用するか、以下のようなYAMLファイルでリソースを作成することで行うことができます。
+
+[source,yaml]
+----
+apiVersion: snapshot.storage.k8s.io/v1beta1
+kind: VolumeSnapshot
+metadata:
+  name: my-shared-storage-snapshot
+  namespace: my-shared-storage
+spec:
+  volumeSnapshotClassName: ocs-storagecluster-cephfsplugin-snapclass 
+  source:
+    persistentVolumeClaimName: my-shared-storage
+----
+
+*OpenShift Web Console* を使う場合は、 *Storage* -> *Persistent Volume Claim* に移動して、目的の *PVC* で *Create Snapshot* を実行します。
+`my-shared-storage` プロジェクトが選択されていることを確認してください。
+
+.Persistent Volume Claim snapshot using UI
+image::ocs/OCP4-OCS4-Snapshot.png[Persistent Volume Claim snapshot using UI]
+
+*VolumeSnapshot* の容量は、オリジナルと同じ容量になります。
+
+.Persistent Volume Claim snapshot configuration
+image::ocs/OCP4-OCS4-Snapshot-config.png[Persistent Volume Claim snapshot configuration]
+    
+ここで *Create* を選択してスナップショットを実行しても構いません。 +
+YAMLファイルでスナップショットを作成するのであれば、ここでは *Cancel* を選択し、次のコマンドで `my-shared-storage` *PVC* のスナップショットを実行できます。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc apply -f labitem/my-shared-storage-snapshot.yaml
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+volumesnapshot.snapshot.storage.k8s.io/my-shared-storage-snapshot created
+----
+
+新しく *VolumeSnapshot* が作られていることを確認できます。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get volumesnapshot -n my-shared-storage
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+NAME                         READYTOUSE   SOURCEPVC           SOURCESNAPSHOTCONTENT   RESTORESIZE   SNAPSHOTCLASS
+  SNAPSHOTCONTENT                                    CREATIONTIME   AGE
+my-shared-storage-snapshot   true         my-shared-storage                           5Gi           ocs-storagecluster-cephfsplugin-snapclass
+  snapcontent-536088af-ca75-475e-8b4d-93cf96b686b4   33s            33s
+----
+
+=== ボリュームスナップショットの復元
+
+これで、*OpenShift Web Console* で新しく作られた *VolumeSnapshot* を復元することができます。*Storage* -> *Volume Snapshots* に移動して、目的の *VolumeSnapshot* で *Restore as new PVC* を実行します。
+
+.Persistent Volume Claim snapshot restore in UI
+image::ocs/OCP4-OCS4-Snapshot-restore.png[Persistent Volume Claim snapshot restore in UI]
+
+スナップショットから新しいクローンを作成するためには、元の *PVC* と同じ *StorageClass* を選択します。 +
+作られるクローン *PVC* のサイズはグレーアウトされていて変更できません。クローン *PVC* のサイズはスナップショット元の `my-shared-storage` *PVC* と同じサイズが自動で指定されるためです。
+
+.Persistent Volume Claim snapshot restore configuration
+image::ocs/OCP4-OCS4-Snapshot-restore-config.png[Persistent Volume Claim snapshot restore configuration]
+
+*Restore* をクリックします。
+
+*VolumeSnapshot* から復元された新しい *PVC* があるかどうかを確認します。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get pvc -n my-shared-storage | grep restore
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+my-shared-storage-snapshot-restore   Bound    pvc-c1d2ea77-c059-4f5e-844e-72d512e466b1   5Gi        RWX            ocs-storagecluster-cephfs   4s
+----
+
+出力された *PVC* は、データの破損や損失がある場合に、アプリケーションを復旧するために使用できます。
