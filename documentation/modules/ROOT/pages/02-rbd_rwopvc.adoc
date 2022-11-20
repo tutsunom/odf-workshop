@@ -301,7 +301,7 @@ exit
 OCPのイベントログにアラートが表示されていることを確認しましょう。
 
 .OpenShift Container Platform Events
-image::images/ocs/OCS-PVCResize-pvcnearfull-alert.png[PVC nearfull alert]
+image::ocs/OCS-PVCResize-pvcnearfull-alert.png[PVC nearfull alert]
 
 ==== PVCのYAMLファイルを変更することによる拡張
 
@@ -477,21 +477,21 @@ NOTE: 両方の結果が同じ値を報告する場合、拡張は成功した�
 最初のステップは、*PVC* が属するプロジェクトを選択することです。
 
 .Select the appropriate project
-image::images/ocs/OCS-PVCResize-select-project.png[Select project]
+image::ocs/OCS-PVCResize-select-project.png[Select project]
 
 *PVC* のコンテキストメニュー(縦に3つの点が並んだアイコン)から、`Expand PVC` を選択します。
 
 .Choose Expand from menu
-image::images/ocs/OCS-PVCResize-choose-expand-menu.png[Choose expand from the contextual menu]
+image::ocs/OCS-PVCResize-choose-expand-menu.png[Choose expand from the contextual menu]
 
 表示されるダイアログボックスで、*PVC* の新しい容量を入力します。
 
 CAUTION: *PVC* のサイズを小さくすることはできません。
 
 .Enter the new size for the *PVC*
-image::images/ocs/OCS-PVCResize-enter-new-size.png[Enter new size]
+image::ocs/OCS-PVCResize-enter-new-size.png[Enter new size]
 
-あとは拡張が完了し、新しいサイズ(15GiB)が反映されるのを待つだけです。
+あとは拡張が完了し、新しいサイズ(10GiB)が反映されるのを待つだけです。
 
 .Wait for the expansion to complete
-image::images/ocs/OCS-PVCResize-verify-resize-worked2.png[Wait for expansion]
+image::ocs/OCS-PVCResize-verify-resize-worked2.png[Wait for expansion]
