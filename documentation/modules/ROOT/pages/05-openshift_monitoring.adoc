@@ -1,0 +1,179 @@
+= OpenShift MonitoringでのODFの使用
+include::_attributes.adoc[]
+:profile: acs
+
+OpenShiftには、オープンソースプロジェクトであるPrometheusと、その広範なエコシステムをベースとした、モニタリングスタックが同梱されています。このモニタリングスタックは事前設定されており、さらにユーザ自身が設定できるようになっています。また、クラスタコンポーネントをモニタリングし、発生した問題をクラスタ管理者に直ちに通知するためのアラートセットが含まれています。 +
+本番環境においては、モニタリングスタックをブロックストレージベースの永続ストレージを使って構成することが強く推奨されます。永続ストレージを使用することで、メトリクスデータやアラートデータが永続ボリュームに保存され、Podの再起動や再作成に耐えられるようになるためです。 +
+ODFでは、Ceph RBD volumeによってブロックストレージを提供します。このセクションでは、PrometheusとAlertManagerのストレージとしてODF Ceph RBD volumeを使って永続化する方法について詳しく説明します。
+
+== OpenShift Monitoringのデフォルトストレージ
+まず、`openshift-monitoring` Namespaceで作成されているPodと *PVC* を見つけましょう。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get pods -n openshift-monitoring
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+NAME                                               READY   STATUS    RESTARTS      AGE
+pod/alertmanager-main-0                            5/5     Running   0             2m6s
+pod/alertmanager-main-1                            5/5     Running   0             2m14s
+pod/alertmanager-main-2                            5/5     Running   0             2m24s
+pod/cluster-monitoring-operator-64fcf6fdd9-rrzq5   2/2     Running   0             30h
+pod/grafana-7fdc7d846d-lnr98                       2/2     Running   0             2m25s
+pod/kube-state-metrics-c4fd7d5d5-jq9vq             3/3     Running   0             2m27s
+pod/node-exporter-5k7bd                            2/2     Running   0             29h
+pod/node-exporter-7stxr                            2/2     Running   0             29h
+pod/node-exporter-ck2n4                            2/2     Running   0             29h
+pod/node-exporter-dp7kl                            2/2     Running   0             10m
+pod/node-exporter-f29xl                            2/2     Running   0             30h
+pod/node-exporter-fs299                            2/2     Running   0             29h
+pod/node-exporter-gch4v                            2/2     Running   0             29h
+pod/node-exporter-nv5sq                            2/2     Running   0             29h
+pod/node-exporter-ppn72                            2/2     Running   0             10m
+pod/node-exporter-qnqz8                            2/2     Running   0             30h
+pod/node-exporter-rw7d2                            2/2     Running   0             10m
+pod/node-exporter-x5crx                            2/2     Running   0             30h
+pod/node-exporter-zv6l7                            2/2     Running   0             29h
+pod/openshift-state-metrics-7f848466cf-lcvdh       3/3     Running   0             30h
+pod/prometheus-adapter-56fdd7694d-d67mn            1/1     Running   0             2m26s
+pod/prometheus-adapter-56fdd7694d-tfwk7            1/1     Running   0             2m27s
+pod/prometheus-k8s-0                               7/7     Running   0             2m7s
+pod/prometheus-k8s-1                               7/7     Running   0             2m20s
+pod/prometheus-operator-7c888bcd97-gpx58           2/2     Running   0             2m33s
+pod/telemeter-client-69bd5b755f-6pxv2              3/3     Running   0             2m27s
+pod/thanos-querier-6b55bc48bb-ft8q2                5/5     Running   0             29h
+pod/thanos-querier-6b55bc48bb-zhvlx                5/5     Running   0             29h
+----
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get pvc -n openshift-monitoring
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+No resources found in openshift-monitoring namespace.
+----
+
+この時点では *PVC* は存在しません。これはモニタリングスタック内の Prometheus も AlertManager もエフェメラルなストレージ(EmptyDir)を使用しているためです。OpenShift がインストールされた直後はこの方法がとられます。 +
+Prometheus は、Prometheus データベースと AlertManager のデータで構成されています。どちらかのデータが失われるとメトリクスやアラートのデータが失われるため、両方を永続化することがベストプラクティスです。
+
+== Prometheus環境の変更
+
+Prometheus では、サポートされる全ての設定変更は中央の *ConfigMap* を通じて制御されます。したがって、この *ConfigMap* は変更を加える前に存在する必要があります。 +
+Openshift のインストール直後は、Prometheus の環境を設定するための *ConfigMap* が存在しない場合があります。*ConfigMap* が存在するかどうかを確認するには、以下のように実行します。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc -n openshift-monitoring get configmap cluster-monitoring-config
+----
+
+.ConfigMapが作成されていない場合の出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+Error from server (NotFound): configmaps "cluster-monitoring-config" not found
+----
+
+.ConfigMapが作成されている場合の出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+NAME                        DATA   AGE
+cluster-monitoring-config   1      10m
+----
+
+*ConfigMap* がない場合は、このコマンドで作成してください。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc apply -f {{ HOME_PATH }}/support/ocslab_cluster-monitoring-noinfra.yaml
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+configmap/cluster-monitoring-config created
+----
+
+もし *ConfigMap* が既にあるならば、次のコマンドを実行して、既存の *ConfigMap* に変更を適用してください。
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc apply -f {{ HOME_PATH }}/support/ocslab_cluster-monitoring-withinfra.yaml
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+configmap/cluster-monitoring-config updated
+----
+
+作成された *ConfigMap* は次のコマンドで見ることができます。
+
+NOTE: Ceph RBD volumeのサイズである `40Gi` は、要件に応じて大きくしたり小さくしたりすることができます。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc -n openshift-monitoring get configmap cluster-monitoring-config -o yaml
+----
+
+.ConfigMap 出力例:
+[source,yaml]
+----
+[...]
+    prometheusK8s:
+      volumeClaimTemplate:
+        metadata:
+          name: alertmanager
+        spec:
+          storageClassName: ocs-storagecluster-ceph-rbd
+          resources:
+            requests:
+              storage: 40Gi
+[...]
+    alertmanagerMain:
+      volumeClaimTemplate:
+        metadata:
+          name: prometheusdb
+        spec:
+          storageClassName: ocs-storagecluster-ceph-rbd
+          resources:
+            requests:
+              storage: 40Gi
+[...]
+----
+
+この新しい `cluster-monitoring-config` *ConfigMap* を作成すると、影響を受けるPodが自動的に再起動され、新しい永続ボリュームがマウントされます。
+
+NOTE: デフォルトのEmptyDirのストレージに書き込まれたデータを、新しい永続ボリュームに引き継ぐことはできません。したがって、バックエンドのストレージを変更した後は、空の状態のデータベースからメトリクスの収集とレポーティングを始めることになります。
+
+数分後には、AlertManagerとPrometheusのPodが再起動します。`openshift-monitoring` Namespace に新しい *PVC* が表示され、それらが永続ストレージを提供するようになったことが確認できます。
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc get pvc -n openshift-monitoring
+----
+.出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
+----
+NAME                               STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS                  AGE
+alertmanager-alertmanager-main-0   Bound    pvc-592e4313-c435-4120-bfc5-0efa9fdafbf3   40Gi       RWO            ocs-storagecluster-ceph-rbd   3m37s
+alertmanager-alertmanager-main-1   Bound    pvc-43d31e4d-8ceb-442a-93c1-07f7fa17f5e9   40Gi       RWO            ocs-storagecluster-ceph-rbd   3m37s
+alertmanager-alertmanager-main-2   Bound    pvc-4139266e-7621-4eee-b14d-a69bee7e22c8   40Gi       RWO            ocs-storagecluster-ceph-rbd   3m37s
+prometheusdb-prometheus-k8s-0      Bound    pvc-1d470a18-ed7b-48f2-93d2-303448572376   40Gi       RWO            ocs-storagecluster-ceph-rbd   3m31s
+prometheusdb-prometheus-k8s-1      Bound    pvc-fff015f0-be83-4d68-bd42-7d3250cf1d9f   40Gi       RWO            ocs-storagecluster-ceph-rbd   3m31s
+----
+
+永続ストレージを変更した後もPrometheusとAlertManagerが正しく動作しているかは、後の<<ODF環境のモニタリング>>セクションで確認できます。
