@@ -1,98 +1,6 @@
-= ODF Operatorを使用してストレージをデプロイする
+= ODF Operatorを使用したストレージのデプロイ
 include::_attributes.adoc[]
-
-== Setup OpenShift Cluster
 :profile: acs
-
-To run OpenShift4, you need to have one provisioned environment using https://demo.redhat.com[RHPDS].
-Go to Catalog -> Openshift 4.10 Workshop -> Order.
-
-== Login OpenShift Web console
-
-Once you have a workshop environment, you can also access OpenShift web console. +
-The web console URL is shown in RHPDS as well as cluster admin username/password.
-
-NOTE: If the language setting is NOT set to "English", it might to be good to set it "English" via User Preference menu.  +
-If you continue this workshop without "English" setting, the pipeline will not display properly in the DevSecOps lab.
-
-== Connect to your bastion server
-
-You also need to access the bastion server in your environment via SSH.
-
-[.console-input]
-[source,bash,subs="attributes+,+macros"]	
-----	
-ssh lab-user@<YOUR_BASTION_SERVER>
-----
-
-Some CLI tools are already installed on you bastion server. You can check the OpenShift version using:
-
-[.console-input]
-[source,bash,subs="attributes+,+macros"]	
-----	
-oc version	
-----
-
-The output should show oc version >=4.10:	
-
-[.console-output]
-[source,bash,subs="attributes+,+macros"]	
-----	
-Client Version: {ocp-version}
-Server Version: {ocp-version}
-Kubernetes Version: {kubernetes-version}
-----
-
-== Edit the default project template
-
-Then first of all, the default Project Template must be edited. +
-In the Openshift 4.10 Workshop environment provided by RHPDS, a Limit Range is automatically set for newly created projects. This can be an obstacle to the smooth running of the Workshop.
-
-Use the `oc edit` command to clear the Limit Range section.
-
-[.console-input]
-[source,bash,subs="attributes+,+macros"]	
-----	
-oc edit template project-request -n openshift-config
-----
-
-Delete all of the following part from the `project-request` manifest and save it.
-
-----
-- apiVersion: v1
-  kind: LimitRange
-  metadata:
-    name: ${PROJECT_NAME}-core-resource-limits
-    namespace: ${PROJECT_NAME}
-  spec:
-    limits:
-    - default:
-        cpu: 500m
-        memory: 1.5Gi
-      defaultRequest:
-        cpu: 50m
-        memory: 256Mi
-      max:
-        cpu: 4
-        memory: 6Gi
-      type: Container
-    - max:
-        cpu: 4
-        memory: 12Gi
-      type: Pod
-----
-
-== Get tutorial sources
-
-:tutorial-url: https://github.com/tutsunom/odf-workshop.git
-:folder: odf-workshop
-include::https://raw.githubusercontent.com/redhat-developer-demos/rhd-tutorial-common/master/download-sources.adoc[]
-
-
-And then you are ready for installing RHACS on Openshift.
-
-
-
 
 == OCPクラスタのスケールと新しいWorkerノードの追加
 
@@ -104,6 +12,8 @@ And then you are ready for installing RHACS on Openshift.
 oc get nodes -l node-role.kubernetes.io/worker -l '!node-role.kubernetes.io/infra','!node-role.kubernetes.io/master'
 ----
 .出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
 ----
 NAME                                         STATUS   ROLES    AGE   VERSION
 ip-10-0-129-208.us-east-2.compute.internal   Ready    worker   15m   v1.22.8+c02bd9d
@@ -115,6 +25,7 @@ ip-10-0-215-4.us-east-2.compute.internal     Ready    worker   15m   v1.22.8+c02
 ここで *MachineSets* を使用して、さらに3つのWorkerノードをクラスタに追加することになります。
 
 [.console-input]
+[source,bash,subs="attributes+,+macros"]
 ----
 oc get machinesets -n openshift-machine-api | grep -v infra
 ----
@@ -122,6 +33,8 @@ oc get machinesets -n openshift-machine-api | grep -v infra
 ここでは、既にクラスタに存在するWorkerノードを作成するために使用される、既存の *MachineSets* が表示されます。3つのAWS Availability Zone (AZ)それぞれに *MachineSet* が存在することが分かります。
 
 .出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
 ----
 NAME                                    DESIRED   CURRENT   READY   AVAILABLE   AGE
 cluster-d6qlm-mbttv-worker-us-east-2a   2         2         2       2           27m
@@ -131,7 +44,8 @@ cluster-d6qlm-mbttv-worker-us-east-2c   1         1         1       1           
 
 インフラストラクチャーノードの演習と同様に、新しい *MachineSets* を作成して、各AWS AZにOCP クラスタのストレージ専用ノードを作成します。
 
-[source,role="execute"]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
 ----
 bash {{ HOME_PATH }}/support/machineset-generator.sh 3 workerocs 0 | oc create -f -
 oc get machineset -n openshift-machine-api -l machine.openshift.io/cluster-api-machine-role=workerocs -o name | xargs oc patch -n openshift-machine-api --type='json' -p '[{"op": "add", "path": "/spec/template/spec/metadata/labels", "value":{"node-role.kubernetes.io/worker":"", "role":"storage-node", "cluster.ocs.openshift.io/openshift-storage":""} }]'
@@ -140,7 +54,8 @@ oc get machineset -n openshift-machine-api -l machine.openshift.io/cluster-api-m
 
 新しい *Machines* が作成されていることを確認します。
 
-[source,role="execute"]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
 ----
 oc get machines -n openshift-machine-api | egrep 'NAME|workerocs'
 ----
@@ -148,6 +63,8 @@ oc get machines -n openshift-machine-api | egrep 'NAME|workerocs'
 しばらくは `Provisioning` または `Provisioned` の状態にありますが、最終的には `Running` の状態になります。
 
 .出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
 ----
 NAME                                             PHASE     TYPE         REGION      ZONE         AGE
 cluster-d6qlm-mbttv-workerocs-us-east-2a-v8p5k   Running   m5.4xlarge   us-east-2   us-east-2a   4m39s
@@ -161,7 +78,8 @@ NOTE: `m5.4xlarge` インスタンスタイプは、16vCPUと64GBのメモリを
 
 さて、私たちの新しい *Machines* がOCPクラスタに追加されているかどうかを確認します。
 
-[source,role="execute"]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
 ----
 watch "oc get machinesets -n openshift-machine-api | egrep 'NAME|workerocs'"
 ----
@@ -169,6 +87,8 @@ watch "oc get machinesets -n openshift-machine-api | egrep 'NAME|workerocs'"
 新しい workerocs *Machine Set* の全てで `READY` と `AVAILABLE` のカラムに数値(この場合は `1` )が表示されるまで待ちます。このステップには5分以上かかる場合があります。
 
 .出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
 ----
 NAME                                       DESIRED   CURRENT   READY   AVAILABLE   AGE
 cluster-d6qlm-mbttv-workerocs-us-east-2a   1         1         1       1           5m25s
@@ -179,11 +99,14 @@ kbd:[Ctrl+C]を押すと終了できます。
 
 最後に、3つのWorkerノードが追加されていることを確認します。全てのworker nodeの `STATUS` が `Ready` であることを確認します。
 
-[source,role="execute"]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
 ----
 oc get nodes -l node-role.kubernetes.io/worker -l '!node-role.kubernetes.io/infra','!node-role.kubernetes.io/master'
 ----
 .出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
 ----
 NAME                                         STATUS   ROLES    AGE   VERSION
 ip-10-0-129-208.us-east-2.compute.internal   Ready    worker   45m   v1.22.8+c02bd9d
@@ -199,11 +122,14 @@ ip-10-0-219-73.us-east-2.compute.internal    Ready    worker   13m   v1.22.8+c02
 ODFを稼働させるノードには、`cluster.ocs.openshift.io/openshift-storage` という特定のラベルが付いている必要があります。 +
 先に `workerocs` *MachineSets* を作成した時にこのラベルを追加しています。これらの *MachineSets* を使って作成されたすべての *Machine* はこのラベルを持つことになります。
 
-[source,role="execute"]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
 ----
 oc get nodes -l cluster.ocs.openshift.io/openshift-storage=
 ----
 .出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
 ----
 NAME                                         STATUS   ROLES    AGE   VERSION
 ip-10-0-142-148.us-east-2.compute.internal   Ready    worker   14m   v1.22.8+c02bd9d
@@ -221,7 +147,8 @@ ip-10-0-219-73.us-east-2.compute.internal    Ready    worker   14m   v1.22.8+c02
 
 はじめに `openshift-storage` Namespace を作成します。
 
-[source,role="execute"]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
 ----
 oc create namespace openshift-storage
 ----
@@ -229,54 +156,48 @@ oc create namespace openshift-storage
 このNamespaceには、モニタリング用のラベルを追加する必要があります。これは、OCPストレージダッシュボードの Prometheus メトリクスとアラートを取得するために必要です。 +
 `openshift-storage` Namespaceにラベルを付けるには、次のコマンドを使用します。
 
-[source,role="execute"]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
 ----
 oc label namespace openshift-storage "openshift.io/cluster-monitoring=true"
 ----
 
 NOTE: `openshift-storage` Namespaceの作成とモニタリング用のラベル付けは、*OpenShift Web Console* を使用してODF Operatorのインストール時に行うこともできます。
 
-*Openshift Web Console* を開きます。
-
-{{ MASTER_URL }}
-
-`kubeadmin` としてログインします。パスワードはこちらです。
-
-[source,role="copypaste"]
-----
-{{ KUBEADMIN_PASSWORD }}
-----
 
 ログインしたら左側のメニューから、*Operators* -> *OperatorHub* を選択します。
 
 .OCP OperatorHub
-image::images/ocs/OCS-OCP-OperatorHub.png[OCP OperatorHub]
+image::ocs/OCS-OCP-OperatorHub.png[OCP OperatorHub]
 
 Now type `openshift data foundation` in the *Filter by _keyword..._* box.
 *Filter by _keyword..._* のボックスに、`openshift data foundation` と入力します。
 
 .OCP OperatorHub filter on OpenShift Data Foundation Operator
-image::images/ocs/OCS4-OCP-OperatorHub-Filter.png[OCP OperatorHub Filter]
+image::ocs/OCS4-OCP-OperatorHub-Filter.png[OCP OperatorHub Filter]
 
 表示された `OpenShift Data Foundation Operator` を選択し、 *Install* ボタンを押します。
 
 .OCP OperatorHub Install OpenShift Data Foundation
-image::images/ocs/OCS4-OCP4-OperatorHub-Install.png[OCP OperatorHub Install]
+image::ocs/OCS4-OCP4-OperatorHub-Install.png[OCP OperatorHub Install]
 
 次の画面で、設定が下図に示す通りであることを確認します。
 
 .OCP Subscribe to OpenShift Data Foundation
-image::images/ocs/OCS4-OCP4-OperatorHub-Subscribe.png[OCP OperatorHub Subscribe]
+image::ocs/OCS4-OCP4-OperatorHub-Subscribe.png[OCP OperatorHub Subscribe]
 
 *Install* をクリックします。
 
 ターミナルに戻って、下のコマンドを実行してインストール状況を確認できます。
 
-[source,role="execute"]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
 ----
 watch oc -n openshift-storage get csv
 ----
 .出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
 ----
 NAME                  DISPLAY                       VERSION   REPLACES              PHASE
 mcg-operator.v4.9.8   NooBaa Operator               4.9.8     mcg-operator.v4.9.7   Succeeded
@@ -292,11 +213,14 @@ CAUTION: 変わるまで数分かかる場合があります。
 
 ODF Operatorのインストールが終わると、いくつかの新しいPodが `openshift-storage` Namespaceに作成されていることが確認できます。
 
-[source,role="execute"]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
 ----
 oc -n openshift-storage get pods
 ----
 .出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
 ----
 NAME                                               READY   STATUS    RESTARTS   AGE
 noobaa-operator-75847d5b48-krtpt                   1/1     Running   0          5m37s
@@ -312,12 +236,12 @@ rook-ceph-operator-54d974474c-k82xz                1/1     Running   0          
 *Create StorageSystem* をクリックします。
 
 .Create storage system in openshift-storage namespace
-image::images/ocs/OCS4-OCP4-View-Operator.png[Create storage system in openshift-storage namespace]
+image::ocs/OCS4-OCP4-View-Operator.png[Create storage system in openshift-storage namespace]
 
 `Create StorageSystem` の画面が表示されます。
 
 .Configure storage system settings
-image::images/ocs/OCS4-config-screen-partial1.png[Configure storage system settings]
+image::ocs/OCS4-config-screen-partial1.png[Configure storage system settings]
 
 *Backing storage* では `Use an existing StorageClass` を選択し、*Storage Class* には `gp2` を指定します。 +
 *Deployment type* では `Full deployment` を指定します。
@@ -328,7 +252,7 @@ NOTE: 他のメニューの `Create a new StorageClass using local storage devic
 また `Connect an external storage platform` は、外部ストレージとコントロールプレーンを統一する特殊なケースで使います。
 
 .Select capacity and nodes for new storage system
-image::images/ocs/OCS4-config-screen-partial2.png[Select capacity and nodes for new storage system]
+image::ocs/OCS4-config-screen-partial2.png[Select capacity and nodes for new storage system]
 
 *Select Capacity* では、`2 TiB` を指定します。
 
@@ -338,7 +262,8 @@ CAUTION: *ここで選択する Requested Capacity は、将来容量を拡張�
 *Select nodes* で、ODFクラスタで使うnodeを指定して *Next* をクリックします。
 ODF用のラベル `cluster.ocs.openshift.io/openshift-storage` が付けられたノードは、ここで自動で選択されるようになっています。そのため、はじめから3つのWorkerノードが選択されているはずです。以下のコマンドを実行して、間違いがないことを確認してみましょう。
 
-[source,role="execute"]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
 ----
 oc get nodes --show-labels | grep ocs | cut -d ' ' -f1
 ----
@@ -346,7 +271,7 @@ oc get nodes --show-labels | grep ocs | cut -d ' ' -f1
 *Next* をクリックします 。
 
 .ODF create a new storage cluster: Security and network
-image::images/ocs/ODF4.9-config-screen-partial3.png[Select encryption and network]
+image::ocs/ODF4.9-config-screen-partial3.png[Select encryption and network]
 
 *Encryption* では、何も選択しません。 +
 クラスタ全体、または部分的な暗号化を利用したい場合は、ここでチェックを入れます。今回の Lab では暗号化はしないので、チェックを外したままで構いません。 + 
@@ -359,13 +284,14 @@ Multus CNIを使ってPodで複数のネットワークを使用できる構成�
 *Next* をクリックします。
 
 .Review and create new storage system
-image::images/ocs/OCS4-config-screen-partial3.png[Review and create new storage system]
+image::ocs/OCS4-config-screen-partial3.png[Review and create new storage system]
 
 設定した内容をレビューし、問題がなければ *Create StorageSystem* をクリックします。
 
 ターミナルウィンドウにすべての *Pods* が `Running` または `Completed` と表示されるまでお待ちください。これは5-10分かかります。
 
-[source,role="execute"]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
 ----
 watch oc -n openshift-storage get pods
 ----
@@ -421,7 +347,8 @@ ODFを例にすると、ODFクラスタをデプロイすると最終的には `
 
 `StorageCluster` のステータスは次のようにチェックできます。
 
-[source,role="execute"]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
 ----
 oc get storagecluster -n openshift-storage
 ----
@@ -434,14 +361,14 @@ oc get storagecluster -n openshift-storage
 まず、ODF Operatorのインストール後に画面右上に次のようなポップアップが表示されている場合は、*Refersh web console* をクリックして画面を更新してください。
 
 .ODF Dashboard after successful operator installation
-image::images/ocs/ODF4.9-refresh-webconsole.png[ODF Dashboard after successful operator installation]
+image::ocs/ODF4.9-refresh-webconsole.png[ODF Dashboard after successful operator installation]
 
 ダッシュボードは左側のメニューバーから *Storage* -> *OpenShift Data Foundation* とクリックすることでアクセスできます。
 
 NOTE: ODFのデプロイが完了したばかりの場合、ダッシュボードが完全に表示されるまでに5〜10分かかります。
 
 .Storage Dashboard after successful storage installation
-image::images/ocs/OCS-dashboard-healthy.png[Storage Dashboard after successful storage installation]
+image::ocs/OCS-dashboard-healthy.png[Storage Dashboard after successful storage installation]
 
 ダッシュボードの使用方法の詳細については、 https://access.redhat.com/documentation/en-us/red_hat_openshift_data_foundation/4.9/html/monitoring_openshift_data_foundation/cluster_health#verifying-openshift-data-foundation-is-healthy_rhodf[ODFモニタリングガイド]を参照してください。
 
@@ -454,7 +381,8 @@ image::images/ocs/OCS-dashboard-healthy.png[Storage Dashboard after successful s
 *Storage* メニューの *Storage Classes* を選択することで、これら3つの *StorageClass* が表示されます。 +
 また、以下のコマンドでも確認できます。
 
-[source,role="execute"]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
 ----
 oc get storageclasses
 ----
@@ -470,51 +398,61 @@ Rook-Ceph *toolbox* はODFに同梱されていないため、手動でデプロ
 
 以下のコマンドで `OCSInitialization ocsinit` を修正します。
 
-[source,role="execute"]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
 ----
 oc patch OCSInitialization ocsinit -n openshift-storage --type json --patch  '[{ "op": "replace", "path": "/spec/enableCephTools", "value": true }]'
 ----
 
 `rook-ceph-tools` Pod が `Running` になれば、次のようにtoolbox Podに入ることができます。
 
-[source,role="execute"]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
 ----
 TOOLS_POD=$(oc get pods -n openshift-storage -l app=rook-ceph-tools -o name)
 oc rsh -n openshift-storage $TOOLS_POD
 ----
 *toolbox* Podに入ったら、次のcephコマンドを実行してみて下さい。これらのコマンドによってCephクラスタの詳細な構成を確認することができます。
 
-[source,role="execute"]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
 ----
 ceph status
 ----
 
-[source,role="execute"]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
 ----
 ceph osd status
 ----
 
-[source,role="execute"]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
 ----
 ceph osd tree
 ----
 
-[source,role="execute"]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
 ----
 ceph df
 ----
 
-[source,role="execute"]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
 ----
 rados df
 ----
 
-[source,role="execute"]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
 ----
 ceph versions
 ----
 
 .出力例:
+[.console-output]
+[source,bash,subs="attributes+,+macros"]
 ----
 sh-4.4$ ceph status
   cluster:
@@ -540,7 +478,8 @@ sh-4.4$ ceph status
 kbd:[Ctrl+D] を押すか、 `exit` を実行して *toolbox* から出ることができます.
 
 
-[source,role="execute"]
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
 ----
 exit
 ----
