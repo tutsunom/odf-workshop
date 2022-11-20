@@ -9,7 +9,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 15Gi
+      storage: 10Gi
   dataSource:
     kind: PersistentVolumeClaim
     name: postgresql
