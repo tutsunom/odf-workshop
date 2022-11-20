@@ -1,4 +1,4 @@
-= Welcome to Red Hat Advanced Cluster Security Workshop
+= Welcome to Red Hat OpenShift Data Foundation Workshop
 :page-layout: home
 :!sectids:
 
