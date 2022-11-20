@@ -3,9 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Welcome to Red Hat Advanced Cluster Security Workshop :: ODF Workshop</title>
-    <link rel="canonical" href="https://tutsunom.github.io/odf-workshop/odf-workshop/index.html">
-    <link rel="next" href="01-setup.html">
+    <title>Setup :: ODF Workshop</title>
+    <link rel="canonical" href="https://tutsunom.github.io/odf-workshop/odf-workshop/appendix-ceph.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 <link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
@@ -371,90 +370,33 @@
 <main class="article">
 <div class="toolbar" role="navigation">
 <button class="nav-toggle"></button>
-  <a href="index.html" class="home-link is-current"></a>
+  <a href="index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">ODF Workshop</a></li>
-    <li><a href="index.html">Welcome to Red Hat Advanced Cluster Security Workshop</a></li>
+    <li><a href="appendix-ceph.html">Setup</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/tutsunom/odf-workshop/edit/master/documentation/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/tutsunom/odf-workshop/edit/master/documentation/modules/ROOT/pages/appendix-ceph.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Welcome to Red Hat Advanced Cluster Security Workshop</h1>
-<div id="preamble">
-<div class="sectionbody">
-<div class="imageblock">
-<div class="content">
-<img src="_images/odf-logo.svg" alt="RHODF Logo" width="400">
-</div>
-</div>
-</div>
-</div>
-<div class="sect1 text-center strong">
-<h2>Red Hat OpenShift Data Foundation</h2>
+<h1 class="page">Setup</h1>
+<div class="sect1">
+<h2 id="_setup_openshift_cluster"><a class="anchor" href="#_setup_openshift_cluster"></a>Setup OpenShift Cluster</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Red Hat OpenShift Data Foundation (ODF) は、コンテナ用ソフトウェア・デファインド・ストレージです。<br>
-Red Hat OpenShift のデータおよびストレージサービス・プラットフォームとして設計された ODF は、クラウド全体でアプリケーションを迅速かつ効率的に開発し、デプロイするのに役立ちます。</p>
-</div>
-<div class="paragraph">
-<p>ODF は、すべての基本的なストレージクラス、S3 互換のオブジェクトストレージ、データ複製、障害復旧機能などの重要な機能をサポートしており、アプリケーションデータをさまざまなアベイラビリティゾーンに配置できます。</p>
-</div>
-<div class="paragraph">
-<p>ODF は、すべてのインフラストラクチャ・プラットフォームで一貫して共通の機能を提供し、開発者の作業を単純化します。開発者はアービトレーションの制限を受けることなく、アプリケーションとデータ管理を必要に応じてデプロイし、将来へ向けて状況の変化にも適応させていくことができます。</p>
+<p>To run OpenShift4, you need to have one provisioned environment using <a href="https://demo.redhat.com">RHPDS</a>.
+Go to Catalog &#8594; Openshift 4.10 Workshop &#8594; Order.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2>学習する内容</h2>
+<h2 id="_login_openshift_web_console"><a class="anchor" href="#_login_openshift_web_console"></a>Login OpenShift Web console</h2>
 <div class="sectionbody">
-<div class="imageblock">
-<div class="content">
-<img src="_images/ocs/OCS-Pods-Diagram.png" alt="OpenShift Data Foundation components" width="800">
-</div>
-</div>
 <div class="paragraph">
-<p>この演習は、ODFのデプロイと管理方法に関心のある、システム管理者とアプリケーション開発者の両方を対象としています。<br>
-この演習では、Red Hat OpenShift Container Platform (OCP) 4とODF Operatorを使用して、OCPワークロードの永続ストレージソリューションとして Ceph と Multi-Cloud-Gateway (MCG) をデプロイします。以下のような内容を学習します。</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>コンテナ化されたCephとMCGの設定とデプロイ</p>
-</li>
-<li>
-<p>デプロイされたCephとMCGの検証</p>
-</li>
-<li>
-<p>CephおよびRADOSコマンドを実行するためのtoolboxの導入</p>
-</li>
-<li>
-<p>Ceph RBDをベースとしたRead-Write-Once (RWO) PVCを使用したアプリケーションの作成</p>
-</li>
-<li>
-<p>CephFSをベースとしたRead-Write-Many (RWX) PVCを使用したアプリケーションの作成</p>
-</li>
-<li>
-<p>PVCのクローンとスナップショット</p>
-</li>
-<li>
-<p>PrometheusおよびAlertManagerへのODFの適用</p>
-</li>
-<li>
-<p>MCGを使用したバケットの作成とアプリケーションからの使用</p>
-</li>
-<li>
-<p>Cephクラスタのストレージの拡張</p>
-</li>
-<li>
-<p>ODFのメトリクスとアラートの確認</p>
-</li>
-<li>
-<p>サポート情報を収集するためのmust-gatherの使用</p>
-</li>
-</ul>
+<p>Once you have a workshop environment, you can also access OpenShift web console.<br>
+The web console URL is shown in RHPDS as well as cluster admin username/password.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -463,16 +405,116 @@ Red Hat OpenShift のデータおよびストレージサービス・プラッ�
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Cephの動作についてより詳しい情報が必要な場合は、このモジュールの演習を開始する前に<a href="appendix-ceph.html">Cephの概要</a>のセクションを確認してください。
+If the language setting is NOT set to "English", it might to be good to set it "English" via User Preference menu. <br>
+If you continue this workshop without "English" setting, the pipeline will not display properly in the DevSecOps lab.
 </td>
 </tr>
 </table>
 </div>
 </div>
 </div>
-<nav class="pagination">
-  <span class="next"><a href="01-setup.html">Setup</a></span>
-</nav>
+<div class="sect1">
+<h2 id="_connect_to_your_bastion_server"><a class="anchor" href="#_connect_to_your_bastion_server"></a>Connect to your bastion server</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You also need to access the bastion server in your environment via SSH.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ssh lab-user@&lt;YOUR_BASTION_SERVER&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Some CLI tools are already installed on you bastion server. You can check the OpenShift version using:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc version</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output should show oc version &gt;=4.10:</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">Client Version: 4.10.36
+Server Version: 4.10.36
+Kubernetes Version: v1.23.5+8471591</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_edit_the_default_project_template"><a class="anchor" href="#_edit_the_default_project_template"></a>Edit the default project template</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Then first of all, the default Project Template must be edited.<br>
+In the Openshift 4.10 Workshop environment provided by RHPDS, a Limit Range is automatically set for newly created projects. This can be an obstacle to the smooth running of the Workshop.</p>
+</div>
+<div class="paragraph">
+<p>Use the <code>oc edit</code> command to clear the Limit Range section.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc edit template project-request -n openshift-config</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Delete all of the following part from the <code>project-request</code> manifest and save it.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>- apiVersion: v1
+  kind: LimitRange
+  metadata:
+    name: ${PROJECT_NAME}-core-resource-limits
+    namespace: ${PROJECT_NAME}
+  spec:
+    limits:
+    - default:
+        cpu: 500m
+        memory: 1.5Gi
+      defaultRequest:
+        cpu: 50m
+        memory: 256Mi
+      max:
+        cpu: 4
+        memory: 6Gi
+      type: Container
+    - max:
+        cpu: 4
+        memory: 12Gi
+      type: Pod</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_get_tutorial_sources"><a class="anchor" href="#_get_tutorial_sources"></a>Get tutorial sources</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before we start setting up the environment, let’s clone the tutorial sources and set the <code>TUTORIAL_HOME</code> environment variable to point to the root directory of the tutorial:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone <a href="https://github.com/tutsunom/odf-workshop.git" class="bare">https://github.com/tutsunom/odf-workshop.git</a> odf-workshop</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export TUTORIAL_HOME="$(pwd)/odf-workshop"</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd $TUTORIAL_HOME</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And then you are ready for installing RHACS on Openshift.</p>
+</div>
+</div>
+</div>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
