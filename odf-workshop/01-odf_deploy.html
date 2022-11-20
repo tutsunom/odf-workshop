@@ -383,6 +383,24 @@
 <article class="doc">
 <h1 class="page">ODF Operatorを使用したストレージのデプロイ</h1>
 <div class="sect1">
+<h2 id="_gitリポジトリのクローン"><a class="anchor" href="#_gitリポジトリのクローン"></a>Gitリポジトリのクローン</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>まずGitリポジトリをクローンし、ディレクトリに移動します。</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone <a href="https://github.com/tutsunom/odf-workshop.git" class="bare">https://github.com/tutsunom/odf-workshop.git</a></code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd odf-workshop</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_ocpクラスタのスケールと新しいworkerノードの追加"><a class="anchor" href="#_ocpクラスタのスケールと新しいworkerノードの追加"></a>OCPクラスタのスケールと新しいWorkerノードの追加</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -423,12 +441,25 @@ cluster-d6qlm-mbttv-worker-us-east-2b   1         1         1       1           
 cluster-d6qlm-mbttv-worker-us-east-2c   1         1         1       1           27m</code></pre>
 </div>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+既存の <strong>MachineSet</strong> が3つのAZに無いOCPクラスタでもそのまま継続できます。後ほど対応します。
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
-<p>インフラストラクチャーノードの演習と同様に、新しい <strong>MachineSets</strong> を作成して、各AWS AZにOCP クラスタのストレージ専用ノードを作成します。</p>
+<p>新しい <strong>MachineSets</strong> を作成して、各AWS AZにOCP クラスタのストレージ専用ノードを作成します。</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">bash {{ HOME_PATH }}/support/machineset-generator.sh 3 workerocs 0 | oc create -f -
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">chmod +x labitem/machineset-cli
+bash labitem/machineset-generator.sh 3 workerocs 0 | oc create -f -
 oc get machineset -n openshift-machine-api -l machine.openshift.io/cluster-api-machine-role=workerocs -o name | xargs oc patch -n openshift-machine-api --type='json' -p '[{"op": "add", "path": "/spec/template/spec/metadata/labels", "value":{"node-role.kubernetes.io/worker":"", "role":"storage-node", "cluster.ocs.openshift.io/openshift-storage":""} }]'
 oc get machineset -n openshift-machine-api -l machine.openshift.io/cluster-api-machine-role=workerocs -o name | xargs oc scale -n openshift-machine-api --replicas=1</code></pre>
 </div>
@@ -452,6 +483,35 @@ cluster-d6qlm-mbttv-workerocs-us-east-2a-v8p5k   Running   m5.4xlarge   us-east-
 cluster-d6qlm-mbttv-workerocs-us-east-2b-dx69b   Running   m5.4xlarge   us-east-2   us-east-2b   4m38s
 cluster-d6qlm-mbttv-workerocs-us-east-2c-g7hlh   Running   m5.4xlarge   us-east-2   us-east-2c   4m38s</code></pre>
 </div>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>既存の <strong>MachineSet</strong> が3つのAZに無いOCPクラスタでは、<code>Failed</code> 状態の <strong>Machine</strong> が存在します。この場合は、<code>Failed</code> 状態の <strong>Machine</strong> に対応する <strong>MachineSet</strong> を削除して下さい。<br>
+代わりに、<code>Provisioning</code> または <code>Provisioned</code> の状態の <strong>Machine</strong> に対応する <strong>MachineSet</strong> を適宜 Scale-Out して、最終的に3台のworkerocs <strong>Machine</strong> を持つように設定して下さい。</p>
+</div>
+<div class="listingblock console-output">
+<div class="title"><code>us-east-2c</code> AZにのみ既存 <strong>MachineSet</strong> がある場合の例:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ oc get machines -n openshift-machine-api | egrep 'NAME|workerocs'
+NAME                                             PHASE     TYPE         REGION      ZONE         AGE
+cluster-2mwq7-jls22-workerocs-us-east-2c-ch9ds   Running   m5.4xlarge   us-east-2   us-east-2c   18m
+cluster-2mwq7-jls22-workerocs-us-east-2c-r5smx   Running   m5.4xlarge   us-east-2   us-east-2c   19m
+cluster-2mwq7-jls22-workerocs-us-east-2c-scjvh   Running   m5.4xlarge   us-east-2   us-east-2c   18m
+
+$ oc get machineset -n openshift-machine-api | egrep 'NAME|workerocs'
+NAME                                       DESIRED   CURRENT   READY   AVAILABLE   AGE
+cluster-2mwq7-jls22-workerocs-us-east-2c   3         3         3       3           30m</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>workerocs <strong>Machines</strong> はAWS EC2の <code>m5.4xlarge</code> インスタンスタイプを使用していることがわかります。</p>
@@ -477,7 +537,7 @@ cluster-d6qlm-mbttv-workerocs-us-east-2c-g7hlh   Running   m5.4xlarge   us-east-
 </div>
 </div>
 <div class="paragraph">
-<p>新しい workerocs <strong>Machine Set</strong> の全てで <code>READY</code> と <code>AVAILABLE</code> のカラムに数値(この場合は <code>1</code> )が表示されるまで待ちます。このステップには5分以上かかる場合があります。</p>
+<p>新しい workerocs <strong>MachineSet</strong> の全てで <code>READY</code> と <code>AVAILABLE</code> のカラムに数値(この場合は <code>1</code> )が表示されるまで待ちます。このステップには5分以上かかる場合があります。</p>
 </div>
 <div class="listingblock console-output">
 <div class="title">出力例:</div>
@@ -538,10 +598,20 @@ ip-10-0-219-73.us-east-2.compute.internal    Ready    worker   14m   v1.22.8+c02
 <div class="sectionbody">
 <div class="paragraph">
 <p>このセクションではOpenShift Data Foundation(ODF) Operatorをインストールし、新しく追加した3つのWorkerノードを使ってODFクラスタを作成します。<br>
-以下がインストールされます。
-- ODF <strong>OperatorGroup</strong>
-- ODF <strong>Subscription</strong>
-- 他の全てのODF リソース (Operators, Ceph Pods, NooBaa Pods, StorageClasses)</p>
+以下がインストールされます。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>ODF <strong>OperatorGroup</strong></p>
+</li>
+<li>
+<p>ODF <strong>Subscription</strong></p>
+</li>
+<li>
+<p>他の全てのODF リソース (Operators, Ceph Pods, NooBaa Pods, StorageClasses)</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>はじめに <code>openshift-storage</code> Namespace を作成します。</p>
@@ -601,16 +671,13 @@ ip-10-0-219-73.us-east-2.compute.internal    Ready    worker   14m   v1.22.8+c02
 <div class="title">Figure 3. OCP OperatorHub Install OpenShift Data Foundation</div>
 </div>
 <div class="paragraph">
-<p>次の画面で、設定が下図に示す通りであることを確認します。</p>
+<p>次の画面で、<code>channel</code> や <code>Installed Namespace</code> などを設定しますが、<strong>デフォルトのまま Install をクリックします。</strong></p>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="_images/ocs/OCS4-OCP4-OperatorHub-Subscribe.png" alt="OCP OperatorHub Subscribe">
 </div>
 <div class="title">Figure 4. OCP Subscribe to OpenShift Data Foundation</div>
-</div>
-<div class="paragraph">
-<p><strong>Install</strong> をクリックします。</p>
 </div>
 <div class="paragraph">
 <p>ターミナルに戻って、下のコマンドを実行してインストール状況を確認できます。</p>
@@ -928,7 +995,7 @@ MCGは <code>noobaa-core</code> Pod内部の <code>db</code> コンテナで利�
 <div class="sectionbody">
 <div class="paragraph">
 <p>このセクションでは、Rook-Ceph <strong>toolbox</strong> を利用して作成されたCephクラスタに対してcephコマンドを実行し、クラスタ構成を確認します。
-Rook-Ceph <strong>toolbox</strong> はODFに同梱されていないため、手動でデプロイする必要があります。</p>
+Rook-Ceph <strong>toolbox</strong> は手動でデプロイする必要があります。</p>
 </div>
 <div class="paragraph">
 <p>以下のコマンドで <code>OCSInitialization ocsinit</code> を修正します。</p>
