@@ -1,5 +1,3 @@
-# Advanced Cluster Security for Kubernetes Workshop
+# OpenShift Data Foundation Workshop
 
 This is the repository for the ODF Workshop available in https://tutusnom.github.io/odf-workshop/[ODF Workshop Guide].
-
-TESTING
